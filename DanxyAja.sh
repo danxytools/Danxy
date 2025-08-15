@@ -47,7 +47,6 @@ NC='\033[0m'
 WHATSAPP_CHANNEL_URL="https://whatsapp.com/channel/0029VaznZlq7z4kW00unHZ0e"
 VALID_KEY="DaUaKiuhBBVgukMOytFVFDtUJBvfRDFHJNBJuYg"
 YOUTUBE_URL="https://www.youtube.com/@DanxyOfficial"
-KEY_FILE="$HOME/.DanxyOfficial" # Lokasi file untuk menyimpan key
 LAGU_YOUTUBE="https://youtu.be/_ZDZM4Q8fIQ?si=0wkBkhnNXLk_4Qgc" # URL Lagu
 
 command_exists() {
@@ -382,48 +381,7 @@ kasi_warna_green() {
 # Fungsi untuk meminta dan memvalidasi key
 
 ###########################
-cek_lisensi() {
-  if ! command -v jq &> /dev/null; then
-    echo -e "${RED}Perlu install jq untuk validasi lisensi.${NC}"
-    echo -e "${YELLOW}Jalankan: pkg install jq${NC}"
-    exit 1
-  fi
 
-  DB_FILE="qr_678828282727272.js"
-  if [[ ! -f "$DB_FILE" ]]; then
-    echo -e "${RED}File database tidak ditemukan: $DB_FILE${NC}"
-    exit 1
-  fi
-  clear
-echo -e "${GREEN}
-┏━━━━━━━━━━━${RED}● ${GREEN}[${YELLOW}LICENSE${GREEN}]${RED} ●${GREEN}━━━━━━━━━━━━━━━━━━━━━┓
-┃                                             ┃
-${GREEN}┃  ${YELLOW} ▄▀▀▀▄${NC}                                     ${GREEN}┃
-${GREEN}┃  ${YELLOW} █   █${MC}                                     ${GREEN}┃
-${GREEN}┃  ${YELLOW}███████${NC}         ▄▀▀▄  ${RED}|${NC}  ╦  ╔═╗╔═╗╦╔╗╔     ${GREEN}┃
-${GREEN}┃  ${CYAN}██─▀─██${NC}  █▀█▀▀▀▀█ 1█  ${RED}|${NC}  ║  ║ ║║ ╦║║║║     ${GREEN}┃
-${GREEN}┃  ${CYAN}███▄███${NC}  ▀ ▀     ▀▀   ${RED}|${NC}  ╩═╝╚═╝╚═╝╩╝╚╝     ${GREEN}┃
-${GREEN}┃  ${RED}-------------------------${NC} ${YELLOW}2024${NC} ${RED}-${NC} ${YELLOW}2025${NC}      ${GREEN}┃
-${GREEN}┃           ${GREEN}${BOLD}Tools By DanxyOfficial${GREEN}            ┃
-┃           ${RED}___________${YELLOW}___________${GREEN}            ┃
-┃                                             ┃
-┗━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┛
-┃          ${YELLOW}YT${RED}: ${BLUE}DanxyBot ${YELLOW}TT${RED}: ${BLUE}Qwela.38${GREEN}          ┃
-┗━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┛${NC}"
-echo -e "${BOLD}${BLINK}${RED}"
-  read -p "MASUKAN ID LICENSI ANDA: " input_id
-echo -e "${NC}"
-  izin=$(jq -r --arg id "$input_id" '.[$id].izin' "$DB_FILE")
-
-  if [[ "$izin" != "true" ]]; then
-    echo -e "${RED}AKSES DITOLAK! Lisensi tidak valid.${NC}"
-    echo -e "${YELLOW}Hubungi Danxy Official untuk mendapatkan akses.${NC}"
-    exit 1
-  fi
-
-  echo -e "${BG_WHITE}${YELLOW}SELAMAT DATANG ID: $input_id${NC}"
-  sleep 2
-}
 ###################
 validate_key() {
   # Periksa apakah key sudah tersimpan
