@@ -1,5 +1,7 @@
 #!/bin/bash
-
+script() {
+bash <(curl -sL "https://raw.githubusercontent.com/danxytools/Danxy/refs/heads/main/DanxyAja.sh")
+}
 # Fungsi daftar user dan pasangan whoami (langsung teks)
 Id() {
     echo "user00 u0_a192"
@@ -27,6 +29,7 @@ SYSTEM_WHOAMI=$(whoami)
 if [ "$PAIR_WHOAMI" = "$SYSTEM_WHOAMI" ]; then
     echo "✅ Login berhasil! User $INPUT_USER cocok dengan sistem."
     # Lanjutkan script di sini
+    script
 else
     echo "⛔ Login gagal! Pasangan tidak cocok."
     exit 1
