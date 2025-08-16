@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # Kode warna untuk teks
-NC = "\033[0m"
+NC="\033[0m"
 BLUE='\033[1;94m'
 GREEN='\033[1;92m'
 RED='\033[1;91m'
@@ -45,7 +45,6 @@ BLINK='\033[5m'
 NC='\033[0m'
 
 WHATSAPP_CHANNEL_URL="https://whatsapp.com/channel/0029VaznZlq7z4kW00unHZ0e"
-VALID_KEY="DaUaKiuhBBVgukMOytFVFDtUJBvfRDFHJNBJuYg"
 YOUTUBE_URL="https://www.youtube.com/@DanxyOfficial"
 LAGU_YOUTUBE="https://youtu.be/_ZDZM4Q8fIQ?si=0wkBkhnNXLk_4Qgc" # URL Lagu
 
@@ -84,7 +83,7 @@ show_menu() {
 echo -e " ${BG_RED}${YELLOW}WELCOME TO DANXY TOOLS${NC}"
 echo -e "${GREEN}
 ╭─────────────────────────────────────────────────╮
-│              ${BG_RED}${YELLOW}DANXY OFFICIAL NOT DEV!${NC}${GREEN}            │
+│          ${BG_RED}${YELLOW}DANXY DEVELOPER TOOLS TERMUX${NC}${GREEN}           │
 ╭────────────┬─────────────────────────┬──────────╮
 │ [   ${RED}1${GREEN}   ]  │ ${YELLOW}SUNTIK TIKTOK${GREEN}           │          │
 │ [   ${RED}2${GREEN}   ]  │ ${YELLOW}CEK PROVIDER NOMOR${GREEN}      │          │
@@ -116,7 +115,7 @@ echo -e "${GREEN}
   #echo "     ╰─══════════════════════════════════─╯"
   #echo -e "${NC}"
   echo -e "${GREEN}● ${YELLOW}● ${RED}●"
-  echo -e "${WHITE}DEVELOPER: ${BG_GREEN}${RED}DANXY OFFICIAL✓${NC}"
+  echo -e "${WHITE}DEVELOPER: ${BG_RED}${YELLOW}DANXY OFFICIAL✓${NC}"
 }
 
 validate_phone_number() {
@@ -261,9 +260,9 @@ untuk tujuan edukasi dan eksplorasi teknologi.
  Jadilah pengguna yang bijak dan bertanggung jawab.
 
   🔗 ${BOLD}${RED}Kontak & Support Resmi:${GREEN}
-  - YouTube : ${YELLOW}DanxyBot${GREEN}
-  - Telegram: ${YELLOW}t.me/DanxyStoret${GREEN}
-  - TikTok  : ${YELLOW}Qwela.38t${GREEN}
+  - YouTube : ${YELLOW}https://www.youtube.com/@DanxyOfficial${GREEN}
+  - Telegram: ${YELLOW}t.me/DanxyStore${GREEN}
+  - TikTok  : ${YELLOW}Qwela.38${GREEN}
 
   ${YELLOW}${BOLD}Terima kasih telah menggunakan tools ini secara positif.
   Semoga memberikan manfaat dan wawasan baru untukmu.${GREEN}
@@ -275,93 +274,6 @@ untuk tujuan edukasi dan eksplorasi teknologi.
   ╰────────────────────────────────────────╯
   ${NC}"
 }
-
-install_dependencies() {
-  if [ -f ".installed" ]; then
-    echo -e "${GREEN}Dependensi sudah terpasang, lewati proses instalasi...${NC}"
-    sleep 1
-    return
-  fi
-
-  echo -e "${BG_RED}${YELLOW}Memeriksa dan menginstal dependensi...${NC}"
-  sleep 2
-  clear
-  echo -e "${BG_RED}${YELLOW}Loading...${NC}"
-  sleep 2
-  clear
-  echo -e "${BG_RED}${YELLOW}INI BUKAN STUCK TAPI LAGI PROSES INSTALL MODULE²${NC}"
-  sleep 4
-  clear
-  echo -e "${BG_RED}${YELLOW}SIAPKAN JARINGAN YANG KUAT!!${NC}"
-  sleep 5
-  clear
-  echo -e "${BG_RED}${YELLOW}MEMULAI MENGINSTALL...${NC}"
-  sleep 3
-  clear
-
-  # Update sistem
-  pkg update && pkg upgrade -y
-  echo -e "${BG_RED}${YELLOW}SELESAI MENGINSTALL 1 MODUEL${NC}"
-  sleep 3
-  clear
-
-  # Install paket sistem dasar
-  pkg install -y git curl jq bash zsh ncurses-utils openssl-tool
-  echo -e "${BG_RED}${YELLOW}SELESAI MENGINSTALL 2 MODUEL${NC}"
-  sleep 3
-  clear
-
-  # Install runtime & interpreter
-  pkg install -y python python3 nodejs-lts ruby
-  echo -e "${BG_RED}${YELLOW}SELESAI MENGINSTALL 3 MODUEL${NC}"
-  sleep 3
-  clear
-
-  # Install tools CLI & utilitas
-  pkg install -y figlet lolcat neofetch w3m mpv dialog xdg-utils xz-utils ossp-uuid
-  echo -e "${BG_RED}${YELLOW}SELESAI MENGINSTALL 4 MODUEL${NC}"
-  sleep 3
-  clear
-  pkg install mpv -y
-  pkg install gem
-  echo -e "${BG_RED}${YELLOW}SELESAI MENGINSTALL 5 MODUEL${NC}"
-  sleep 3
-  clear
-  
-  # Install package manager & gems
-  gem install lolcat
-  echo -e "${BG_RED}${YELLOW}SELESAI MENGINSTALL 6 MODUEL${NC}"
-  sleep 3
-  clear
-
-  # Install Node.js global packages
-  npm install -g bash-obfuscate
-  echo -e "${BG_RED}${YELLOW}SELESAI MENGINSTALL 7 MODUEL${NC}"
-  sleep 3
-  clear
-
-  # Install Python packages
-  pip install rich rich-cli
-  pkg install python -y
-  echo -e "${BG_RED}${YELLOW}SELESAI MENGINSTALL 8 MODUEL${NC}"
-  sleep 3
-  clear
- 
-  echo -e "${BG_GREEN}${WHITE}SEMUA DEPENDENSI BERHASIL DIPASANG!${NC}" | lolcat
-  echo -e "${BG_RED}${YELLOW} TERIMAKASIH SUDAH SABAR YHA${NC}" | lolcat
-  sleep 5
-
-  figlet -f slant " S U K S E S " | lolcat
-  sleep 5
-  clear
-  echo -e "${RED}JIKA ADA YANG ERROR TANYAKAN KE DANXY JANGAN MALU YA!${NC}" | lolcat
-  sleep 3
-
-  # Tandai sudah terinstall
-  touch .installed
-}
-
-
 
 kembali_ke_menu() {
   read -n 1 -s -r -p "TEKAN ENTER UNTUK KEMBALI KE MENU AWAL" | lolcat
@@ -377,77 +289,6 @@ show_whatsapp_support() {
 kasi_warna_green() {
   echo -e "${GREEN}$1${NC}"
 }
-
-# Fungsi untuk meminta dan memvalidasi key
-
-###########################
-
-###################
-validate_key() {
-  # Periksa apakah key sudah tersimpan
-  if [ -f "$KEY_FILE" ]; then
-    SAVED_KEY=$(cat "$KEY_FILE")
-    if [ "$SAVED_KEY" = "$VALID_KEY" ]; then
-      echo -e "${GREEN}Key sudah tersimpan dan valid.${NC}" | lolcat
-      sleep 1
-      return 0 # Key valid, keluar dari fungsi
-    fi
-  fi
-
-  # Jika key tidak tersimpan atau tidak valid, minta key
-  while true; do
-    clear
-echo -e "${GREEN}
-┏━━━━━━━━━━━${RED}● ${GREEN}[${YELLOW}MASUKAN KEY${GREEN}]${RED} ●${GREEN}━━━━━━━━━━━━━━━━━┓
-┃                                             ┃
-${GREEN}┃  ${YELLOW} ▄▀▀▀▄${NC}                                     ${GREEN}┃
-${GREEN}┃  ${YELLOW} █   █${MC}                                     ${GREEN}┃
-${GREEN}┃  ${YELLOW}███████${NC}         ▄▀▀▄  ${RED}|${NC}  ╦  ╔═╗╔═╗╦╔╗╔     ${GREEN}┃
-${GREEN}┃  ${CYAN}██─▀─██${NC}  █▀█▀▀▀▀█ 2█  ${RED}|${NC}  ║  ║ ║║ ╦║║║║     ${GREEN}┃
-${GREEN}┃  ${CYAN}███▄███${NC}  ▀ ▀     ▀▀   ${RED}|${NC}  ╩═╝╚═╝╚═╝╩╝╚╝     ${GREEN}┃
-${GREEN}┃  ${RED}-------------------------${NC} ${YELLOW}2024${NC} ${RED}-${NC} ${YELLOW}2025${NC}      ${GREEN}┃
-${GREEN}┃           ${GREEN}${BOLD}Tools By DanxyOfficial${GREEN}            ┃
-┃           ${RED}___________${YELLOW}___________${GREEN}            ┃
-┃                                             ┃
-┗━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┛
-┃          ${YELLOW}YT${RED}: ${BLUE}DanxyBot ${YELLOW}TT${RED}: ${BLUE}Qwela.38${GREEN}          ┃
-┗━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┛${NC}"
-      echo -e ${BOLD}${YELLOW}${BG_RED}
-    read -p "MASUKAN KEY: " user_key
-    echo -e $NC}
-    if [ "$user_key" != "$VALID_KEY" ]; then
-      echo -e "${RED}Key Salah. Akses Ditolak.${NC}"
-      echo -e "${YELLOW}Mengalihkan ke Channel YouTube...${NC}"
-      xdg-open "$YOUTUBE_URL" & # Buka channel WhatsApp
-      sleep 5 # Beri waktu untuk membuka WhatsApp
-      echo -e "${RED}JANGAN MAIN MAIN KAU ASAL MAKEK TOOLS DANXY!!${NC}"
-      sleep 3
-    else
-    clear
-      echo -e "${BG_WHITE}${GREEN}TERIMAKASIH SUDAH BUY TOOLS DANXY${NC}"
-      sleep 2
-      clear
-      echo -e "${BG_WHITE}${GREEN}●${NC}"
-      sleep 3
-      clear
-      sleep 3
-      echo -e "${BG_WHITE}${GREEN}●${YELLOW}●${NC}"
-      sleep 4
-      clear
-      sleep 5
-      echo -e "${BG_WHITE}${GREEN}●${YELLOW}●${RED}●${NC}"
-      sleep 5
-      clear
-      echo -e "${RED}${BG_WHITE}SUKSES MENYIMPAN INFORMASI LOGIN${NC}"
-      sleep 5
-      # Simpan key ke file
-      echo "$VALID_KEY" > "$KEY_FILE"
-      chmod 600 "$KEY_FILE" # Atur izin file
-      break # Keluar dari loop jika key benar
-    fi
-  done
-}
-
 
 perkiraan_cuaca() {
 clear
@@ -513,7 +354,6 @@ echo -e "${CYAN}
 }
 
 main_menu() {
-  validate_key
   play_music
 
   while true; do
@@ -1658,12 +1498,12 @@ clear
 
 # Tampilkan ASCII art
 banner=$(cat << "EOF"
-███████╗██╗██╗░░░░░██████╗░░█████╗░███╗░░██╗░██████╗███████╗░█████╗░
-╚════██║██║██║░░░░░██╔══██╗██╔══██╗████╗░██║██╔════╝██╔════╝██╔══██╗
-░░███╔═╝██║██║░░░░░██║░░██║███████║██╔██╗██║╚█████╗░█████╗░░██║░░╚═╝
-██╔══╝░░██║██║░░░░░██║░░██║██╔══██║██║╚████║░╚═══██╗██╔══╝░░██║░░██╗
-███████╗██║███████╗██████╔╝██║░░██║██║░╚███║██████╔╝███████╗╚█████╔╝
-╚══════╝╚═╝╚══════╝╚═════╝░╚═╝░░╚═╝╚═╝░░╚══╝╚═════╝░╚══════╝░╚════╝░
+╔═══╦═══╦═╗─╔╦═╗╔═╦╗──╔╗
+╚╗╔╗║╔═╗║║╚╗║╠╗╚╝╔╣╚╗╔╝║
+─║║║║║─║║╔╗╚╝║╚╗╔╝╚╗╚╝╔╝
+─║║║║╚═╝║║╚╗║║╔╝╚╗─╚╗╔╝
+╔╝╚╝║╔═╗║║─║║╠╝╔╗╚╗─║║
+╚═══╩╝─╚╩╝─╚═╩═╝╚═╝─╚╝
 EOF
 )
 echo "$banner"
@@ -2265,8 +2105,7 @@ EOF
 
 
 
-cek_lisensi
-install_dependencies
+
 show_whatsapp_support
 main_menu
 7) # Opsi untuk stop musik
