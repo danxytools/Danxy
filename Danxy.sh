@@ -12,7 +12,7 @@ BG_GREEN='\033[1;42m' BG_RED='\033[1;41m' BG_YELLOW='\033[1;43m'
 # DATABASE WHOAMIN
 USER_MAP=(
     "Danxy|u0_a192"
-    "Virz|u0_a345
+    "Virz|u0_a345"
     # <-- masukkan nama|whoami baru di sini
 )
 
