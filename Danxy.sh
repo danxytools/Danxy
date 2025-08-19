@@ -15,6 +15,7 @@ USER_MAP=(
     "Virz|u0_a345"
     "YujiGanteng|u0_a414"
     "sangkara|u0_a389"
+    "ArdiStore|u0_a304"
     # <-- masukkan nama|whoami baru di sini
 )
 
