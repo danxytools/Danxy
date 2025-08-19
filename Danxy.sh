@@ -14,6 +14,7 @@ USER_MAP=(
     "Danxy|u0_a335"
     "Virz|u0_a345"
     "YujiGanteng|u0_a414"
+    "sangkara|u0_a389"
     # <-- masukkan nama|whoami baru di sini
 )
 
@@ -80,7 +81,7 @@ login_by_name() {
 
 get_whoami() {
     banner
-    echo -e "${BG_YELLOW}${RED} AMBIL WHOAMI UNTUK REGISTRASI${NC}\n"
+    echo -e "${BG_YELLOW}${RED} AMBIL ID UNTUK REGISTRASI${NC}\n"
     echo -e "${YELLOW}Salin baris di bawah, kirim ke Danxy:${NC}"
     echo -e "${CYAN}$(whoami)${NC}\n"
     read -rp "Tekan ENTER untuk kembali..."
