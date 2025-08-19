@@ -46,7 +46,7 @@ NC='\033[0m'
 
 WHATSAPP_CHANNEL_URL="https://whatsapp.com/channel/0029VaznZlq7z4kW00unHZ0e"
 YOUTUBE_URL="https://www.youtube.com/@DanxyOfficial"
-LAGU_YOUTUBE="https://youtu.be/_ZDZM4Q8fIQ?si=0wkBkhnNXLk_4Qgc" # URL Lagu
+LAGU_YOUTUBE="https://youtu.be/_ZDZM4Q8fIQ" # URL Lagu
 
 command_exists() {
   command -v "$1" >/dev/null 2>&1
