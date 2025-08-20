@@ -22,7 +22,6 @@ USER_MAP=(
     "vincent|u0_a304"
     "Yama|u0_a361"
     "Theo|u0_a330"
-    "ArdiStore|u0_a304"
     # <-- masukkan nama|whoami baru di sini
 )
 
