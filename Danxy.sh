@@ -21,6 +21,7 @@ USER_MAP=(
     "Fahri|u0_a321"
     "vincent|u0_a304"
     "Yama|u0_a361"
+    "Theo|u0_a330"
     # <-- masukkan nama|whoami baru di sini
 )
 
