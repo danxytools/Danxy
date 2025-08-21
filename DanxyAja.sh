@@ -52,7 +52,6 @@ trap 'tput cnorm; kill $! 2>/dev/null' EXIT  # restore cursor & kill animasi
 tput civis  # sembunyikan cursor
 
 frames=(
-echo"
 '[ ░░░░░░░░░░ ] 0 %  |  INITIALIZING CORE...'
 '[ █░░░░░░░░░ ] 10 % |  INJECTING PAYLOAD...'
 '[ ██░░░░░░░░ ] 20 % |  BYPASSING FIREWALL...'
@@ -64,7 +63,6 @@ echo"
 '[ ████████░░ ] 80 % |  LOCKING BACKDOOR...'
 '[ █████████░ ] 90 % |  FINALIZING...'
 '[ ██████████ ] DONE |  SYSTEM READY!'
-" | lolcat
 )
 total=${#frames[@]}
 for ((i=0;i<total;i++)); do
