@@ -1,5 +1,4 @@
 #!/bin/bash
-
 # Kode warna untuk teks
 NC="\033[0m"
 BLUE='\033[1;94m'
@@ -44,10 +43,37 @@ BLINK='\033[5m'
 # Kode untuk menghapus warna dan gaya
 NC='\033[0m'
 
-WHATSAPP_CHANNEL_URL="https://whatsapp.com/channel/0029VaznZlq7z4kW00unHZ0e"
+#WHATSAPP_CHANNEL_URL="https://whatsapp.com/channel/0029VaznZlq7z4kW00unHZ0e"
 YOUTUBE_URL="https://www.youtube.com/@DanxyOfficial"
-LAGU_YOUTUBE="https://youtu.be/_ZDZM4Q8fIQ" # URL Lagu
+LAGU_YOUTUBE="https://youtu.be/T-A4zIBKtV8" # URL Lagu
 
+loading() {
+trap 'tput cnorm; kill $! 2>/dev/null' EXIT  # restore cursor & kill animasi
+tput civis  # sembunyikan cursor
+
+frames=(
+echo"
+'[ ░░░░░░░░░░ ] 0 %  |  INITIALIZING CORE...'
+'[ █░░░░░░░░░ ] 10 % |  INJECTING PAYLOAD...'
+'[ ██░░░░░░░░ ] 20 % |  BYPASSING FIREWALL...'
+'[ ███░░░░░░░ ] 30 % |  CRACKING HASH...'
+'[ ████░░░░░░ ] 40 % |  SPREADING ROOTKIT...'
+'[ █████░░░░░ ] 50 % |  EXFILTRATING DATA...'
+'[ ██████░░░░ ] 60 % |  CLEANING LOGS...'
+'[ ███████░░░ ] 70 % |  SPOOFING ORIGIN...'
+'[ ████████░░ ] 80 % |  LOCKING BACKDOOR...'
+'[ █████████░ ] 90 % |  FINALIZING...'
+'[ ██████████ ] DONE |  SYSTEM READY!'
+" | lolcat
+)
+total=${#frames[@]}
+for ((i=0;i<total;i++)); do
+    printf "\r\033[32m%s\033[0m" "${frames[i]}"
+    sleep 0.4
+done
+echo -e "\n"
+tput cnorm  # tampilkan cursor lagi
+}
 command_exists() {
   command -v "$1" >/dev/null 2>&1
 }
@@ -57,6 +83,7 @@ banner() {
   if command_exists figlet; then
     figlet -f slant "  Loading" | lolcat
     echo -e "       ${BG_RED}${YELLOW}SABAR CUY BENTAR DOANG KOK${NC}"
+    loading
   else
   sleep 2
     clear
@@ -80,6 +107,8 @@ banner() {
 }
 
 show_menu() {
+loading
+clear
 echo -e " ${BG_RED}${YELLOW}WELCOME TO DANXY TOOLS${NC}"
 echo -e "${GREEN}
 ╭─────────────────────────────────────────────────╮
@@ -119,14 +148,16 @@ echo -e "${GREEN}
 }
 
 validate_phone_number() {
-  [[ "$1" =~ ^08[0-9]{8,13}$ ]] || {
-    echo -e "${RED}Nomor telepon tidak valid. Harus dimulai dengan 08 dan memiliki 10-13 digit.${NC}"
+  [[ "$1" =~ ^08[0-9]{8,11}$ ]] || {
+    echo -e "${RED}[ ! ] Nomor telepon Harus 10-11 digit!${NC}"
     return 1
   }
   return 0
 }
 
 suntik_tiktok() {
+clear
+loading
   echo -e "${CYAN}
   ╭────────────────────────────────────────╮
   │           ${YELLOW}DANXY OFFICIAL 80${CYAN}            │
@@ -147,7 +178,9 @@ suntik_tiktok() {
 }
 
 cek_provider() {
+clear
   read -p "Masukkan Nomor Telepon (08xxxxxxxxxx): " nomor
+  loading
 
   validate_phone_number "$nomor" || return 1
 
@@ -280,11 +313,11 @@ kembali_ke_menu() {
   echo
 }
 
-show_whatsapp_support() {
-  echo -e "${BLUE}JANGAN LUPA JOIN CHANNEL DanxyBot YHA MAKASIH${NC}" | lolcat
-  xdg-open "$WHATSAPP_CHANNEL_URL" &
-  sleep 5
-}
+#show_whatsapp_support() {
+#  echo -e "${BLUE}JANGAN LUPA JOIN CHANNEL DanxyBot YHA MAKASIH${NC}" | lolcat
+#  xdg-open "$WHATSAPP_CHANNEL_URL" &
+#  sleep 5
+#}
 
 kasi_warna_green() {
   echo -e "${GREEN}$1${NC}"
@@ -661,7 +694,8 @@ ip_lookup() {
     return
   fi
 
-  echo "🔎 Melacak data..."
+  echo "Melacak data..."
+  loading
   sleep 1
 
   curl -s "http://ip-api.com/json/$ip" | jq -r '
@@ -675,6 +709,7 @@ ip_lookup() {
 
 cek_ip_publik() {
   clear
+  loading
   echo -e "
 ⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⢀⣀⣀⣀⣀⡀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀
 ⠀⠀⠀⠀⠀⠀⠀⠀⢀⢤⣶⣯⣿⣶⣿⣷⣶⣿⣭⣶⣄⢄⡀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀
@@ -751,6 +786,7 @@ echo -e "${CYAN}
   fi
 
   echo -e "\nMengecek kebocoran untuk: $gmail ..."
+  loading
   sleep 1
 
   hasil=$(curl -s "https://haveibeenpwned.com/unifiedsearch/$gmail" -H "User-Agent: Bash-Tools" | grep -o 'Name\":\"[^\"]*')
@@ -1040,6 +1076,7 @@ osint_nik() {
     fi
 
     # Output
+    loading
     echo -e "${GREEN}!Tanggal Lahir: $tanggal/$bulan/$tahun${NC}"
     echo -e "${GREEN}!Jenis Kelamin: $jeniskelamin${NC}"
     echo -e "${GREEN}!Provinsi: $provinsi${NC}"
@@ -1299,6 +1336,7 @@ cheker_nik() {
     fi
 
     # Output
+    loading
     echo -e "${GREEN}!Tanggal Lahir: $tanggal/$bulan/$tahun${NC}"
     echo -e "${GREEN}!Jenis Kelamin: $jeniskelamin${NC}"
     echo -e "${GREEN}!Provinsi: $provinsi${NC}"
@@ -1415,6 +1453,7 @@ sleep 2
 declare -a links
 
 # 1. Google Dorks (10)
+loading
 links+=(
 "https://www.google.com/search?q=%22$NAMA%22"
 "https://www.google.com/search?q=%22$NAMA%22+site:facebook.com"
@@ -1935,6 +1974,7 @@ generate_password() {
 
     # Generate password menggunakan openssl
     password=$(openssl rand -base64 "$((length * 3 / 4))" | head -c "$length")
+    loading
 
     echo -e "${GREEN}Password yang dihasilkan: ${CYAN}$password${NC}"
 
@@ -3032,10 +3072,6 @@ EOF
     done
     color yellow "Selesai!"
 }
-
-
-
-
 
 show_whatsapp_support
 main_menu
