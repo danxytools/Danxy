@@ -78,6 +78,7 @@ command_exists() {
 
 banner() {
   if command_exists figlet; then
+    clear
     figlet -f slant "  Loading" | lolcat
     echo -e "       ${BG_RED}${YELLOW}SABAR CUY BENTAR DOANG KOK${NC}"
   else
