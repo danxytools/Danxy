@@ -80,7 +80,6 @@ banner() {
   if command_exists figlet; then
     figlet -f slant "  Loading" | lolcat
     echo -e "       ${BG_RED}${YELLOW}SABAR CUY BENTAR DOANG KOK${NC}"
-    loading
   else
   sleep 2
     clear
@@ -94,22 +93,22 @@ banner() {
   echo -e "${RED}" | lolcat
   sleep 1
   clear
+  loading
+  clear
   if command_exists figlet; then
     figlet -f slant "DanxyTols" | lolcat
   else
     echo -e "${CYAN}===== DanxyTols =====${NC}"
+    loading | lolcat
     sleep 1
-    clear
   fi
 }
 
 show_menu() {
-loading
-clear
 echo -e " ${BG_RED}${YELLOW}WELCOME TO DANXY TOOLS${NC}"
 echo -e "${GREEN}
 ╭─────────────────────────────────────────────────╮
-│          ${BG_RED}${YELLOW}DANXY DEVELOPER TOOLS TERMUX${NC}${GREEN}           │
+│          ${YELLOW}DANXY DEVELOPER TOOLS TERMUX${NC}${GREEN}           │
 ╭────────────┬─────────────────────────┬──────────╮
 │ [   ${RED}1${GREEN}   ]  │ ${YELLOW}SUNTIK TIKTOK${GREEN}           │          │
 │ [   ${RED}2${GREEN}   ]  │ ${YELLOW}CEK PROVIDER NOMOR${GREEN}      │          │
@@ -155,6 +154,7 @@ validate_phone_number() {
 suntik_tiktok() {
 clear
 loading
+clear
   echo -e "${CYAN}
   ╭────────────────────────────────────────╮
   │           ${YELLOW}DANXY OFFICIAL 80${CYAN}            │
@@ -204,7 +204,7 @@ clear
     provider="Smartfren"
     ;;
   esac
-
+  loading
   echo -e "${CYAN}
   ╭────────────────────────────────────────╮
   │           ${YELLOW}HASIL CEK PROVIDER${CYAN}           │
@@ -255,6 +255,9 @@ ascii_art_generator() {
 
 # Fungsi info tools
 info() {
+  clear
+  loading
+  clear
   echo -e "${RED}
   ╭────────────────────────────────────────╮
   │              ${BLUE}INFO TOOLS${RED}                │
@@ -783,7 +786,7 @@ echo -e "${CYAN}
   fi
 
   echo -e "\nMengecek kebocoran untuk: $gmail ..."
-  loading
+  
   sleep 1
 
   hasil=$(curl -s "https://haveibeenpwned.com/unifiedsearch/$gmail" -H "User-Agent: Bash-Tools" | grep -o 'Name\":\"[^\"]*')
@@ -849,6 +852,7 @@ echo -e "${BG_RED}${YELLOW} ENCRYPSI CODE BASH ${NC}"
 
 play_music() {
     echo -e "MUSIK DI NYALAKAN" | lolcat
+    clear
   if command_exists mpv; then
     mpv --no-video --loop-file "$LAGU_YOUTUBE" >/dev/null 2>&1 &
   else
@@ -1450,7 +1454,7 @@ sleep 2
 declare -a links
 
 # 1. Google Dorks (10)
-loading
+
 links+=(
 "https://www.google.com/search?q=%22$NAMA%22"
 "https://www.google.com/search?q=%22$NAMA%22+site:facebook.com"
@@ -3070,7 +3074,7 @@ EOF
     color yellow "Selesai!"
 }
 
-show_whatsapp_support
+#show_whatsapp_support
 main_menu
 7) # Opsi untuk stop musik
   stop_music
