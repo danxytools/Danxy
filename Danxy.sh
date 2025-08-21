@@ -1,6 +1,6 @@
 #!/bin/bash
 # ---------------------------------------------------------
-#  DanxyLauncher.sh  – Login pakai nama, cek whoami otomatis
+#  Danxy.sh  – Login pakai nama, cek whoami otomatis
 # ---------------------------------------------------------
 
 # ---------- WARNA ----------
