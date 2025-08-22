@@ -110,7 +110,7 @@ main_menu() {
         echo -e "${GREEN}┗━━━━━━━━━━━━━━━━━━━━━┛${NC}    ${GREEN}┗━━━━━━━━━━━━━━━━━━━━━┛${NC}"
         echo -e "${GREEN}      ┃                                    ┃${NC}"
         echo -e "${GREEN}      ┗━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┛${NC}"
-        printf -e "${GREEN}● ${YELLOW}● ${RED}●${YELLOW}"
+        echo -e "${GREEN}● ${YELLOW}● ${RED}●${YELLOW}"
         printf "\n\033[0;36m┏━\033[0;32m[ DANXY TOOLS V8.3 ]@termux\033[0;36m ~ \033[0;33m[\033[0;31mMENU\033[0;33m]\033[0;36m\n\033[0;36m┗━━\033[1;31m❯\033[0m "
         read -r pilih
         echo -e "${NC}"
