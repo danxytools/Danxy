@@ -1,6 +1,6 @@
 #!/bin/bash
 # ---------------------------------------------------------
-#  Danxy.sh  – Login pakai nama, cek whoami otomatis
+#  DanxyLauncher.sh  – Login pakai nama, cek whoami otomatis
 # ---------------------------------------------------------
 
 # ---------- WARNA ----------
@@ -11,29 +11,17 @@ BG_GREEN='\033[1;42m' BG_RED='\033[1;41m' BG_YELLOW='\033[1;43m'
 
 # DATABASE WHOAMIN
 USER_MAP=(
-    "vhinn|u0_a458"
-    "Nopal|u0_a300"
-    "Danxy|u0_a338"
-    "Virz|u0_a345"
-    "YujiGanteng|u0_a414"
-    "sangkara|u0_a389"
-    "ArdiStore|u0_a304"
-    "citergr2|u0_a324"
-    "vabo|u0_a257"
-    "Fahri|u0_a321"
-    "vincent|u0_a304"
-    "Yama|u0_a361"
-    "Theo|u0_a330"
+    "Danxy|u0_a192"
     # <-- masukkan nama|whoami baru di sini
 )
 
 # ---------- FUNGSI ----------
 banner() {
     clear
-  #sl | lolcat
- # echo -e "                  ${BG_RED}DANXY TOOLS V8.3${NC}"
- # sleep 2
- # clear
+   sl
+  echo -e "                  ${BG_RED}DANXY TOOLS V8.3${NC}"
+  sleep 2
+  clear
 echo -e "${GREEN}
 ┏━━━━━━━━━━${RED}● ${GREEN}[${YELLOW}LICENSE${GREEN}]${RED} ●${GREEN}━━━━━━━━━━━━━━━━━━━━━━━━━┓
 ┃                                                ┃
@@ -90,10 +78,12 @@ login_by_name() {
 
 get_whoami() {
     banner
-    echo -e "${BG_YELLOW}${RED} AMBIL ID UNTUK REGISTRASI${NC}\n"
-    echo -e "${YELLOW}Salin baris di bawah, kirim ke Danxy:${NC}"
-    echo -e "${CYAN}$(whoami)${NC}\n"
-    read -rp "Tekan ENTER untuk kembali..."
+    echo -e "${BG_YELLOW}${RED}SALIN ID USER WARNA HIJAU DI BAWAH INI 
+DAN KASI KE DANXY!!${NC}\n"
+    echo -e "${GREEN}$(whoami)${NC}\n"
+    echo -e "\n${BG_RED}${YELLOW}ID ANDA DI ATAS DI GUNAKAN UNTUK
+MENDAFTARKAN ANDA KE DATABASE${NC}\n"
+    read -rp "TEKAN ENTER UNTIK KEMBALI KE MENU LOGIN"
 }
 
 main_menu() {
@@ -117,7 +107,7 @@ main_menu() {
         case $pilih in
             1) login_by_name ;;
             2) get_whoami ;;
-            0) echo "Bye!"; exit 0 ;;
+            3) echo "Bye!"; exit 3 ;;
             *) echo -e "${RED}Pilihan salah!${NC}"; sleep 1 ;;
         esac
     done
