@@ -13,7 +13,6 @@ BG_GREEN='\033[1;42m' BG_RED='\033[1;41m' BG_YELLOW='\033[1;43m'
 USER_MAP=(
     "Nopal|u0_a300"
     "vhinn|u0_a458"
-    "Danxy|u0_a338"
     "Virz|u0_a345"
     "YujiGanteng|u0_a414"
     "sangkara|u0_a389"
