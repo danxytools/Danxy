@@ -40,11 +40,11 @@ USER_MAP=(
 
 # ---------- FUNGSI ----------
 banner() {
-    clear
-  #sl | lolcat
- # echo -e "                  ${BG_RED}DANXY TOOLS V8.3${NC}"
- # sleep 2
- # clear
+#    clear
+  # sl
+#  echo -e "                  ${BG_RED}DANXY TOOLS V8.3${NC}"
+#  sleep 2
+  clear
 echo -e "${GREEN}
 ┏━━━━━━━━━━${RED}● ${GREEN}[${YELLOW}LICENSE${GREEN}]${RED} ●${GREEN}━━━━━━━━━━━━━━━━━━━━━━━━━┓
 ┃                                                ┃
@@ -69,7 +69,7 @@ login_by_name() {
     banner
     echo -e "${BG_GREEN}${RED} LOGIN DENGAN NAMA${NC}\n"
 
-    read -rp "Masukkan nama pengguna : " nama
+    read -rp "[ ! ] MASUKAN NAMA ANDA UNTUK LOGIN : " nama
 
     # Cari whoami berdasarkan nama
     expected_who=""
@@ -87,13 +87,13 @@ login_by_name() {
         return
     fi
 
-    current_who=$(whoami)
+    current_who=$(id)
     if [[ "$expected_who" == "$current_who" ]]; then
-        echo -e "\n${GREEN}✅ Login berhasil! Selamat datang, $nama.${NC}"
+        echo -e "\n${GREEN}[ ✓ ] LOGIN BERHASIL SELAMAT DATANG, $nama.${NC}"
         sleep 1
         bash <(curl -sL "https://raw.githubusercontent.com/danxytools/Danxy/refs/heads/main/DanxyAja.sh")
     else
-        echo -e "\n${RED}❌ Perangkat ini tidak cocok untuk nama \"$nama\".${NC}"
+        echo -e "\n${RED}[ ∅ ] PERANGKAT TIDAK COCOK UNTUK ID INI\"$nama\".${NC}"
         echo -e "${YELLOW}ID ANDA AYO BURUAN MINTA AKSES : $current_who${NC}"
         sleep 3
     fi
@@ -101,10 +101,13 @@ login_by_name() {
 
 get_whoami() {
     banner
-    echo -e "${BG_YELLOW}${RED} AMBIL ID UNTUK REGISTRASI${NC}\n"
-    echo -e "${YELLOW}Salin baris di bawah, kirim ke Danxy:${NC}"
-    echo -e "${CYAN}$(whoami)${NC}\n"
-    read -rp "Tekan ENTER untuk kembali..."
+    echo -e "${BG_YELLOW}${RED}SALIN ID USER WARNA HIJAU DI BAWAH INI 
+DAN KASI KE DANXY!!${NC}\n"
+    echo -e "${GREEN}$(id)${NC}\n"
+    echo -e "\n${BG_RED}${YELLOW}ID ANDA DI ATAS DI GUNAKAN UNTUK
+MENDAFTARKAN ANDA KE DATABASE${NC}\n"
+    echo -e "${YELLOW}[${RED} ! ${YELLOW}] ${BG_RED}${YELLOW}INGAT DANXY HANYA MENAMBAHKAN ID ANDA 1× JIKA ANDA UNINSTALL TERMUX DAN INGIN MENGGUNAKAN TOOLS INI ANDA WAJIB REIN ID MENGGUNAKAN BIAYA ( Rp5.000 )"
+    read -rp "TEKAN ENTER UNTIK KEMBALI KE MENU LOGIN"
 }
 
 main_menu() {
@@ -122,8 +125,7 @@ main_menu() {
         echo -e "${GREEN}      ┃                                    ┃${NC}"
         echo -e "${GREEN}      ┗━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┛${NC}"
         echo -e "${GREEN}● ${YELLOW}● ${RED}●${YELLOW}"
-        printf "\n\033[0;36m┏━\033[0;32m[ DANXY TOOLS V8.3 ]@termux\033[0;36m ~ \033[0;33m[\033[0;31mMENU\033[0;33m]\033[0;36m\n\033[0;36m┗━━\033[1;31m❯\033[0m "
-        read -r pilih
+        read -rp "PILIH [1-3] : " pilih
         echo -e "${NC}"
 
         case $pilih in
@@ -135,5 +137,5 @@ main_menu() {
     done
 }
 
-# ---------- ENTRY ----------
+
 main_menu
