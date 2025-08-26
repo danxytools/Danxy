@@ -1,4 +1,8 @@
 #!/bin/bash
+# ---------------------------------------------------------
+#  DanxyLauncher.sh  – Login pakai nama, cek whoami otomatis
+# ---------------------------------------------------------
+
 # ---------- WARNA ----------
 NC="\033[0m"
 GREEN='\033[1;92m'  RED='\033[1;91m'  YELLOW='\033[1;93m'
@@ -32,7 +36,6 @@ USER_MAP=(
     "Theo|u0_a330"
                     # <-- masukkan nama|whoami baru di sini
 )
-
 # ---------- FUNGSI ----------
 banner() {
 #    clear
@@ -82,7 +85,7 @@ login_by_name() {
         return
     fi
 
-    current_who=$(id)
+    current_who=$(whoami)
     if [[ "$expected_who" == "$current_who" ]]; then
         echo -e "\n${GREEN}[ ✓ ] LOGIN BERHASIL SELAMAT DATANG, $nama.${NC}"
         sleep 1
@@ -98,10 +101,9 @@ get_whoami() {
     banner
     echo -e "${BG_YELLOW}${RED}SALIN ID USER WARNA HIJAU DI BAWAH INI 
 DAN KASI KE DANXY!!${NC}\n"
-    echo -e "${GREEN}$(id)${NC}\n"
+    echo -e "${GREEN}$(whoami)${NC}\n"
     echo -e "\n${BG_RED}${YELLOW}ID ANDA DI ATAS DI GUNAKAN UNTUK
 MENDAFTARKAN ANDA KE DATABASE${NC}\n"
-    echo -e "${YELLOW}[${RED} ! ${YELLOW}] ${BG_RED}${YELLOW}INGAT DANXY HANYA MENAMBAHKAN ID ANDA 1× JIKA ANDA UNINSTALL TERMUX DAN INGIN MENGGUNAKAN TOOLS INI ANDA WAJIB REIN ID MENGGUNAKAN BIAYA ( Rp5.000 )"
     read -rp "TEKAN ENTER UNTIK KEMBALI KE MENU LOGIN"
 }
 
