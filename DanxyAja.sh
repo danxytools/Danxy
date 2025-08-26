@@ -37,6 +37,14 @@ BG_YELLOW='\033[1;43m'
 BG_MAGENTA='\033[1;45m'
 BG_WHITE='\033[1;47m'
 
+R='\033[1;31m'
+G='\033[1;32m'
+B='\033[1;34m'
+Y='\033[1;33m'
+W='\033[1;37m'
+D='\033[0;37m'
+RESET='\033[0m'
+
 # Kode untuk mengatur gaya teks
 BOLD='\033[1m'
 UNDERLINE='\033[4m'
@@ -162,28 +170,29 @@ echo -e "${GREEN}
  ╭──────────────────────────────────────────────────────╮
  │                 ${YELLOW}MENU UTAMA TOOLS V8.3${NC}${GREEN}                │
  ├────────────┬─────────────────────────┬───────────────┤
- │ [   ${RED}1${GREEN}   ]  │ ${YELLOW}SUNTIK TIKTOK${GREEN}           │               │
- │ [   ${RED}2${GREEN}   ]  │ ${YELLOW}CEK PROVIDER NOMOR${GREEN}      │               │
- │ [   ${RED}3${GREEN}   ]  │ ${YELLOW}ASCII ART GENERATOR${GREEN}     │               │
- │ [   ${RED}4${GREEN}   ]  │ ${YELLOW}PERKIRAAN CUACA${GREEN}         │               │
- │ [   ${RED}5${GREEN}   ]  │ ${YELLOW}BROWSING (w3m)${GREEN}          │               │
- │ [   ${RED}6${GREEN}   ]  │ ${YELLOW}STOP MUSIK${GREEN}              │               │
- │ [   ${RED}7${GREEN}   ]  │ ${YELLOW}STATUS WEBSITE${GREEN}          │               │
- │ [   ${RED}8${GREEN}   ]  │ ${YELLOW}ALL KALKULATOR${GREEN}          │               │
- │ [   ${RED}9${GREEN}   ]  │ ${YELLOW}TRACKING RESI PAKET${GREEN}     │               │
- │ [   ${RED}10${GREEN}  ]  │ ${YELLOW}TRACKING IP${GREEN}             │               │
- │ [   ${RED}11${GREEN}  ]  │ ${YELLOW}IP PRIBADI${GREEN}              │               │
- │ [   ${RED}12${GREEN}  ]  │ ${YELLOW}KEBOCORAN GMAIL${GREEN}         │               │
- │ [   ${RED}13${GREEN}  ]  │ ${YELLOW}ENCRYPSI BASH${GREEN}           │               │
- │ [   ${RED}14${GREEN}  ]  │ ${YELLOW}PLAY MUSIK${GREEN}              │               │
- │ [   ${RED}15${GREEN}  ]  │ ${YELLOW}LACAK NAMA${GREEN}              │               │
- │ [   ${RED}16${GREEN}  ]  │ ${YELLOW}LACAK LOKASI NOMOR (IP)${GREEN} │               │
- │ [   ${RED}17${GREEN}  ]  │ ${YELLOW}LAPORKAN BUG  ${GREEN}          │               │
- │ [   ${RED}18${GREEN}  ]  │ ${YELLOW}MENU TRACKING${GREEN}           │               │
- │ [   ${RED}19${GREEN}  ]  │ ${YELLOW}MENU OSIN${GREEN}               │               │
- │ [   ${RED}20${GREEN}  ]  │ ${YELLOW}INFO TOOLS${GREEN}              │               │
- │ [   ${RED}0${GREEN}   ]  │ ${YELLOW}KELUAR${GREEN}                  │               │
- ├────────────┴─────────────────────────┴───────────────┤ 
+ │  [  ${RED}01${GREEN}  ]  │ ${YELLOW}SUNTIK TIKTOK${GREEN}           │               │
+ │  [  ${RED}02${GREEN}  ]  │ ${YELLOW}CEK PROVIDER NOMOR${GREEN}      │               │
+ │  [  ${RED}03${GREEN}  ]  │ ${YELLOW}ASCII ART GENERATOR${GREEN}     │               │
+ │  [  ${RED}04${GREEN}  ]  │ ${YELLOW}PERKIRAAN CUACA${GREEN}         │               │
+ │  [  ${RED}05${GREEN}  ]  │ ${YELLOW}BROWSING (w3m)${GREEN}          │               │
+ │  [  ${RED}06${GREEN}  ]  │ ${YELLOW}STOP MUSIK${GREEN}              │               │
+ │  [  ${RED}07${GREEN}  ]  │ ${YELLOW}STATUS WEBSITE${GREEN}          │               │
+ │  [  ${RED}08${GREEN}  ]  │ ${YELLOW}ALL KALKULATOR${GREEN}          │               │
+ │  [  ${RED}09${GREEN}  ]  │ ${YELLOW}TRACKING RESI PAKET${GREEN}     │               │
+ │  [  ${RED}10${GREEN}  ]  │ ${YELLOW}TRACKING IP${GREEN}             │               │
+ │  [  ${RED}11${GREEN}  ]  │ ${YELLOW}IP PRIBADI${GREEN}              │               │
+ │  [  ${RED}12${GREEN}  ]  │ ${YELLOW}KEBOCORAN GMAIL${GREEN}         │               │
+ │  [  ${RED}13${GREEN}  ]  │ ${YELLOW}ENCRYPSI BASH${GREEN}           │               │
+ │  [  ${RED}14${GREEN}  ]  │ ${YELLOW}PLAY MUSIK${GREEN}              │               │
+ │  [  ${RED}15${GREEN}  ]  │ ${YELLOW}LACAK NAMA${GREEN}              │               │
+ │  [  ${RED}16${GREEN}  ]  │ ${YELLOW}LACAK LOKASI NOMOR (IP)${GREEN} │               │
+ │  [  ${RED}17${GREEN}  ]  │ ${YELLOW}LAPORKAN BUG  ${GREEN}          │               │
+ │  [  ${RED}18${GREEN}  ]  │ ${YELLOW}MENU TRACKING${GREEN}           │               │
+ │  [  ${RED}19${GREEN}  ]  │ ${YELLOW}MENU OSIN${GREEN}               │               │
+ │  [  ${RED}20${GREEN}  ]  │ ${YELLOW}MENU GHOS TRACK${GREEN}         │               │
+ │  [  ${RED}21${GREEN}  ]  │ ${YELLOW}INFO TOOLS${GREEN}              │               │
+ │  [  ${RED}00${GREEN}  ]  │ ${YELLOW}KELUAR${GREEN}                  │               │
+ ├────────────┴─────────────────────────┴───────────────┤
  │             DANXY TOOLS V8.3 2024 - 2025             │
  ├────────────────────┬──────────────┬──────────────────┤
  │ ${YELLOW}Your ID: ${your_id}   │ ${YELLOW}YT${NC}: ${RED}DanxyBot │ TT${NC}: Qwela.38${NC}${GREEN}     │
@@ -206,40 +215,40 @@ main_menu() {
         read -r danxy
 
     case $danxy in
-    1)
+    01|1)
       suntik_tiktok
       kembali_ke_menu
       ;;
-    2)
+    02|2)
       cek_provider
       kembali_ke_menu
       ;;
-    3)
+    03|3)
       ascii_art_generator
       kembali_ke_menu
       ;;
-    4)
+    04|4)
       perkiraan_cuaca
       kembali_ke_menu
       ;;
-    5)
+    05|5)
       browse_web
       kembali_ke_menu
       ;;
-    6) # Opsi untuk stop musik
+    06|6) # Opsi untuk stop musik
       stop_music
       echo -e "${YELLOW}Musik dihentikan.${NC}"
       kembali_ke_menu
       ;;
-    7)
+    07|7)
       cek_status_website
       kembali_ke_menu
       ;;
-    8)
+    08|8)
       kalkulator
       kembali_ke_menu
       ;;
-   9)
+   09|9)
       tracking_resi
       kembali_ke_menu
       ;;
@@ -281,10 +290,13 @@ main_menu() {
       menu_Osin
       ;;
    20)
+      menu_ghostrack
+      ;;
+   21)
       info
       kembali_ke_menu
       ;;
-    0)
+    00|0)
       echo -e "${CYAN}TERIMAKASIH SUDAH MENGGUNAKAN TOOLS DANXY.${NC}" | lolcat
       stop_music # Menghentikan pemutaran musik saat keluar
       exit 0
@@ -296,6 +308,339 @@ main_menu() {
     esac
   done
 }
+
+banner_big() {
+  clear
+  cat << "EOF"
+   ________               __      ______                __  
+  / ____/ /_  ____  _____/ /_    /_  __/________ ______/ /__
+ / / __/ __ \/ __ \/ ___/ __/_____/ / / ___/ __ `/ ___/ //_/
+/ /_/ / / / / /_/ (__  ) /_/_____/ / / /  / /_/ / /__/ ,<   
+\____/_/ /_/\____/____/\__/     /_/ /_/   \__,_/\___/_/|_| 
+
+    [ + ]  C O D E   B Y  D A N X Y  [ + ]
+EOF
+}
+menu_ghostrack() {
+    pause(){ echo -e "\n\033[1;92m[i]\033[0m Press Enter to continue..."; read -r; }
+
+    menu(){
+        banner_big
+        echo -e "
+      \033[1;96m╔══════════════════════════════════════════════╗\033[0m
+      \033[1;96m║\033[0m  \033[1;94m01\033[0m \033[1;97mUserrecon   \033[0m\033[1;92mUsername reconnaissance\033[0m      \033[1;96m║\033[0m
+      \033[1;96m║\033[0m  \033[1;94m02\033[0m \033[1;97mFacedumper  \033[0m\033[1;92mDump Facebook info\033[0m           \033[1;96m║\033[0m
+      \033[1;96m║\033[0m  \033[1;94m03\033[0m \033[1;97mMailfinder  \033[0m\033[1;92mFind e-mail from name\033[0m        \033[1;96m║\033[0m
+      \033[1;96m║\033[0m  \033[1;94m04\033[0m \033[1;97mGodorker    \033[0m\033[1;92mGoogle dorking\033[0m               \033[1;96m║\033[0m
+      \033[1;96m║\033[0m  \033[1;94m05\033[0m \033[1;97mPhoneinfo   \033[0m\033[1;92mPhone number info\033[0m            \033[1;96m║\033[0m
+      \033[1;96m║\033[0m  \033[1;94m06\033[0m \033[1;97mDNSLookup   \033[0m\033[1;92mDNS lookup\033[0m                   \033[1;96m║\033[0m
+      \033[1;96m║\033[0m  \033[1;94m07\033[0m \033[1;97mWhoislookup \033[0m\033[1;92mWhois lookup\033[0m                 \033[1;96m║\033[0m
+      \033[1;96m║\033[0m  \033[1;94m08\033[0m \033[1;97mSublookup   \033[0m\033[1;92mSubnet calculator\033[0m            \033[1;96m║\033[0m
+      \033[1;96m║\033[0m  \033[1;94m09\033[0m \033[1;97mHostfinder  \033[0m\033[1;92mFind hostnames\033[0m               \033[1;96m║\033[0m
+      \033[1;96m║\033[0m  \033[1;94m10\033[0m \033[1;97mDNSfinder   \033[0m\033[1;92mShared DNS finder\033[0m            \033[1;96m║\033[0m
+      \033[1;96m║\033[0m  \033[1;94m11\033[0m \033[1;97mRIPlookup   \033[0m\033[1;92mReverse IP lookup\033[0m            \033[1;96m║\033[0m
+      \033[1;96m║\033[0m  \033[1;94m12\033[0m \033[1;97mIPlocation  \033[0m\033[1;92mIP to location\033[0m               \033[1;96m║\033[0m
+      \033[1;96m║\033[0m  \033[1;94m13\033[0m \033[1;97mBitlyBypass \033[0m\033[1;92mExpand short URL\033[0m             \033[1;96m║\033[0m
+      \033[1;96m║\033[0m  \033[1;94m14\033[0m \033[1;97mGithubLookup\033[0m\033[1;92mGitHub user info\033[0m             \033[1;96m║\033[0m
+      \033[1;96m║\033[0m  \033[1;94m15\033[0m \033[1;97mTempMail    \033[0m\033[1;92mDisposable mailbox\033[0m           \033[1;96m║\033[0m
+      \033[1;96m╠══════════════════════════════════════════════╣\033[0m
+      \033[1;96m║\033[0m  \033[1;91m00\033[0m \033[1;97mExit        \033[1;95mbye bye :(\033[0m                   \033[1;96m║\033[0m
+      \033[1;96m╚══════════════════════════════════════════════╝\033[0m"
+    }
+
+
+
+# ---------- Functions ----------
+userrecon() {
+  local R="\033[31m" G="\033[32m" RESET="\033[0m"
+
+  read -rp "Enter username : " user
+  echo
+
+  # ---- 60-site master list (cleaned) ----
+  local sites=(
+    https://facebook.com/{}
+    https://instagram.com/{}
+    https://twitter.com/{}
+    https://youtube.com/{}
+    https://vimeo.com/{}
+    https://github.com/{}
+    https://plus.google.com/{}
+    https://pinterest.com/{}
+    https://flickr.com/people/{}
+    https://vk.com/{}
+    https://about.me/{}
+    https://disqus.com/{}
+    https://bitbucket.org/{}
+    https://flipboard.com/@{}
+    https://medium.com/@{}
+    https://hackerone.com/{}
+    https://keybase.io/{}
+    https://buzzfeed.com/{}
+    https://slideshare.net/{}
+    https://mixcloud.com/{}
+    https://soundcloud.com/{}
+    https://badoo.com/en/{}
+    https://imgur.com/user/{}
+    https://open.spotify.com/user/{}
+    https://pastebin.com/u/{}
+    https://wattpad.com/user/{}
+    https://canva.com/{}
+    https://codecademy.com/{}
+    https://last.fm/user/{}
+    https://blip.fm/{}
+    https://dribbble.com/{}
+    https://en.gravatar.com/{}
+    https://foursquare.com/{}
+    https://creativemarket.com/{}
+    https://ello.co/{}
+    https://cash.me/{}
+    https://angel.co/{}
+    https://500px.com/{}
+    https://houzz.com/user/{}
+    https://tripadvisor.com/members/{}
+    https://kongregate.com/accounts/{}
+    https://{}.blogspot.com
+    https://{}.tumblr.com
+    https://{}.wordpress.com
+    https://{}.deviantart.com
+    https://{}.slack.com
+    https://{}.livejournal.com
+    https://{}.newgrounds.com
+    https://{}.hubpages.com
+    https://{}.contently.com
+    https://steamcommunity.com/id/{}
+    https://www.wikipedia.org/wiki/User:{}
+    https://www.freelancer.com/u/{}
+    https://www.dailymotion.com/{}
+    https://www.etsy.com/shop/{}
+    https://www.scribd.com/{}
+    https://www.patreon.com/{}
+    https://www.behance.net/{}
+    https://www.goodreads.com/{}
+    https://www.gumroad.com/{}
+    https://www.instructables.com/member/{}
+    https://www.codementor.io/{}
+    https://www.reverbnation.com/{}
+    https://www.designspiration.net/{}
+    https://www.bandcamp.com/{}
+    https://www.colourlovers.com/love/{}
+    https://www.ifttt.com/p/{}
+    https://www.trakt.tv/users/{}
+    https://www.okcupid.com/profile/{}
+    https://www.trip.skyscanner.com/user/{}
+    http://www.zone-h.org/archive/notifier={}
+    https://tiktok.com/@{}
+    https://linkedin.com/in/{}
+  )
+
+  for template in "${sites[@]}"; do
+    local url="${template/\{\}/$user}"
+    local status
+    status=$(curl -s -L -o /dev/null -w "%{http_code}" --max-time 10 "$url")
+    if [[ $status =~ ^2 ]]; then
+      echo -e "${G}[+]${RESET} $url"
+    else
+      echo -e "${R}[-]${RESET} $url"
+    fi
+  done
+
+  echo -e "\n${G}ENTER UNTIK KEMBALI KE MENU${RESET}"
+  read -r _
+}
+
+
+API_HACKERTARGET="https://api.hackertarget.com/{}/?q={}"
+IPINFO_API_URL="https://ipinfo.io/{}/json"
+VERIPHONE_API_BASE_URL="https://api.veriphone.io/v2/verify"
+REALEMAIL_API_URL="https://isitarealemail.com/api/email/validate"
+GITHUB_API_URL="https://api.github.com/users/{}"
+TEMPMAIL_API_URL="https://www.1secmail.com/api/v1/"
+TEMPMAIL_MAILBOX_URL="https://www.1secmail.com/mailbox"
+
+# Keys – export in your shell or change below
+REALEMAIL_API_KEY="${REALEMAIL_API_CONFIG_KEY:-0c6ad1fd-f753-4628-8c0a-7968e722c6c7}"
+VERIPHONE_API_KEY="${VERIPHONE_API_CONFIG_KEY:-0c6ad1fd-f753-4628-8c0a-7968e722c6c7}"
+
+# -----------------------------------------------------------------------------
+# 2. Generic helpers
+# -----------------------------------------------------------------------------
+require_jq() {
+  if ! command -v jq &>/dev/null; then
+    echo -e "${R}[!]${RESET} 'jq' is required but not installed." >&2
+    return 1
+  fi
+}
+pause() {
+  echo -e "${G}Press ENTER to return to the menu…${RESET}"
+  read -r _
+}
+
+# -----------------------------------------------------------------------------
+# 3. Facebook UID dumper (graph)
+# -----------------------------------------------------------------------------
+facedumper() {
+  require_jq || return
+  read -rp "Facebook UID or username : " uid
+  token="${FB_TOKEN:-}"
+  [[ -z $token ]] && { echo -e "${R}[!]${RESET} export FB_TOKEN first"; return; }
+  url="https://graph.facebook.com/${uid}?access_token=${token}&fields=id,name,username,birthday,email,gender,link"
+  curl -s "$url" | jq .
+  pause
+}
+
+# -----------------------------------------------------------------------------
+# 4. E-mail permutation tester
+# -----------------------------------------------------------------------------
+mailfinder() {
+  require_jq || return
+  read -rp "Full name (First Last) : " name
+  read -rp "Domain (gmail.com)    : " dom
+  IFS=' ' read -r f l <<<"$name"
+  for e in "${f}.${l}@${dom}" "${f}${l}@${dom}" "${f}@${dom}"; do
+    res=$(curl -s "${REALEMAIL_API_URL}?email=${e}" \
+               -H "Authorization: Bearer ${REALEMAIL_API_KEY}")
+    [[ "$(jq -r '.status' <<<"$res")" == "valid" ]] && \
+      echo -e "${G}[✓]${RESET} $e" | tee -a result_mailfinder.txt
+  done
+  pause
+}
+
+# -----------------------------------------------------------------------------
+# 5. Google dorker (hackertarget)
+# -----------------------------------------------------------------------------
+godorker() {
+  read -rp "Dork string : " dork
+  enc=$(jq -sRr @uri <<<"$dork")
+  url=$(printf "$API_HACKERTARGET" "google" "$enc")
+  curl -s "$url" | tee result_godorker.txt
+  pause
+}
+
+# -----------------------------------------------------------------------------
+# 6. Phone-number lookup (veriphone)
+# -----------------------------------------------------------------------------
+phoneinfo() {
+  require_jq || return
+  read -rp "Phone (+628...) : " phone
+  url="${VERIPHONE_API_BASE_URL}?phone=${phone}&key=${VERIPHONE_API_KEY}"
+  curl -s "$url" | jq .
+  pause
+}
+
+# -----------------------------------------------------------------------------
+# 7. DNS / WHOIS / subnet / host / shared-dns helpers
+#   – each uses the same hackertarget pattern
+# -----------------------------------------------------------------------------
+dnslookup() {
+  read -rp "Domain : " dom
+  curl -s "$(printf "$API_HACKERTARGET" "dnslookup" "$dom")"
+  pause
+}
+whoislookup() {
+  read -rp "Domain/IP : " dom
+  curl -s "$(printf "$API_HACKERTARGET" "whois" "$dom")"
+  pause
+}
+sublookup() {
+  read -rp "Domain/IP : " dom
+  curl -s "$(printf "$API_HACKERTARGET" "subnetcalc" "$dom")"
+  pause
+}
+hostfinder() {
+  read -rp "Domain : " dom
+  curl -s "$(printf "$API_HACKERTARGET" "hostsearch" "$dom")"
+  pause
+}
+dnsfinder() {
+  read -rp "Domain : " dom
+  curl -s "$(printf "$API_HACKERTARGET" "findshareddns" "$dom")"
+  pause
+}
+riplookup() {
+  read -rp "IP address : " ip
+  curl -s "$(printf "$API_HACKERTARGET" "reverseiplookup" "$ip")"
+  pause
+}
+
+# -----------------------------------------------------------------------------
+# 8. ipinfo.io wrapper
+# -----------------------------------------------------------------------------
+iplocation() {
+  require_jq || return
+  read -rp "IP address : " ip
+  curl -s "${IPINFO_API_URL/\{\}/$ip}" | jq .
+  pause
+}
+
+# -----------------------------------------------------------------------------
+# 9. Bitly expander (no API key needed)
+# -----------------------------------------------------------------------------
+bitlybypass() {
+  read -rp "Short URL : " url
+  long=$(curl -sI "$url" | grep -i '^location:' | cut -d' ' -f2 | tr -d '\r')
+  [[ -n $long ]] && echo -e "${G}[✓]${RESET} $long" || echo -e "${R}[!]${RESET} No redirect"
+  pause
+}
+
+# -----------------------------------------------------------------------------
+# 10. GitHub user lookup
+# -----------------------------------------------------------------------------
+githublookup() {
+  require_jq || return
+  read -rp "GitHub username : " user
+  curl -s "${GITHUB_API_URL/\{\}/$user}" | jq .
+  pause
+}
+
+# -----------------------------------------------------------------------------
+# 11. Disposable mailbox (1secmail)
+# -----------------------------------------------------------------------------
+tempmail() {
+  require_jq || return
+  login=$(LC_ALL=C tr -dc 'a-z0-9' </dev/urandom | head -c10)
+  domain="1secmail.com"
+  addr="$login@$domain"
+  printf '\n\033[92m📧\033[0m Address : \033[93m%s\033[0m\n' "$addr"
+  printf '\033[90mChecking inbox every 3 s (Ctrl-C to quit)…\033[0m\n'
+
+  while true; do
+    res=$(curl -s "${TEMPMAIL_API_URL}?action=getMessages&login=$login&domain=$domain")
+    if [[ $(jq -r 'type' <<<"$res" 2>/dev/null) == "array" && $res != "[]" ]]; then
+      jq -r '.[] | "From:  $.from)\nSubject:  $.subject)\n"' <<<"$res"
+    fi
+    sleep 3
+  done
+}
+
+
+
+while true; do
+    menu
+    read -rp "Select option : " opt
+    case $opt in
+        01|1) userrecon ;;
+        02|2) facedumper ;;
+        03|3) mailfinder ;;
+        04|4) godorker ;;
+        05|5) phoneinfo ;;
+        06|6) dnslookup ;;
+        07|7) whoislookup ;;
+        08|8) sublookup ;;
+        09|9) hostfinder ;;
+        10) dnsfinder ;;
+        11) riplookup ;;
+        12) iplocation ;;
+        13) bitlybypass ;;
+        14) githublookup ;;
+        15) tempmail ;;
+        00|0) echo -e "\n\033[1;91m[!]\033[0m Bye!"; break ;;
+        *) echo -e "\033[1;91m[!]\033[0m Invalid choice"; sleep 1 ;;
+    esac
+    read -r dummy
+done
+}
+
 
 validate_phone_number() {
   [[ "$1" =~ ^08[0-9]{8,11}$ ]] || {
@@ -329,49 +674,55 @@ clear
 }
 
 cek_provider() {
-clear
+  clear
   read -p "Masukkan Nomor Telepon (08xxxxxxxxxx): " nomor
   loading
 
   validate_phone_number "$nomor" || return 1
 
+  # --- 1. Ambil prefix utk provider lokal ---
   prefix=$(echo "$nomor" | cut -c1-4)
   provider="Tidak dikenal"
 
   case "$prefix" in
-  0811 | 0812 | 0813 | 0821 | 0822 | 0852 | 0853)
-    provider="Telkomsel"
-    ;;
-  0851)
-    provider="By.U (Telkomsel)"
-    ;;
-  0814 | 0815 | 0816 | 0855 | 0856 | 0857 | 0858)
-    provider="Indosat"
-    ;;
-  0817 | 0818 | 0819 | 0859 | 0877 | 0878)
-    provider="XL"
-    ;;
-  0895 | 0896 | 0897 | 0898 | 0899)
-    provider="Tri (3)"
-    ;;
-  0881 | 0882 | 0883 | 0884 | 0885 | 0886 | 0887 | 0888)
-    provider="Smartfren"
-    ;;
+    0811|0812|0813|0821|0822|0852|0853) provider="Telkomsel" ;;
+    0851) provider="By.U (Telkomsel)" ;;
+    0814|0815|0816|0855|0856|0857|0858) provider="Indosat" ;;
+    0817|0818|0819|0859|0877|0878) provider="XL" ;;
+    0895|0896|0897|0898|0899) provider="Tri (3)" ;;
+    0881|0882|0883|0884|0885|0886|0887|0888) provider="Smartfren" ;;
   esac
+
+  # 2. Cek lokasi via API eksternal
+  # Ganti URL & API_KEY dengan punya kamu
+  API_KEY="YOUR_API_KEY"
+  lokasi="Tidak diketahui"
+
+  response=$(curl -s "http://apilayer.net/api/validate?access_key=$API_KEY&number=$nomor&country=ID&format=1")
+
+  location=$(echo "$response" | jq -r '.location // empty')
+  country=$(echo "$response" | jq -r '.country_name // empty')
+
+  if [[ -n "$location" && "$location" != "null" ]]; then
+      lokasi="$location, $country"
+  fi
+
   loading
   echo -e "${CYAN}
   ╭────────────────────────────────────────╮
   │           ${YELLOW}HASIL CEK PROVIDER${CYAN}           │
   ╰────────────────────────────────────────╯${NC}"
 
-  echo -e "${GREEN}Nomor: ${nomor}${NC}"
+  echo -e "${GREEN}Nomor   : ${nomor}${NC}"
   echo -e "${GREEN}Provider: ${provider}${NC}"
+  echo -e "${GREEN}Lokasi  : ${lokasi}${NC}"
 
   echo -e "${CYAN}
   ╭────────────────────────────────────────╮
   │           ${YELLOW}DANXY OFFICIAL 80${CYAN}            │
   ╰────────────────────────────────────────╯${NC}"
 }
+
 
 ascii_art_generator() {
   read -p "MASUKAN TEKS (CONTOH: DANXY): " text
@@ -439,31 +790,31 @@ echo -e "⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀�
 Tools ini dikembangkan oleh DanxyOfficial
 untuk tujuan edukasi dan eksplorasi teknologi.
 
-📌 ${BOLD}${RED}Tujuan Utama:${GREEN}
+[ ∅ ] ${BOLD}${RED}Tujuan Utama:${GREEN}
  - Mendorong pembelajaran seputar keamanan digital
  - Membantu pengguna memahami potensi celah sistem secara etis
  - Melatih keterampilan pencarian data terbuka (OSINT)
  - Menyediakan media belajar scripting & automasi di Termux
 
-⚠️ ${BOLD}${RED}Penggunaan Bertanggung Jawab:${GREEN}
+[ ∅ ] ${BOLD}${RED}Penggunaan Bertanggung Jawab:${GREEN}
    Tools ini hanya diperuntukkan untuk:
  - Edukasi & eksplorasi pribadi
  - Pengujian sistem milik sendiri (authorized testing)
  - Eksperimen dalam ruang lingkup legal
 
-❌ ${BOLD}${RED}Dilarang keras:${GREEN}
+[ ∅ ] ${BOLD}${RED}Dilarang keras:${GREEN}
  - Menggunakan tools untuk tindak ilegal
    (peretasan, penipuan, penyalahgunaan data)
  - Melanggar privasi pihak lain tanpa izin
  - Menjual atau menyebarluaskan ulang tanpa izin dari pembuat
  - Menghapus atau mengubah nama pembuat (credit)
 
- 🚨 ${BOLD}${RED}Peringatan:${GREEN}
+[ ∅ ] ${BOLD}${RED}Peringatan:${GREEN}
  Penyalahgunaan tools ini 
  dapat menimbulkan konsekuensi hukum.
  Jadilah pengguna yang bijak dan bertanggung jawab.
 
-  🔗 ${BOLD}${RED}Kontak & Support Resmi:${GREEN}
+[ ∅ ] ${BOLD}${RED}Kontak & Support Resmi:${GREEN}
   - YouTube : ${YELLOW}https://www.youtube.com/@DanxyOfficial${GREEN}
   - Telegram: ${YELLOW}t.me/DanxyStore${GREEN}
   - TikTok  : ${YELLOW}Qwela.38${GREEN}
@@ -1150,18 +1501,18 @@ clear
  ╭───────────────────────────────────────────────╮
  │                                               │
  ╭─────────────┬────────────────────────────┬────╮
- │ [    1    ] │ SHORT LINK                 │    │
- │ [    2    ] │ Chat Ai                    │    │
- │ [    3    ] │ Checker NIK                │    │
- │ [    4    ] │ Spam Tele                  │    │
- │ [    5    ] │ Tracking Nama              │    │
- │ [    6    ] │ Checker BD File PHP        │    │
- │ [    7    ] │ Spam NGL                   │    │
- │ [    8    ] │ Spam Otp  (SMS)            │    │
- │ [    9    ] │ Generate Pasword           │    │
- │ [    10   ] │ Phising Link (Bot telegram)│    │ 
- │ [    11   ] │ Checker Cyrpto BTC/USDT    │    │     
- │ [    0    ] │ KEMBALI KE MENU AWAL       │    │
+ │  [   01   ] │ SHORT LINK                 │    │
+ │  [   02   ] │ Chat Ai                    │    │
+ │  [   03   ] │ Checker NIK                │    │
+ │  [   04   ] │ Spam Tele                  │    │
+ │  [   05   ] │ Tracking Nama              │    │
+ │  [   06   ] │ Checker BD File PHP        │    │
+ │  [   07   ] │ Spam NGL                   │    │
+ │  [   08   ] │ Spam Otp  (WA)             │    │
+ │  [   09   ] │ Generate Pasword           │    │
+ │  [   10   ] │ Phising Link (Bot telegram)│    │ 
+ │  [   11   ] │ Checker Cyrpto BTC/USDT    │    │     
+ │  [   00   ] │ KEMBALI KE MENU AWAL       │    │
  ╰─────────────┴────────────────────────────┴────╯
  │                                               │
  ╰───────────────────────────────────────────────╯" | lolcat
@@ -1172,33 +1523,33 @@ clear
 
     case $pilih in
     
-      1)
+      01|1)
         short_url
        ;;
-      2)
+      02|2)
         ai_chat
        ;;
-      3)
+      03|4)
         cheker_nik
        ;;
-      4)
+      04|4)
         spam_tg
         kembali_ke_menu
        ;;
-       5)
+       05|5)
         track_nama
         ;;
-       6)
+       06|6)
         checker_backdor_php
         ;;
-       7)
+       07|7)
         ngl_spam
         ;;
-       8)
+       08|8)
         spam_otp
         kembali_ke_termux
         ;;
-       9)
+       09|9)
         generate_password
         ;;
       10)
@@ -1207,7 +1558,7 @@ clear
        11)
         crypto_check
         ;;
-      0)
+      00|0)
         echo "CLOSE MENU 2" | lolcat
         break
         ;;
@@ -2199,7 +2550,18 @@ generate_password() {
   │           ${YELLOW}DANXY OFFICIAL 80${CYAN}            │
   ╰────────────────────────────────────────╯${NC}"
 }
+banner_big() {
+  clear
+  cat << "EOF"
+       ________               __      ______                __  
+      / ____/ /_  ____  _____/ /_    /_  __/________ ______/ /__
+     / / __/ __ \/ __ \/ ___/ __/_____/ / / ___/ __ `/ ___/ //_/
+    / /_/ / / / / /_/ (__  ) /_/_____/ / / /  / /_/ / /__/ ,<   
+    \____/_/ /_/\____/____/\__/     /_/ /_/   \__,_/\___/_/|_| 
 
+              [ + ]  C O D E   B Y  D A N X Y  [ + ]
+EOF
+}
 menu_tracking() {
   while true; do
 clear
@@ -2215,17 +2577,18 @@ clear
  ╭───────────────────────────────────────────────╮
  │                                               │
  ╭─────────────┬────────────────────────────┬────╮
- │ [    1    ] │ IP Tracker (GeoIP + ISP)   │    │
- │ [    2    ] │ Tracking Phising (link)    │    │
- │ [    3    ] │ Email Bomber  (BETA)       │    │
- │ [    4    ] │ Tracking NIK V2            │    │
- │ [    5    ] │ Tracking Info Domain       │    │
- │ [    6    ] │ Nmap Lite                  │    │
- │ [    7    ] │ DDOS Lite                  │    │
- │ [    8    ] │ Track lksi foto di ambil   │    │
- │ [    9    ] │ Cracker Pw .Zip            │    │ 
- │ [   10    ] │ PHISING ALL SOSMED         │    │ 
- │ [    0    ] │ KEMBALI KE MENU AWAL       │    │
+ │  [   01   ] │ IP Tracker (GeoIP + ISP)   │    │
+ │  [   02   ] │ Tracking Phising (link)    │    │
+ │  [   03   ] │ Email Bomber  (WORK)       │    │
+ │  [   04   ] │ Tracking NIK V2            │    │
+ │  [   05   ] │ Tracking Info Domain       │    │
+ │  [   06   ] │ Nmap Lite                  │    │
+ │  [   07   ] │ IP TRACK                   │    │
+ │  [   08   ] │ Track lksi foto di ambil   │    │
+ │  [   09   ] │ Cracker Pw .Zip            │    │ 
+ │  [   10   ] │ PHISING ALL SOSMED         │    │ 
+ │  [   11   ] │ PHONE TRACK                │    │ 
+ │  [   00   ] │ KEMBALI KE MENU AWAL       │    │
  ╰─────────────┴────────────────────────────┴────╯
  │                                               │
  ╰───────────────────────────────────────────────╯" | lolcat
@@ -2236,37 +2599,40 @@ clear
 
     case $pilih in
     
-        1)
+        01|1)
         GeoIP_ISP
         ;;
-        2)
+        02|2)
         track_live
         ;;
-        3)
+        03|3)
          spam_gmail
         ;;
-        4)
+        04|4)
          Nik_cek
         ;;
-        5)
+        05|5)
          whois_lookup
         ;;
-        6)
+        06|6)
          port_scan
         ;;
-        7)
-         ddos_lite
+        07|7)
+         ip_track
         ;;
-        8)
+        08|8)
          exif_tool
         ;;
-        9)
+        09|9)
          bruteforce_zip
         ;;
        10)
         phising_allsosmed
+        ;;
+       11)
+        phone_track
        ;;
-      0)
+      00|0)
         echo "CLOSE MENU 2" | lolcat
         break
         ;;
@@ -2279,8 +2645,70 @@ clear
     read -p "ENTER UNTUK KEMBALI KE MENU" | lolcat
   done
 }
-#!/bin/bash
 
+phone_track() {
+banner_big
+  echo -ne "\n${WHT}Enter phone number target ${GRN}Ex [+6281xxxxxxxxx] ${WHT}: ${GRN}"
+  read -r phone
+  echo -e "\n${WHT}========== ${GRN}SHOW INFORMATION PHONE NUMBERS ${WHT}=========="
+  # Using libphonenumber-js via node (install with: npm i -g libphonenumber-js)
+  node - << "EOF" "$phone"
+const parsePhoneNumber = require('libphonenumber-js');
+const input = process.argv[2];
+try {
+  const pn = parsePhoneNumber(input);
+  if (!pn) { console.log('Invalid number'); process.exit(1); }
+  console.log(`Location             : ${pn.getRegionCode()}`);
+  console.log(`Carrier              : ${pn.getCarrierCode() || 'N/A'}`);
+  console.log(`Valid number         : ${pn.isValid()}`);
+  console.log(`International format : ${pn.formatInternational()}`);
+  console.log(`E.164 format         : ${pn.format('E164')}`);
+  console.log(`Type                 : ${pn.getType()}`);
+} catch (e) {
+  console.error('Error parsing number', e.message);
+}
+EOF
+}
+ip_track() {
+banner_big
+
+  echo -ne "\n${WHT}Enter IP target : ${GRN}"
+  read -r ip
+  echo -e "\n${WHT}============= ${GRN}SHOW INFORMATION IP ADDRESS ${WHT}=============${RST}"
+  data=$(curl -s "http://ipwho.is/${ip}")
+  echo -e "${WHT}\n IP target       : ${GRN}${ip}"
+  echo -e "${WHT} Type IP         : ${GRN}$(echo "$data" | jq -r '.type')"
+  echo -e "${WHT} Country         : ${GRN}$(echo "$data" | jq -r '.country')"
+  echo -e "${WHT} Country Code    : ${GRN}$(echo "$data" | jq -r '.country_code')"
+  echo -e "${WHT} City            : ${GRN}$(echo "$data" | jq -r '.city')"
+  echo -e "${WHT} Continent       : ${GRN}$(echo "$data" | jq -r '.continent')"
+  echo -e "${WHT} Continent Code  : ${GRN}$(echo "$data" | jq -r '.continent_code')"
+  echo -e "${WHT} Region          : ${GRN}$(echo "$data" | jq -r '.region')"
+  echo -e "${WHT} Region Code     : ${GRN}$(echo "$data" | jq -r '.region_code')"
+  echo -e "${WHT} Latitude        : ${GRN}$(echo "$data" | jq -r '.latitude')"
+  echo -e "${WHT} Longitude       : ${GRN}$(echo "$data" | jq -r '.longitude')"
+  lat=$(echo "$data" | jq -r '.latitude')
+  lon=$(echo "$data" | jq -r '.longitude')
+  echo -e "${WHT} Maps            : ${GRN}https://www.google.com/maps/@${lat},${lon},8z"
+  echo -e "${WHT} EU              : ${GRN}$(echo "$data" | jq -r '.is_eu')"
+  echo -e "${WHT} Postal          : ${GRN}$(echo "$data" | jq -r '.postal')"
+  echo -e "${WHT} Calling Code    : ${GRN}$(echo "$data" | jq -r '.calling_code')"
+  echo -e "${WHT} Capital         : ${GRN}$(echo "$data" | jq -r '.capital')"
+  echo -e "${WHT} Borders         : ${GRN}$(echo "$data" | jq -r '.borders')"
+  echo -e "${WHT} Country Flag    : ${GRN}$(echo "$data" | jq -r '.flag.emoji')"
+  echo -e "${WHT} ASN             : ${GRN}$(echo "$data" | jq -r '.connection.asn')"
+  echo -e "${WHT} ORG             : ${GRN}$(echo "$data" | jq -r '.connection.org')"
+  echo -e "${WHT} ISP             : ${GRN}$(echo "$data" | jq -r '.connection.isp')"
+  echo -e "${WHT} Domain          : ${GRN}$(echo "$data" | jq -r '.connection.domain')"
+  echo -e "${WHT} Timezone ID     : ${GRN}$(echo "$data" | jq -r '.timezone.id')"
+  echo -e "${WHT} ABBR            : ${GRN}$(echo "$data" | jq -r '.timezone.abbr')"
+  echo -e "${WHT} DST             : ${GRN}$(echo "$data" | jq -r '.timezone.is_dst')"
+  echo -e "${WHT} Offset          : ${GRN}$(echo "$data" | jq -r '.timezone.offset')"
+  echo -e "${WHT} UTC             : ${GRN}$(echo "$data" | jq -r '.timezone.utc')"
+  echo -e "${WHT} Current Time    : ${GRN}$(echo "$data" | jq -r '.timezone.current_time')"
+}
+
+#!/bin/bash
 phising_allsosmed() {
     # ---------- warna ----------
     RED='\033[0;31m'; GREEN='\033[0;32m'; YELLOW='\033[0;33m'; CYAN='\033[0;36m'; RESET='\033[0m'
@@ -2507,17 +2935,6 @@ bruteforce_zip() {
 exif_tool() {
   read -p "Masukkan file foto: " foto
   exiftool "$foto" | grep -i "GPS\|Date\|Model"
-  read -p "Tekan Enter untuk kembali..."
-}
-
-ddos_lite() {
-  read -p "Masukkan target URL: " target
-  read -p "Jumlah request: " jumlah
-  for ((i=1; i<=jumlah; i++)); do
-    curl -s "$target" > /dev/null
-    echo "Request $i terkirim"
-  done
-  echo "Selesai." | lolcat
   read -p "Tekan Enter untuk kembali..."
 }
 
@@ -3262,10 +3679,7 @@ garis_tengah() { echo '┣━━━━━━━━━━━━━━━━━━
    
 #!/usr/bin/env bash
 spam_gmail() {
-echo 
 clear
-ATAS
-BAWAH
 echo -e "${WHITE}
 ⠀⠀⠀⠀⠀⠀⠀⢀⡤⠒⠉⠉⠉⠒⢤⡀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀
 ⠀⠀⠀⠀⠀⠀⠰⠋⠀⢀⣀⣀⡠⠆⠀⢱⠀⠀⠀⠀⠀⠀⠀⡔⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠐⡀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⣀⣤⣄⡀⠀⠀⠀⠀⠀⠀⠀⠀
