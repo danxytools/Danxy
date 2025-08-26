@@ -1,8 +1,4 @@
 #!/bin/bash
-# ---------------------------------------------------------
-#  DanxyLauncher.sh  – Login pakai nama, cek whoami otomatis
-# ---------------------------------------------------------
-
 # ---------- WARNA ----------
 NC="\033[0m"
 GREEN='\033[1;92m'  RED='\033[1;91m'  YELLOW='\033[1;93m'
@@ -31,11 +27,10 @@ USER_MAP=(
     "ArdiStore|u0_a304"
     "citergr2|u0_a324"
     "vabo|u0_a257"
-    "Fahri|u0_a321"
     "vincent|u0_a304"
     "Yama|u0_a361"
     "Theo|u0_a330"
-    # <-- masukkan nama|whoami baru di sini
+                    # <-- masukkan nama|whoami baru di sini
 )
 
 # ---------- FUNGSI ----------
