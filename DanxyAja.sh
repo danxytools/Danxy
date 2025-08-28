@@ -89,8 +89,8 @@ command_exists() {
 banner() {
   if command_exists figlet; then
     clear
-    toilet -f slant "Loading" --filter border | lolcat
-    echo -e "       ${BG_RED}${YELLOW}SABAR CUY BENTAR DOANG KOK${NC}"
+    toilet -f slant   "  Loading  " --filter border | lolcat
+    echo -e "            ${BG_RED}${YELLOW}SABAR CUY BENTAR DOANG KOK${NC}"
   else
   sleep 2
     clear
@@ -154,6 +154,42 @@ tangal_tahun() {
     echo "$greeting, $tgl"
 }
 
+klik() {
+    curl -sL https://raw.githubusercontent.com/DanxyPrasetyo/Jembotbadakngakak/main/klik.mp3 | \
+    play -q -t mp3 -
+}
+
+hello() {
+echo -e "${RED}
+██████╗░░█████╗░███╗░░██╗██╗░░██╗██╗░░░██╗
+██╔══██╗██╔══██╗████╗░██║╚██╗██╔╝╚██╗░██╔╝
+██║░░██║███████║██╔██╗██║░╚███╔╝░░╚████╔╝░
+${WHITE}██║░░██║██╔══██║██║╚████║░██╔██╗░░░╚██╔╝░░
+██████╔╝██║░░██║██║░╚███║██╔╝╚██╗░░░██║░░░
+╚═════╝░╚═╝░░╚═╝╚═╝░░╚══╝╚═╝░░╚═╝░░░╚═╝░░░ [ ${RED}V8.3${NC} ]" | lolcat
+    local txt="HALLO BRO SELAMAT DATANG DI DANXY TOOLS V8.3"
+    local delay=0.04
+    local len=${#txt}
+    curl -sL --max-time 4 \
+        https://github.com/DanxyPrasetyo/Jembotbadakngakak/raw/refs/heads/main/welcome.mp3 \
+        2>/dev/null | play -q -t mp3 - &
+    for ((i=0; i<=len; i++)); do
+        printf "\r\033[1;93;41m%${i}s\033[0m" "${txt:0:i}"
+        sleep "$delay"
+    done
+    printf "\n"
+}
+
+
+
+
+
+
+
+
+
+
+
 
 show_menu() {
 your_id="$(whoami)"
@@ -205,10 +241,12 @@ echo -e "${GREEN}
    echo -e "  ${GREEN}● ${YELLOW}● ${RED}●"
    echo -e "  ${WHITE}DEVELOPER: ${BG_RED}${YELLOW}DANXY OFFICIAL✓${NC}"
 }
+clear
 main_menu() {
   play_music
-
+  hello
   while true; do
+    klik
     banner
     show_menu
     printf "${GREEN}  ┏━[ ${RED}DANXY TOOLS V8.3${NC} ${GREEN}]${YELLOW}@termux${GREEN} ~ ${NC}${RED}[${YELLOW}MENU${YELLOW}${RED}]${NC}${GREEN}\n  ┗━━${GREEN}❯${YELLOW}❯${RED}❯${YELLOW} "
@@ -216,88 +254,132 @@ main_menu() {
 
     case $danxy in
     01|1)
+      klik
       suntik_tiktok
       kembali_ke_menu
+      klik
       ;;
     02|2)
+      klik
       cek_provider
       kembali_ke_menu
+      klik
       ;;
     03|3)
+      klik
       ascii_art_generator
       kembali_ke_menu
+      klik
       ;;
     04|4)
+      klik
       perkiraan_cuaca
       kembali_ke_menu
+      klik
       ;;
     05|5)
+      klik
       browse_web
       kembali_ke_menu
+      klik
       ;;
     06|6) # Opsi untuk stop musik
+      klik
       stop_music
       echo -e "${YELLOW}Musik dihentikan.${NC}"
       kembali_ke_menu
+      klik
       ;;
     07|7)
+    klik
       cek_status_website
       kembali_ke_menu
+      klik
       ;;
     08|8)
+    klik
       kalkulator
       kembali_ke_menu
+      klik
       ;;
    09|9)
+   klik
       tracking_resi
       kembali_ke_menu
+      klik
       ;;
    10)
+   klik
       ip_lookup
       kembali_ke_menu
+      klik
       ;;
    11)
+   klik
       cek_ip_publik
       kembali_ke_menu
+      klik
       ;;
    12)
+   klik
       cek_kebocoran_gmail
       kembali_ke_menu
+      klik
       ;;
    13)
+   klik
       enkripsi_bash
       kembali_ke_menu
+      klik
       ;;
    14)
-      play_music 
+   klik
+      play_music
+      klik
       ;;
    15)
+   klik
       lacak_nama
       kembali_ke_menu
+      klik
       ;;
    16)
+   klik
       lacak_lokasi_nomor
       kembali_ke_menu
+      klik
       ;;
    17)
+   klik
       lapor_error
       kembali_ke_menu
+      klik
       ;;
    18)
+   klik
       menu_tracking
+      klik
       ;;
    19)
+   klik
       menu_Osin
+      klik
       ;;
    20)
+   klik
       menu_ghostrack
+      klik
       ;;
    21)
+   klik
       info
       kembali_ke_menu
+      klik
       ;;
     00|0)
+    klik
       echo -e "${CYAN}TERIMAKASIH SUDAH MENGGUNAKAN TOOLS DANXY.${NC}" | lolcat
+      klik
       stop_music # Menghentikan pemutaran musik saat keluar
       exit 0
       ;;
@@ -613,29 +695,28 @@ tempmail() {
   done
 }
 
-
-
+# ---- loop utama ----
 while true; do
     menu
     read -rp "Select option : " opt
-    case $opt in
-        01|1) userrecon ;;
-        02|2) facedumper ;;
-        03|3) mailfinder ;;
-        04|4) godorker ;;
-        05|5) phoneinfo ;;
-        06|6) dnslookup ;;
-        07|7) whoislookup ;;
-        08|8) sublookup ;;
-        09|9) hostfinder ;;
-        10) dnsfinder ;;
-        11) riplookup ;;
-        12) iplocation ;;
-        13) bitlybypass ;;
-        14) githublookup ;;
-        15) tempmail ;;
+    case "$opt" in
+        01|1) klik; userrecon ;;
+        02|2) klik; facedumper ;;
+        03|3) klik; mailfinder ;;
+        04|4) klik; godorker ;;
+        05|5) klik; phoneinfo ;;
+        06|6) klik; dnslookup ;;
+        07|7) klik; whoislookup ;;
+        08|8) klik; sublookup ;;
+        09|9) klik; hostfinder ;;
+        10)   klik; dnsfinder ;;
+        11)   klik; riplookup ;;
+        12)   klik; iplocation ;;
+        13)   klik; bitlybypass ;;
+        14)   klik; githublookup ;;
+        15)   klik; tempmail ;;
         00|0) echo -e "\n\033[1;91m[!]\033[0m Bye!"; break ;;
-        *) echo -e "\033[1;91m[!]\033[0m Invalid choice"; sleep 1 ;;
+        *)    echo -e "\033[1;91m[!]\033[0m Invalid choice"; sleep 1 ;;
     esac
     read -r dummy
 done
@@ -1242,7 +1323,6 @@ echo -e "${BG_RED}${YELLOW} ENCRYPSI CODE BASH ${NC}"
 }
 
 play_music() {
-    echo -e "MUSIK DI NYALAKAN" | lolcat
     clear
   if command_exists mpv; then
     mpv --no-video --loop-file "$LAGU_YOUTUBE" >/dev/null 2>&1 &
@@ -1483,43 +1563,67 @@ clear
     case $pilih in
     
       01|1)
+      klik
         short_url
+        klik
        ;;
       02|2)
+      klik
         ai_chat
+        klik
        ;;
       03|4)
+      klik
         cheker_nik
+        klik
        ;;
       04|4)
+      klik
         spam_tg
         kembali_ke_menu
+        klik 
        ;;
        05|5)
+       klik
         track_nama
+        klik
         ;;
        06|6)
+       klik
         checker_backdor_php
+        klik
         ;;
        07|7)
+       klik
         ngl_spam
+        klik
         ;;
        08|8)
+       klik
         spam_otp
         kembali_ke_termux
+        klik
         ;;
        09|9)
+       klik
         generate_password
+        klik
         ;;
       10)
+      klik
         phising_tele
+        klik
         ;;
        11)
+       klik
         crypto_check
+        klik
         ;;
       00|0)
+      klik
         echo "CLOSE MENU 2" | lolcat
         break
+        klik
         ;;
         *)
         echo "INPUT TIDAK VALID!" | lolcat
@@ -2605,41 +2709,65 @@ clear
     case $pilih in
     
         01|1)
+        klik
         GeoIP_ISP
+        klik
         ;;
         02|2)
+        klik
         track_live
+        klik
         ;;
         03|3)
+        klik
          spam_gmail
+         klik
         ;;
         04|4)
+        klik
          Nik_cek
+         klik
         ;;
         05|5)
+        klik
          whois_lookup
+         klik
         ;;
         06|6)
+        klik
          port_scan
+         klik
         ;;
         07|7)
+        klik
          ip_track
+         klik
         ;;
         08|8)
+        klik
          exif_tool
+         klik
         ;;
         09|9)
+        klik
          bruteforce_zip
+         klik
         ;;
        10)
+       klik
         phising_allsosmed
+        klik
         ;;
        11)
+       klik
         phone_track
+        klik
        ;;
       00|0)
+      klik
         echo "CLOSE MENU 2" | lolcat
         break
+        klik
         ;;
       *)
         echo "INPUT TIDAK VALID!" | lolcat
@@ -2973,7 +3101,7 @@ echo -e "
 ⠀⢠⣦⣴⣤⣄⠀⢤⣦⣴⣄⠀⢴⣴⣤⢰⣴⡤⣰⣴⣤⣦⣦⡦⣴⣤⣦⣴⣤⠀⢠⣦⣴⣤⣦⢀⣠⣦⣦⣄⠀⢀⣤⣦⣦⣀⢠⣦⣦⡄⠀⣠⣦⣦⡄⠀⢠⣦⣴⡄⣦⣦⠀⣀⣀⠀⠀⠀⢀⣀⢀⡀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀
 ⠀⢈⣿⡧⢹⣿⡇⢰⣟⣿⣿⠀⢨⣿⣿⣧⣿⠅⠀⢻⣿⣾⡋⠀⠙⣿⣷⠟⠀⠀⠘⠫⣿⣏⠛⢸⣿⡇⢸⣿⣇⣿⣿⠀⣿⣿⠀⣿⣿⢀⡀⢿⣷⣿⣅⠀⠀⢹⣿⡅⣿⠃⢺⣿⣽⡇⠀⠀⠸⣫⣿⣟⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀
 ⠀⢰⣿⣷⣾⠿⠣⣾⣯⢽⣿⣧⢴⣿⡜⣿⣿⠅⣶⣿⡭⣿⣷⡆⠀⣾⣿⣇⠀⠀⠀⣸⣿⣷⡀⠘⢿⣧⣾⠿⠃⠻⣿⣦⡿⠟⢰⣿⣿⣾⣇⣷⣯⣿⠟⠀⠀⠀⣿⣿⡏⠀⢿⣯⣿⠷⣰⣶⢰⣤⣽⡿⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀
-" | lolcat⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀
+" | lolcat
 read -p "Masukkan IP / domain untuk di-track: " target
 echo -e "\n[+] Tracking $target ..."
 data=$(curl -s "http://ip-api.com/json/$target?fields=status,message,country,regionName,city,zip,lat,lon,isp,org,as,query")
@@ -3702,6 +3830,10 @@ echo -e "${BG_RED}${YELLOW}MENJALANKAN SERVER...${NC}"
 echo "                                                          "
 python3 Danxy.py
 }
+
+
+
+
 
 garis()        { echo '┏━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┓'; }
 garis_tutup()  { echo '┗━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┛'; }
