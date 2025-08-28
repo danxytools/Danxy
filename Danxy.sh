@@ -17,7 +17,6 @@ USER_MAP=(
     "Betmen tukang srempet|u0_a357"
     "Razor3|u0_a484"
     "TuTu|u0_a349"
-    "relxbug|u0_a892"
     "immz|u0_a192"
     "Luxxy|u0_a291"
     "Gembonk|u0_a637"
