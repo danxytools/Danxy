@@ -20,7 +20,6 @@ USER_MAP=(
     "Her1980|u0_a348"
     "Betmen tukang srempet|u0_a357"
     "Razor3|u0_a484"
-    "TuTu|u0_a349"
     "immz|u0_a192"
     "Luxxy|u0_a291"
     "Gembonk|u0_a637"
