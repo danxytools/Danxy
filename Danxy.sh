@@ -14,7 +14,6 @@ USER_MAP=(
     "Masz|u0_a209"
     "Yanxi|u0_a303"
     "Yuki_Unli|u0_a560"
-    "relxbug|u0_a892"
     "iqbal|u0_a441"
     "Mr.FlowX|u0_a257"
     "Razor|u0_a485"
