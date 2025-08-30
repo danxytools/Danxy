@@ -25,8 +25,8 @@ color() {
     *)      printf "%s${NC}\n" "$text" ;; # Default: No color
   esac
 }
-ATAS()        { echo '┏━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┓'; }
-BAWAH()  { echo ' ┗━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┛ '; }
+ATAS()        { echo '┏━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┓'; }
+BAWAH()  { echo '┗━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┛ '; }
 
 # Kode warna untuk latar belakang
 BG_BLUE='\033[1;44m'
@@ -106,11 +106,10 @@ banner() {
 #  loading
   clear
   if command_exists figlet; then
-    echo "                                        "
-    echo "                                        "
     toilet -f slant "DanxyTools" --filter border | lolcat
-    echo -e " ┃ TOOLS INI DI BUAT & DI KEMBANGAN OLEH DANXY OFFICIAL ┃"
+    echo -e "┃  TOOLS INI DI BUAT & DI KEMBANGKAN OLEH DANXY OFFICIAL ┃"
     BAWAH
+   
   else
     echo -e "${CYAN}=====DanxyTools =====${NC}"
  #   loading | lolcat
@@ -271,7 +270,9 @@ g_spaces=$(printf '%*s' $((g_pad > 0 ? g_pad : 0)) '')
 
 #echo -e "                  ${BG_RED}${YELLOW} WELCOME TO ALL MENU ${NC}"
 echo -e "${GREEN}
- ╭──────────────────────────────────────────────────────╮
+ ┏━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┓
+ │ █████████ ███████████████  ███████████████ █████████ │
+ ├──────────────────────────────────────────────────────┤
  │ ${YELLOW}${greeting}${g_spaces}${GREEN}     │
  ╰──────────────────────────────────────────────────────╯
  ╭──────────────────────────────────────────────────────╮
