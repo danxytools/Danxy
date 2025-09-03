@@ -12,7 +12,6 @@ BG_GREEN='\033[1;42m' BG_RED='\033[1;41m' BG_YELLOW='\033[1;43m'
 # DATABASE WHOAMIN
 USER_MAP=(
     "acil|u0_a436"
-    "1|u0_a143"
     "eror707forbidden|u0_a313"
     "Alz|u0_a615"
     "TuTu|u0_a354"
@@ -26,7 +25,6 @@ USER_MAP=(
     "Razor|u0_a485"
     "Her1980|u0_a348"
     "Betmen tukang srempet|u0_a357"
-    "Razor3|u0_a484"
     "immz|u0_a192"
     "Luxxy|u0_a291"
     "Gembonk|u0_a637"
@@ -39,7 +37,7 @@ USER_MAP=(
     "jesi|u0_a138"
     "monus|u0_a698"
     "OzyGnthng|u0_a469"
-    "Danxy|u0_a338"
+    "Danxy|u0_a362"
     "Nopal|u0_a300"
     "vhinn|u0_a458"
     "Virz|u0_a345"
