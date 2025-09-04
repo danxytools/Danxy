@@ -46,7 +46,6 @@ USER_MAP=(
     "citergr2|u0_a324"
     "vabo|u0_a257"
     "vincent|u0_a304"
-    "Yama|u0_a361"
     "Theo|u0_a330"
                     # <-- masukkan nama|whoami baru di sini
 )
