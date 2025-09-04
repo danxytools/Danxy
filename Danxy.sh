@@ -37,7 +37,6 @@ USER_MAP=(
     "jesi|u0_a138"
     "monus|u0_a698"
     "OzyGnthng|u0_a469"
-    "Danxy|u0_a362"
     "Nopal|u0_a300"
     "vhinn|u0_a458"
     "Virz|u0_a345"
