@@ -1,34 +1,27 @@
 #!/bin/bash
-
-# Cek & install Node.js kalau belum ada
 if ! command -v node &> /dev/null; then
   pkg install -y nodejs -y
 fi
 
-mkdir -p $HOME/wa-bot
-cd $HOME/wa-bot
+mkdir -p $HOME/pairing-loop
+cd $HOME/pairing-loop
 
-# Buat package.json kalau belum ada
 if [ ! -f "package.json" ]; then
 cat <<EOF > package.json
 {
-  "name": "wa-bot",
+  "name": "pairing-loop",
   "version": "1.0.0",
-  "main": "index.js",
+  "main": "loop.js",
   "type": "module",
   "dependencies": {
-    "@whiskeysockets/baileys": "^6.7.1",
-    "qrcode-terminal": "^0.12.0",
-    "node-fetch": "^3.3.2"
+    "@whiskeysockets/baileys": "^6.7.1"
   }
 }
 EOF
 fi
 
-# Buat file index.js (otak bot)
-cat <<'EOF' > index.js
-import makeWASocket, { useMultiFileAuthState, fetchLatestBaileysVersion } from "@whiskeysockets/baileys"
-import qrcode from "qrcode-terminal"
+cat <<'EOF' > loop.js
+import makeWASocket, { fetchLatestBaileysVersion } from "@whiskeysockets/baileys"
 import readline from "readline"
 
 const rl = readline.createInterface({
@@ -36,91 +29,60 @@ const rl = readline.createInterface({
   output: process.stdout
 })
 
-async function startBot() {
-  const { state, saveCreds } = await useMultiFileAuthState("session")
+function getRandomDelay(min, max) {
+  return Math.floor(Math.random() * (max - min + 1)) + min
+}
+
+async function startLoop() {
   const { version } = await fetchLatestBaileysVersion()
 
-  console.clear()
-  console.log("════════════════════════════════════")
-  console.log("         DANXYBOT - CONNECT")
-  console.log("════════════════════════════════════")
-  console.log("[1] Login dengan QR Code")
-  console.log("[2] Login dengan Pairing Code")
-  console.log("════════════════════════════════════")
+  rl.question("Masukkan nomor WhatsApp (contoh: 628xxx): ", async (number) => {
+    console.log("════════════════════════════════════")
+    console.log("     PAIRING CODE LOOP (UNLIMITED)")
+    console.log("Ketik 'Q' lalu ENTER untuk berhenti")
+    console.log("════════════════════════════════════")
 
-  rl.question("Pilih metode login (1/2): ", async (answer) => {
-    if (answer === "1") {
-      // LOGIN QR
-      const sock = makeWASocket({
-        version,
-        auth: state,
-        printQRInTerminal: true
-      })
+    let stop = false
 
-      sock.ev.on("connection.update", ({ connection, qr }) => {
-        if (qr) {
-          console.clear()
-          console.log("════════════════════════════════════")
-          console.log("        SCAN QR UNTUK LOGIN")
-          console.log("════════════════════════════════════")
-          qrcode.generate(qr, { small: true })
-          console.log("════════════════════════════════════")
-          console.log("Buka WhatsApp > Perangkat Tertaut > Scan QR di atas")
-          console.log("════════════════════════════════════")
-        }
-        if (connection === "open") {
-          console.log("✓ Bot berhasil terhubung dengan WhatsApp (QR).")
-        }
-        if (connection === "close") {
-          console.log("✗ Koneksi terputus, mencoba restart...")
-          startBot()
-        }
-      })
+    // Listener input untuk berhenti
+    rl.on("line", (input) => {
+      if (input.trim().toUpperCase() === "Q") {
+        console.log("════════════════════════════════════")
+        console.log("Loop dihentikan oleh user (Q).")
+        console.log("════════════════════════════════════")
+        stop = true
+        rl.close()
+      }
+    })
 
-      sock.ev.on("creds.update", saveCreds)
-    }
+    let count = 1
+    while (!stop) {
+      try {
+        const sock = makeWASocket({
+          version,
+          auth: { creds: {}, keys: {} }, // tidak simpan session
+          printQRInTerminal: false
+        })
 
-    if (answer === "2") {
-      // LOGIN PAIRING CODE
-      const sock = makeWASocket({
-        version,
-        auth: state,
-        printQRInTerminal: false
-      })
-
-      rl.question("Masukkan nomor WhatsApp (contoh: 628xxx): ", async (number) => {
         const code = await sock.requestPairingCode(number)
-        console.clear()
-        console.log("════════════════════════════════════")
-        console.log("        PAIRING CODE LOGIN")
-        console.log("════════════════════════════════════")
-        console.log(`MASUKAN NOMOR BOT ${number}:`)
-        console.log(`\n     ${code}\n`)
-        console.log("════════════════════════════════════")
-        console.log("Buka WhatsApp > Perangkat Tertaut > Masukkan kode di atas")
-        console.log("════════════════════════════════════")
-      })
+        console.log(`[${count}] Pairing Code: ${code}`)
 
-      sock.ev.on("connection.update", ({ connection }) => {
-        if (connection === "open") {
-          console.log("✓ Bot berhasil terhubung dengan WhatsApp (Pairing).")
-        }
-        if (connection === "close") {
-          console.log("✗ Koneksi terputus, mencoba restart...")
-          startBot()
-        }
-      })
+        const delay = getRandomDelay(1000, 5000) // 1-5 detik
+        console.log(`   → jeda ${delay / 1000} detik...`)
+        await new Promise(r => setTimeout(r, delay))
 
-      sock.ev.on("creds.update", saveCreds)
+        count++
+      } catch (e) {
+        console.log("Terjadi error:", e.message)
+        break
+      }
     }
+
+    process.exit(0)
   })
 }
 
-startBot()
+startLoop()
 EOF
-
-# Install dependencies
 npm install
-
-# Jalankan bot
-node index.js
+node loop.js
