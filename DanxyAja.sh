@@ -1,5 +1,4 @@
 #!/bin/bash
-play_music
 # Kode warna untuk teks
 NC="\033[0m"
 BLUE='\033[1;94m'
@@ -91,7 +90,7 @@ banner() {
   if command_exists figlet; then
     clear
     toilet -f slant   "     Loading     " --filter border | lolcat
-    echo -e "            ${BG_RED}${YELLOW}SABAR CUY BENTAR DOANG KOK${NC}"
+    echo -e "                    ${BG_RED}${YELLOW}SABAR CUY BENTAR DOANG KOK${NC}"
   else
   sleep 2
     clear
@@ -157,20 +156,59 @@ tangal_tahun() {
     echo "$greeting, $tgl"
 }
 
+# Variabel global untuk kontrol sound
+SOUND_ENABLED=true
+
 klik() {
-    curl -sL https://raw.githubusercontent.com/DanxyPrasetyo/Jembotbadakngakak/main/klik.mp3 | \
-    play -q -t mp3 -
+    if [ "$SOUND_ENABLED" = true ]; then
+        curl -sL https://raw.githubusercontent.com/DanxyPrasetyo/Jembotbadakngakak/main/klik.mp3 | \
+        play -q -t mp3 -
+    fi
 }
 
-salah() {
-    curl -sL https://raw.githubusercontent.com/DanxyPrasetyo/Jembotbadakngakak/main/pilihanSalah.mp3 | \
-    play -q -t mp3 -
+# Fitur untuk mematikan sound
+OFF_KLIK() {
+    SOUND_ENABLED=false
 }
+
+# Fitur untuk menghidupkan sound lagi
+ON_KLIK() {
+    SOUND_ENABLED=true
+}
+
+
+# letakkan di bagian global (atas) script supaya tersedia untuk semua fungsi
+SOUND_SALAH_ENABLED=true
+
+salah() {
+  # hanya mainkan sound jika enabled
+  if [ "${SOUND_SALAH_ENABLED}" = true ]; then
+    curl -sL https://raw.githubusercontent.com/DanxyPrasetyo/Jembotbadakngakak/main/pilihanSalah.mp3 | \
+    play -q -t mp3 - 2>/dev/null
+  fi
+}
+
+disableSalah() {
+  SOUND_SALAH_ENABLED=false
+}
+
+enableSalah() {
+  SOUND_SALAH_ENABLED=true
+}
+
+toggleSalah() {
+  if [ "${SOUND_SALAH_ENABLED}" = true ]; then
+    disableSalah
+  else
+    enableSalah
+  fi
+}
+
 
 hello() {
     # auto-install sox jika belum ada
     if ! command -v play &>/dev/null; then
-        echo -e "\033[1;33m[+] Installing sox...\033[0m"
+        echo -e "\033[1;33m[ + ] INSTALL SOX\033[0m"
         pkg install -y sox >/dev/null 2>&1
     fi
     echo -e "${RED}
@@ -209,42 +247,41 @@ g_spaces=$(printf '%*s' $((g_pad > 0 ? g_pad : 0)) '')
 #echo -e "                  ${BG_RED}${YELLOW} WELCOME TO ALL MENU ${NC}"
 
 echo -e "${GREEN}
- ┏━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┓
+ ╭━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━╮
  │ █████████░█████████████████████░░████████████████████░█████████ │
  ├─────────────────────────────────────────────────────────────────┤
  │ ${YELLOW}${greeting}${g_spaces}${GREEN}                │
- ╰─────────────────────────────────────────────────────────────────╯
- ╭─────────────────────────────────────────────────────────────────╮
+ ├─────────────────────────────────────────────────────────────────┤
+ │ ${YELLOW}Your ID: ${your_id}          ${YELLOW}YT${NC}: ${RED}DanxyBot          TT${NC}: Qwela.38${NC}${GREEN}    │
+ ╰─────────────────────────────────────────────────────────────────╯${NC}
+ ╭━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━╮
  │                     ${YELLOW}~ MENU UTAMA TOOLS V8.3 ~${NC}${GREEN}                   │
- ├────────────┬─────────────────────────┬──────────────────────────┤
- │  [  ${RED}01${GREEN}  ]  │ ${YELLOW}SUNTIK TIKTOK${GREEN}           │         MENU FUN         │
- │  [  ${RED}02${GREEN}  ]  │ ${YELLOW}SUNTIK IG    ${GREEN}           ├──────────────────────────┤
+ ├────────────┬─────────────────────────┬────────────┬─────────────┤
+ │  [  ${RED}01${GREEN}  ]  │ ${YELLOW}SUNTIK TIKTOK${GREEN}           │  PERINTAH  │   FUNGSI    │
+ │  [  ${RED}02${GREEN}  ]  │ ${YELLOW}SUNTIK IG    ${GREEN}           ├────────────┴─────────────┤
  │  [  ${RED}03${GREEN}  ]  │ ${YELLOW}CEK PROVIDER NOMOR${GREEN}      │ [ DOWNLD ] DOWNLOADER    │
- │  [  ${RED}04${GREEN}  ]  │ ${YELLOW}ASCII ART GENERATOR${GREEN}     │                          │
- │  [  ${RED}05${GREEN}  ]  │ ${YELLOW}PERKIRAAN CUACA${GREEN}         │                          │
- │  [  ${RED}06${GREEN}  ]  │ ${YELLOW}BROWSING (w3m)${GREEN}          │                          │
- │  [  ${RED}07${GREEN}  ]  │ ${YELLOW}STOP MUSIK${GREEN}              │                          │
- │  [  ${RED}08${GREEN}  ]  │ ${YELLOW}STATUS WEBSITE${GREEN}          │                          │
- │  [  ${RED}09${GREEN}  ]  │ ${YELLOW}ALL KALKULATOR${GREEN}          │                          │
- │  [  ${RED}10${GREEN}  ]  │ ${YELLOW}DEFACE WEBSITE     ${GREEN}     │                          │
- │  [  ${RED}11${GREEN}  ]  │ ${YELLOW}TRACKING IP${GREEN}             │                          │
- │  [  ${RED}12${GREEN}  ]  │ ${YELLOW}IP PRIBADI${GREEN}              │                          │
- │  [  ${RED}13${GREEN}  ]  │ ${YELLOW}KEBOCORAN GMAIL${GREEN}         │                          │
- │  [  ${RED}14${GREEN}  ]  │ ${YELLOW}ENCRYPSI BASH${GREEN}           │                          │
- │  [  ${RED}15${GREEN}  ]  │ ${YELLOW}PLAY MUSIK${GREEN}              │                          │
- │  [  ${RED}16${GREEN}  ]  │ ${YELLOW}LACAK NAMA${GREEN}              │                          │
- │  [  ${RED}17${GREEN}  ]  │ ${YELLOW}LACAK LOKASI NOMOR (IP)${GREEN} │                          │
- │  [  ${RED}18${GREEN}  ]  │ ${YELLOW}LAPORKAN BUG  ${GREEN}          │                          │
- │  [  ${RED}19${GREEN}  ]  │ ${YELLOW}MENU TRACKING${GREEN}           │                          │
- │  [  ${RED}20${GREEN}  ]  │ ${YELLOW}MENU OSIN${GREEN}               │                          │
- │  [  ${RED}21${GREEN}  ]  │ ${YELLOW}MENU GHOS TRACK${GREEN}         │                          │
- │  [  ${RED}22${GREEN}  ]  │ ${YELLOW}INFO TOOLS${GREEN}              │                          │
+ │  [  ${RED}04${GREEN}  ]  │ ${YELLOW}ASCII ART GENERATOR${GREEN}     │ [  FUN   ] GAME MENU     │
+ │  [  ${RED}05${GREEN}  ]  │ ${YELLOW}PERKIRAAN CUACA${GREEN}         │ [   A1   ] EFEK KLIK OFF │
+ │  [  ${RED}06${GREEN}  ]  │ ${YELLOW}BROWSING (w3m)${GREEN}          │ [   A2   ] EFEK KLIK ON  │
+ │  [  ${RED}07${GREEN}  ]  │ ${YELLOW}STATUS WEBSITE${GREEN}          │ [   B1   ] MATIKAN MUSIK │
+ │  [  ${RED}08${GREEN}  ]  │ ${YELLOW}ALL KALKULATOR${GREEN}          │ [   B2   ] MUSIK NYALA   │
+ │  [  ${RED}09${GREEN}  ]  │ ${YELLOW}DEFACE WEBSITE     ${GREEN}     │ [   C1   ] OFF EFEK SALAH│
+ │  [  ${RED}10${GREEN}  ]  │ ${YELLOW}TRACKING IP${GREEN}             │ [   C2   ] ON EFEK SALAH │
+ │  [  ${RED}11${GREEN}  ]  │ ${YELLOW}IP PRIBADI${GREEN}              ├──────────────────────────┤
+ │  [  ${RED}12${GREEN}  ]  │ ${YELLOW}KEBOCORAN GMAIL${GREEN}         │                          │
+ │  [  ${RED}13${GREEN}  ]  │ ${YELLOW}ENCRYPSI BASH${GREEN}           │                          │
+ │  [  ${RED}14${GREEN}  ]  │ ${YELLOW}LACAK NAMA${GREEN}              │                          │
+ │  [  ${RED}15${GREEN}  ]  │ ${YELLOW}LACAK LOKASI NOMOR (IP)${GREEN} │                          │
+ │  [  ${RED}16${GREEN}  ]  │ ${YELLOW}LAPORKAN BUG  ${GREEN}          │                          │
+ │  [  ${RED}17${GREEN}  ]  │ ${YELLOW}MENU TRACKING${GREEN}           │                          │
+ │  [  ${RED}18${GREEN}  ]  │ ${YELLOW}MENU OSIN${GREEN}               │                          │
+ │  [  ${RED}19${GREEN}  ]  │ ${YELLOW}MENU GHOS TRACK${GREEN}         │                          │
+ │  [  ${RED}20${GREEN}  ]  │ ${YELLOW}INFO TOOLS${GREEN}              │                          │
  │  [  ${RED}00${GREEN}  ]  │ ${YELLOW}KELUAR${GREEN}                  │                          │
  ├────────────┴─────────────────────────┴──────────────────────────┤
  │                 DANXY TOOLS V8.3 2024 - 2025                    │
- ├────────────────────┬──────────────┬─────────────────────────────┤
- │ ${YELLOW}Your ID: ${your_id}   │ ${YELLOW}YT${NC}: ${RED}DanxyBot │ TT${NC}: Qwela.38${NC}${GREEN}                │
- ╰────────────────────┴──────────────┴─────────────────────────────╯${NC}" | lolcat
+ ├─────────────────────────────────────────────────────────────────┤
+ ╰─────────────────────────────────────────────────────────────────╯" | lolcat
   #echo -e "${CYAN}"
   #echo "     ╭─══════════════════════════════════─╮"
   #echo "     │    [] ALL MENU DANXY TOOLS []    │"
@@ -256,7 +293,7 @@ echo -e "${GREEN}
 clear
 
 main_menu() {
-  
+  play_music
   hello
   while true; do
     klik
@@ -302,94 +339,82 @@ main_menu() {
       kembali_ke_menu
       klik
       ;;
-    07|7) # Opsi untuk stop musik
-      klik
-      stop_music
-      echo -e "${YELLOW}Musik dihentikan.${NC}"
-      kembali_ke_menu
-      klik
-      ;;
-    08|8)
+    07|7)
     klik
       cek_status_website
       kembali_ke_menu
       klik
       ;;
-    09|9)
+    08|8)
     klik
       kalkulator
       kembali_ke_menu
       klik
       ;;
-   10)
+   09|9)
    klik
       deface_mod
       kembali_ke_menu
       klik
       ;;
-   11)
+   10)
    klik
       ip_lookup
       kembali_ke_menu
       klik
       ;;
-   12)
+   11)
    klik
       cek_ip_publik
       kembali_ke_menu
       klik
       ;;
-   13)
+   12)
    klik
       cek_kebocoran_gmail
       kembali_ke_menu
       klik
       ;;
-   14)
+   13)
    klik
       enkripsi_bash
       kembali_ke_menu
       klik
       ;;
-   15)
-   klik
-      play_music
-      klik
-      ;;
-   16)
+   14)
    klik
       lacak_nama
       kembali_ke_menu
       klik
       ;;
-   17)
+   15)
    klik
       lacak_lokasi_nomor
       kembali_ke_menu
       klik
       ;;
-   18)
+   16)
    klik
       lapor_error
       kembali_ke_menu
       klik
       ;;
-   19)
+   17)
    klik
       menu_tracking
       klik
       ;;
-   20)
+   18)
    klik
       menu_Osin
       klik
       ;;
-   21)
+   19)
    klik
       menu_ghostrack
       klik
      ;;
-   23)
+   20)
    klik
       info
       kembali_ke_menu
@@ -400,11 +425,46 @@ DOWNLD)
    downloader_menu
    klik
       ;;
-FUN)
+  FUN)
     klik
     fun_menu
     klik
     ;;
+  A1|a1)
+    OFF_KLIK
+    echo -e "${NC}[${GREEN} ✓${NC} ] ${BG_RED}${YELLOW}BERHASIL MEMATIKAN EFEK KLIK${NC}"
+    kembali_ke_menu
+    ;;
+  A2|a2)
+    ON_KLIK
+    echo -e "${NC}[${GREEN} ✓${NC} ] ${BG_RED}${YELLOW}BERHASIL MENYALAKAN EFEK KLIK${NC}"
+    klik
+    ;;
+  B1|b1) # Opsi untuk stop musik
+      klik
+      stop_music
+      echo -e "${NC}[${GREEN} ✓${NC} ] ${BG_RED}${YELLOW}BERHASIL MEMATIKAN MUSIK${NC}"
+      kembali_ke_menu
+      klik
+      ;;
+   B2|b2)
+   klik
+      play_music
+      echo -e "${NC}[${GREEN} ✓${NC} ] ${BG_RED}${YELLOW}BERHASIL MENYALAKAN MUSIK${NC}"
+      klik
+      ;;
+  C1|c1)
+     klik
+     disableSalah
+     echo -e "${NC}[${GREEN} ✓${NC} ] ${BG_RED}${YELLOW}BERHASIL MEMATIKAN EFEK SALAH${NC}"
+     klik
+      ;;
+  C2|c2)
+     klik
+     enableSalah
+     echo -e "${NC}[${GREEN} ✓${NC} ] ${BG_RED}${YELLOW}BERHASIL MENYALAKAN EFEK SALAH${NC}"
+     klik
+     ;;
     00|0)
     klik
       echo -e "${CYAN}TERIMAKASIH SUDAH MENGGUNAKAN TOOLS DANXY.${NC}" | lolcat
@@ -422,25 +482,26 @@ FUN)
 }
 
 
+
 downloader_menu() {
   clear
-  echo "┏━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┓"
-  echo "│             ALL-IN-ONE DOWNLOADER            │"
-  echo "┗━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┛"
+   echo "╭━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━╮"
+   echo "│             ALL-IN-ONE DOWNLOADER            │"
+   echo "╰━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━╯"
 
   # auto-install yt-dlp
   command -v yt-dlp >/dev/null || { pkg install -y yt-dlp; }
 
   while true; do
     echo
-    echo "╔════════════════════════════════════════════╗"
-    echo "║ [1] TikTok Video (MP4)                     ║"
-    echo "║ [2] TikTok Audio (MP3)                     ║"
-    echo "║ [3] YouTube Video (MP4)                    ║"
-    echo "║ [4] YouTube Audio (MP3)                    ║"
-    echo "║ [0] Kembali                                ║"
-    echo "╚════════════════════════════════════════════╝"
-    read -p "Pilih: " CHOICE
+    echo "╭━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━╮"
+    echo "│ [1] TikTok Video (MP4)                       │"
+    echo "│ [2] TikTok Audio (MP3)                       │"
+    echo "│ [3] YouTube Video (MP4)                      │"
+    echo "│ [4] YouTube Audio (MP3)                      │"
+    echo "│ [0] Kembali                                  │"
+    echo "╰━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━╯"
+    read -p "PILIH FITUR: " CHOICE
 
     case $CHOICE in
       1)
@@ -463,6 +524,72 @@ downloader_menu() {
       *) echo -e "${R}❌ Salah pilih${N}"; sleep 1 ;;
     esac
   done
+}
+
+fun_menu() {
+  # auto-install yt-dlp
+  command -v yt-dlp >/dev/null || { pkg install -y yt-dlp; }
+
+  while true; do
+    clear
+    echo "╭━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━╮"
+    echo "│                  MENU GAME                   │"
+    echo "╰━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━╯"
+  
+    echo
+    echo "╭━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━╮"
+    echo "│ [1] CONVERT FOTO KE ASCII ART                │"
+    echo "│ [0] Kembali                                  │"
+    echo "╰━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━╯"
+    read -p "FITUR: " CHOICE
+
+    case $CHOICE in
+      1)
+      klik
+      asciiArt
+      klik 
+      ;; 
+      2)
+      klik
+      ppsdm
+      klik      
+       ;;
+      0) break ;;
+      *) echo -e "${R}❌ Salah pilih${N}"; sleep 1 ;;
+    esac
+  done
+}
+
+asciiArt() {
+  clear
+  echo -e "\033[1;96m"
+  echo "┏━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┓"
+  echo "┃        ASCII ART CONVERTER        ┃"
+  echo "┗━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┛"
+  echo "ALL CONVERT FOTO KAMJ JADI ASCII"
+  echo -e "\033[0m"
+
+  if ! command -v jp2a &> /dev/null; then
+    echo "[ + ] Installing jp2a (ASCII converter)..."
+    pkg install -y jp2a > /dev/null 2>&1
+  fi
+  read -p "Masukkan path gambar (contoh: /sdcard/foto.jpg): " img
+
+  if [ ! -f "$img" ]; then
+    echo "[ ! ] File tidak ditemukan!"
+    return
+  fi
+  folder="/storage/emulated/0/HASIL_ASCII"
+  mkdir -p "$folder"
+  out="$folder/asciiart-$(date +%Y%m%d-%H%M%S).txt"
+
+  echo -e "\n[ ∅ ] Mengubah gambar ke ASCII Art...\n"
+  jp2a --colors --width=80 "$img" | tee "$out"
+  
+  echo -e "\n[ ∆ ] ASCII Art selesai dibuat!"
+  echo "[ + ] Hasil tersimpan di: $out"
+  echo -e "\nTekan ENTER 1× untuk kembali..."
+  read
 }
 
 
@@ -1405,7 +1532,6 @@ EOF
 
 
 play_music() {
-    clear
     # auto-install mpv jika belum ada
     if ! command -v mpv &>/dev/null; then
         echo -e "${RED}[+] Installing mpv...${NC}"
