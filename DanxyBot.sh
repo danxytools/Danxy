@@ -1,13 +1,14 @@
 #!/bin/bash
 
+# Cek & install Node.js kalau belum ada
 if ! command -v node &> /dev/null; then
   pkg install -y nodejs -y
 fi
 
-
 mkdir -p $HOME/wa-bot
 cd $HOME/wa-bot
 
+# Buat package.json kalau belum ada
 if [ ! -f "package.json" ]; then
 cat <<EOF > package.json
 {
@@ -24,7 +25,7 @@ cat <<EOF > package.json
 EOF
 fi
 
-# Buat file otak bot
+# Buat file index.js (otak bot)
 cat <<'EOF' > index.js
 import makeWASocket, { useMultiFileAuthState, fetchLatestBaileysVersion } from "@whiskeysockets/baileys"
 import qrcode from "qrcode-terminal"
@@ -36,7 +37,7 @@ const rl = readline.createInterface({
 })
 
 async function startBot() {
-  const { state, saveCreds } = await useMultiFileAuthState("auth_info")
+  const { state, saveCreds } = await useMultiFileAuthState("session")
   const { version } = await fetchLatestBaileysVersion()
 
   console.clear()
@@ -49,11 +50,11 @@ async function startBot() {
 
   rl.question("Pilih metode login (1/2): ", async (answer) => {
     if (answer === "1") {
-      // QR LOGIN
+      // LOGIN QR
       const sock = makeWASocket({
         version,
         auth: state,
-        printQRInTerminal: true // otomatis tampil QR di console
+        printQRInTerminal: true
       })
 
       sock.ev.on("connection.update", ({ connection, qr }) => {
@@ -70,13 +71,17 @@ async function startBot() {
         if (connection === "open") {
           console.log("✓ Bot berhasil terhubung dengan WhatsApp (QR).")
         }
+        if (connection === "close") {
+          console.log("✗ Koneksi terputus, mencoba restart...")
+          startBot()
+        }
       })
 
       sock.ev.on("creds.update", saveCreds)
     }
 
     if (answer === "2") {
-      // PAIRING LOGIN
+      // LOGIN PAIRING CODE
       const sock = makeWASocket({
         version,
         auth: state,
@@ -89,7 +94,7 @@ async function startBot() {
         console.log("════════════════════════════════════")
         console.log("        PAIRING CODE LOGIN")
         console.log("════════════════════════════════════")
-        console.log(`MASUKAN NOMOR BOT${number}:`)
+        console.log(`MASUKAN NOMOR BOT ${number}:`)
         console.log(`\n     ${code}\n`)
         console.log("════════════════════════════════════")
         console.log("Buka WhatsApp > Perangkat Tertaut > Masukkan kode di atas")
@@ -99,6 +104,10 @@ async function startBot() {
       sock.ev.on("connection.update", ({ connection }) => {
         if (connection === "open") {
           console.log("✓ Bot berhasil terhubung dengan WhatsApp (Pairing).")
+        }
+        if (connection === "close") {
+          console.log("✗ Koneksi terputus, mencoba restart...")
+          startBot()
         }
       })
 
