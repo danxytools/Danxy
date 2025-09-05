@@ -25,8 +25,9 @@ fi
 
 # Buat file loop.js otomatis
 cat <<'EOF' > loop.js
-import makeWASocket, { fetchLatestBaileysVersion } from "@whiskeysockets/baileys"
+import makeWASocket, { fetchLatestBaileysVersion, useSingleFileAuthState } from "@whiskeysockets/baileys"
 import readline from "readline"
+import fs from "fs"
 
 const rl = readline.createInterface({
   input: process.stdin,
@@ -39,6 +40,10 @@ function getRandomDelay(min, max) {
 
 async function startLoop() {
   const { version } = await fetchLatestBaileysVersion()
+
+  // File auth dummy sementara
+  const tmpAuthFile = "./auth_dummy.json"
+  const { state, saveState } = useSingleFileAuthState(tmpAuthFile)
 
   rl.question("MASUKAN NOMOR TARGET (62): ", async (number) => {
     console.log("════════════════════════════════════")
@@ -57,6 +62,7 @@ async function startLoop() {
         console.log(`Loop dihentikan oleh user (Q). Total code: ${count}`)
         console.log("════════════════════════════════════")
         rl.close()
+        if (fs.existsSync(tmpAuthFile)) fs.unlinkSync(tmpAuthFile) // hapus auth dummy
       }
     })
 
@@ -64,9 +70,11 @@ async function startLoop() {
       try {
         const sock = makeWASocket({
           version,
-          auth: { creds: {}, keys: {} }, // dummy auth, no session
+          auth: state,
           printQRInTerminal: false
         })
+
+        sock.ev.on("creds.update", saveState)
 
         const code = await sock.requestPairingCode(number)
         count++
