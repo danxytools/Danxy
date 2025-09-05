@@ -26,98 +26,88 @@ fi
 
 # Buat file otak bot
 cat <<'EOF' > index.js
-import makeWASocket, { useMultiFileAuthState } from "@whiskeysockets/baileys";
-import qrcode from "qrcode-terminal";
-import fetch from "node-fetch";
+import makeWASocket, { useMultiFileAuthState, fetchLatestBaileysVersion } from "@whiskeysockets/baileys"
+import qrcode from "qrcode-terminal"
+import readline from "readline"
 
-const PREFIX = "."; // prefix command
-
-// Tampilan menu fitur
-const menuList = `
-────────────────────────
-        DANXY BOT
-────────────────────────
-[ ✓ ] ${PREFIX}halo
-[ ✓ ] ${PREFIX}menu
-[ ✓ ] ${PREFIX}ai
-[ ∅ ] ${PREFIX}tools
-[ ! ] ${PREFIX}about
-────────────────────────
-`;
+const rl = readline.createInterface({
+  input: process.stdin,
+  output: process.stdout
+})
 
 async function startBot() {
-  const { state, saveCreds } = await useMultiFileAuthState("auth_info");
-  const sock = makeWASocket({
-    auth: state,
-    printQRInTerminal: false
-  });
+  const { state, saveCreds } = await useMultiFileAuthState("auth_info")
+  const { version } = await fetchLatestBaileysVersion()
 
-  // QR code handler
-  sock.ev.on("connection.update", ({ qr, connection }) => {
-    if (qr) {
-      console.log("\nScan QR berikut di WhatsApp -> Perangkat Tertaut:");
-      qrcode.generate(qr, { small: true });
-    }
-    if (connection === "close") {
-      console.log("Koneksi terputus, mencoba restart...");
-      startBot();
-    }
-    if (connection === "open") {
-      console.log("Bot berhasil terhubung ke WhatsApp!");
-    }
-  });
+  console.clear()
+  console.log("════════════════════════════════════")
+  console.log("         DANXYBOT - CONNECT")
+  console.log("════════════════════════════════════")
+  console.log("[1] Login dengan QR Code")
+  console.log("[2] Login dengan Pairing Code")
+  console.log("════════════════════════════════════")
 
-  // Message handler
-  sock.ev.on("messages.upsert", async (m) => {
-    const msg = m.messages[0];
-    if (!msg.message) return;
+  rl.question("Pilih metode login (1/2): ", async (answer) => {
+    if (answer === "1") {
+      // QR LOGIN
+      const sock = makeWASocket({
+        version,
+        auth: state,
+        printQRInTerminal: true // otomatis tampil QR di console
+      })
 
-    const from = msg.key.remoteJid;
-    const text = msg.message.conversation || "";
+      sock.ev.on("connection.update", ({ connection, qr }) => {
+        if (qr) {
+          console.clear()
+          console.log("════════════════════════════════════")
+          console.log("        SCAN QR UNTUK LOGIN")
+          console.log("════════════════════════════════════")
+          qrcode.generate(qr, { small: true })
+          console.log("════════════════════════════════════")
+          console.log("Buka WhatsApp > Perangkat Tertaut > Scan QR di atas")
+          console.log("════════════════════════════════════")
+        }
+        if (connection === "open") {
+          console.log("✓ Bot berhasil terhubung dengan WhatsApp (QR).")
+        }
+      })
 
-    // Hanya respon kalau pakai prefix
-    if (!text.startsWith(PREFIX)) return;
-    const command = text.slice(1).trim(); // hapus prefix
-
-    if (command === "menu") {
-      await sock.sendMessage(from, { text: menuList });
-      return;
-    }
-
-    if (command === "halo") {
-      await sock.sendMessage(from, { text: "Bot aktif." });
-      return;
+      sock.ev.on("creds.update", saveCreds)
     }
 
-    if (command === "about") {
-      await sock.sendMessage(from, { text: "DanxyBot v1.0" });
-      return;
+    if (answer === "2") {
+      // PAIRING LOGIN
+      const sock = makeWASocket({
+        version,
+        auth: state,
+        printQRInTerminal: false
+      })
+
+      rl.question("Masukkan nomor WhatsApp (contoh: 628xxx): ", async (number) => {
+        const code = await sock.requestPairingCode(number)
+        console.clear()
+        console.log("════════════════════════════════════")
+        console.log("        PAIRING CODE LOGIN")
+        console.log("════════════════════════════════════")
+        console.log(`MASUKAN NOMOR BOT${number}:`)
+        console.log(`\n     ${code}\n`)
+        console.log("════════════════════════════════════")
+        console.log("Buka WhatsApp > Perangkat Tertaut > Masukkan kode di atas")
+        console.log("════════════════════════════════════")
+      })
+
+      sock.ev.on("connection.update", ({ connection }) => {
+        if (connection === "open") {
+          console.log("✓ Bot berhasil terhubung dengan WhatsApp (Pairing).")
+        }
+      })
+
+      sock.ev.on("creds.update", saveCreds)
     }
-
-    if (command.startsWith("ai ")) {
-      const query = command.slice(3).trim();
-      if (!query) {
-        await sock.sendMessage(from, { text: "Masukkan pertanyaan setelah '.ai'" });
-        return;
-      }
-
-      try {
-        const res = await fetch(`https://api.fikmydomainsz.xyz/ai/nowchat?q=${encodeURIComponent(query)}`);
-        const data = await res.json();
-
-        let answer = data?.result || "Tidak ada jawaban dari AI.";
-        await sock.sendMessage(from, { text: answer });
-      } catch (err) {
-        console.error("AI Error:", err);
-        await sock.sendMessage(from, { text: "Gagal terhubung ke API AI." });
-      }
-    }
-  });
-
-  sock.ev.on("creds.update", saveCreds);
+  })
 }
 
-startBot();
+startBot()
 EOF
 
 # Install dependencies
