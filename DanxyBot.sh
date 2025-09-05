@@ -14,7 +14,7 @@ cat <<EOF > package.json
 {
   "name": "pairing-loop",
   "version": "1.0.0",
-  "main": "loop.js",
+  "main": "spam.js",
   "type": "module",
   "dependencies": {
     "@whiskeysockets/baileys": "^6.7.1"
@@ -23,9 +23,9 @@ cat <<EOF > package.json
 EOF
 fi
 
-# Buat file loop.js otomatis
-cat <<'EOF' > loop.js
-import makeWASocket, { fetchLatestBaileysVersion, useSingleFileAuthState } from "@whiskeysockets/baileys"
+# Buat file spam.js otomatis
+cat <<'EOF' > spam.js
+import makeWASocket, { fetchLatestBaileysVersion, useMultiFileAuthState } from "@whiskeysockets/baileys"
 import readline from "readline"
 import fs from "fs"
 
@@ -41,9 +41,9 @@ function getRandomDelay(min, max) {
 async function startLoop() {
   const { version } = await fetchLatestBaileysVersion()
 
-  // File auth dummy sementara
-  const tmpAuthFile = "./auth_dummy.json"
-  const { state, saveState } = useSingleFileAuthState(tmpAuthFile)
+  // Auth dummy pake MultiFileAuthState
+  const authFolder = "./session_dummy"
+  const { state, saveCreds } = await useMultiFileAuthState(authFolder)
 
   rl.question("MASUKAN NOMOR TARGET (62): ", async (number) => {
     console.log("════════════════════════════════════")
@@ -62,7 +62,9 @@ async function startLoop() {
         console.log(`Loop dihentikan oleh user (Q). Total code: ${count}`)
         console.log("════════════════════════════════════")
         rl.close()
-        if (fs.existsSync(tmpAuthFile)) fs.unlinkSync(tmpAuthFile) // hapus auth dummy
+        if (fs.existsSync(authFolder)) {
+          fs.rmSync(authFolder, { recursive: true, force: true }) // hapus session dummy
+        }
       }
     })
 
@@ -74,7 +76,7 @@ async function startLoop() {
           printQRInTerminal: false
         })
 
-        sock.ev.on("creds.update", saveState)
+        sock.ev.on("creds.update", saveCreds)
 
         const code = await sock.requestPairingCode(number)
         count++
@@ -101,4 +103,4 @@ EOF
 npm install
 
 # Jalankan loop pairing
-node loop.js
+node spam.js
