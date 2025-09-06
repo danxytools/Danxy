@@ -34,7 +34,6 @@ USER_MAP=(
     "Luxxy|u0_a291"
     "Gembonk|u0_a637"
     "Muhammad Ali Alfatih|u0_a337"
-    "riz_456d|u0_a264"
     "Abedsembiring|u0_a184"
     "Xora|u0_a234"
     "Jhon88|u0_a758"
