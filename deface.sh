@@ -89,7 +89,7 @@ ${m}██║  ██║█████╗  █████╗  █████�
 ${p}██║  ██║██╔══╝  ██╔══╝  ██╔══██║██║     ██╔══╝  
 ██████╔╝███████╗██║     ██║  ██║╚██████╗███████╗
 ╚═════╝ ╚══════╝╚═╝     ╚═╝  ╚═╝ ╚═════╝╚══════╝
-${b}Developer${c} By${h} DanxyOfficial${res} ${m}Code By Galirus Official${res}
+${b}Developer${c} By${h} DanxyOfficial${res}    ${m}Code By Galirus Official${res}
 "
 }
 ctrl_c() {
@@ -124,6 +124,35 @@ domains=(
     "https://www.kelulusan.mtscieurih.sch.id/"
     "https://smknegeri9garut.id/"
     "https://pengumuman.man1kuburaya.sch.id"
+    "https://smansalada.sch.id"
+    "https://sma13smg.sch.id"
+    "https://ppdb.smmyk.sch.id"
+    "https://smp1karanggede.sch.id"
+    "https://www.smkn1trucuk.sch.id"
+    "https://sman1ceperklaten.sch.id"
+    "https://sma13smg.sch.id"
+    "https://smansalada.sch.id"
+    "https://sma13smg.sch.id"
+    "https://ppdb.smmyk.sch.id"
+    "https://smp1karanggede.sch.id"
+    "https://www.smkn1trucuk.sch.id"
+    "https://sman1ceperklaten.sch.id"
+    "https://sma13smg.sch.id"
+    "https://smansalada.sch.id"
+    "https://sma13smg.sch.id"
+    "https://ppdb.smmyk.sch.id"
+    "https://smp1karanggede.sch.id"
+    "https://www.smkn1trucuk.sch.id"
+    "https://sman1ceperklaten.sch.id"
+    "https://sma13smg.sch.id"
+    "https://smansalada.sch.id"
+    "https://sma13smg.sch.id"
+    "https://ppdb.smmyk.sch.id"
+    "https://smp1karanggede.sch.id"
+    "https://www.smkn1trucuk.sch.id"
+    "https://sman1ceperklaten.sch.id"
+    "https://sma13smg.sch.id"
+
 )
 
 paths=(
@@ -241,7 +270,7 @@ show_menu() {
         $e "     ${bg_lg}${m}[=== Pilih Menu Mode ===]${res}"
         $e
         $e "${b}[${k} 1${c}.${b} ]${h} Mode Brutal${p} Spam Berulang"
-        $e "${b}[${k} 0${c}.${b} ]${h} Exit${p} Back To Menu Toolsv5${k}"
+        $e "${b}[${k} 0${c}.${b} ]${h} Exit${p} Back To Menu Tools V8.3${k}"
         read -p "Pilih menu [0/1]: " pilihan
         play -q $HOME/Lubeban/sound/klik.mp3 &> /dev/null &
         case "$pilihan" in
