@@ -15,7 +15,6 @@ USER_MAP=(
     "IkbalGanteng|u0_a549"
     "algi|u0_a205"
     "Junaz|u0_a393"
-    "RizxvelzOfc404|u0_a363"
     "ihsan|u0_a237"
     "NIZ105|u0_a413"
     "Afan acp|u0_a238"
