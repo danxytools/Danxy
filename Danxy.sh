@@ -11,6 +11,7 @@ BG_GREEN='\033[1;42m' BG_RED='\033[1;41m' BG_YELLOW='\033[1;43m'
 
 # DATABASE WHOAMIN
 USER_MAP=(
+    "yannrzy|u0_a352"
     "hamzy|u0_a402"
     "fauzi|u0_a1309"
     "Noel|u0_a357"
